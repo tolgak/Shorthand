@@ -92,7 +92,7 @@
       this.label7.AutoSize = true;
       this.label7.Location = new System.Drawing.Point(67, 120);
       this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(49, 17);
+      this.label7.Size = new System.Drawing.Size(48, 17);
       this.label7.TabIndex = 24;
       this.label7.Text = "DPLY #";
       // 
@@ -110,29 +110,29 @@
       this.label6.AutoSize = true;
       this.label6.Location = new System.Drawing.Point(275, 86);
       this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(67, 17);
+      this.label6.Size = new System.Drawing.Size(66, 17);
       this.label6.TabIndex = 22;
       this.label6.Text = "Deliver To";
       // 
       // rdbTest
       // 
       this.rdbTest.AutoSize = true;
-      this.rdbTest.Checked = true;
       this.rdbTest.Location = new System.Drawing.Point(503, 84);
       this.rdbTest.Name = "rdbTest";
-      this.rdbTest.Size = new System.Drawing.Size(50, 21);
+      this.rdbTest.Size = new System.Drawing.Size(49, 21);
       this.rdbTest.TabIndex = 7;
-      this.rdbTest.TabStop = true;
       this.rdbTest.Text = "Test";
       this.rdbTest.UseVisualStyleBackColor = true;
       // 
       // rdbProduction
       // 
       this.rdbProduction.AutoSize = true;
+      this.rdbProduction.Checked = true;
       this.rdbProduction.Location = new System.Drawing.Point(408, 84);
       this.rdbProduction.Name = "rdbProduction";
       this.rdbProduction.Size = new System.Drawing.Size(89, 21);
       this.rdbProduction.TabIndex = 6;
+      this.rdbProduction.TabStop = true;
       this.rdbProduction.Text = "Production";
       this.rdbProduction.UseVisualStyleBackColor = true;
       this.rdbProduction.CheckedChanged += new System.EventHandler(this.rdbProduction_CheckedChanged);
@@ -196,7 +196,7 @@
       this.label3.AutoSize = true;
       this.label3.Location = new System.Drawing.Point(72, 85);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(44, 17);
+      this.label3.Size = new System.Drawing.Size(43, 17);
       this.label3.TabIndex = 15;
       this.label3.Text = "UAT #";
       // 
@@ -223,7 +223,7 @@
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(61, 49);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(55, 17);
+      this.label1.Size = new System.Drawing.Size(54, 17);
       this.label1.TabIndex = 12;
       this.label1.Text = "TALEP #";
       // 

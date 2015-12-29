@@ -19,21 +19,16 @@ namespace Shorthand
       var description = this.BuilDeploymentDescription(references);
       var summary = string.Format("Deploy {0}", internalIssueKey);
       var deploymentIssueKey = jira.CreateIssue("ARG", summary, description, "Task");
-
-
-
-      jira.CreateLink(deploymentIssueKey, internalIssueKey, "roduction Task For");
-
       references.Add("deploymentIssueKey", deploymentIssueKey);
+
+      jira.CreateLink("Production", internalIssueKey, deploymentIssueKey);
+
+
+      
     
     
       //this.DeployExecutables(references);         
     }
-
-
-
-
-
 
 
     private void DeployExecutables(Dictionary<string, string> references)

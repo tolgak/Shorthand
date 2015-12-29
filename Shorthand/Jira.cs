@@ -12,86 +12,62 @@ namespace Shorthand
 {
   public class Jira
   {
-    // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials    
+    // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials
     // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials/jira-rest-api-example-add-comment
     public void AddCommentToIssue(string issueKey, string comment)
     {
       var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
-      var url = string.Format("{0}/rest/api/2/issue/{1}/comment", options.JiraBaseUrl, issueKey);
-      var json = JsonConvert.SerializeObject( new {body = comment});
+      var url  = string.Format("{0}/rest/api/2/issue/{1}/comment", options.JiraBaseUrl, issueKey);
+      var data = new { body = comment };
+      var json = JsonConvert.SerializeObject( data );
 
       var response = this.PostToJira(url, json, "POST");
+    }
+
+    public void AssignIssueTo(string issueKey, string assignee)
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url  = string.Format("{0}/rest/api/2/issue/{1}/assignee", options.JiraBaseUrl, issueKey);
+      var data = new { name = assignee };
+      var json = JsonConvert.SerializeObject( data );
+      var response = this.PostToJira(url, json, "PUT");
     }
 
     public string CreateIssue(string projectKey, string summary, string description, string issueType, string assignee = "")
     {
       // create new
-      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
-      
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;      
       var url = string.Format("{0}/rest/api/2/issue", options.JiraBaseUrl);
       var data = new { fields = new { project = new { key = projectKey}
                                     , summary = summary
                                     , description = description
-                                    , issuetype = new {name = issueType} }  };
+                                    , issuetype = new {name = issueType} } };
       var json= JsonConvert.SerializeObject(data);
       var response = this.PostToJira(url, json, "POST");
 
-      // update 
+      // update assignee
       var responseObj = new { id="", key="", self=""};
       var issueKey = JsonConvert.DeserializeAnonymousType(response, responseObj).key ;
-      var url2 = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
-      var data2 = new { fields = new { assignee = new { name = string.IsNullOrEmpty(assignee) ? options.Username : assignee } } };
-      var json2= JsonConvert.SerializeObject(data2);
-      var response2 = this.PostToJira(url2, json2, "PUT");
+      this.AssignIssueTo(issueKey, string.IsNullOrEmpty(assignee) ? options.Username : assignee);
 
       return issueKey;
     }
 
-    public void CreateLink(string fromIssue, string toIssue, string relationship)
+    // https://docs.atlassian.com/jira/REST/latest/#d2e4925
+    // https://developer.atlassian.com/jiradev/jira-platform/guides/other/guide-jira-remote-issue-links/jira-rest-api-for-remote-issue-links
+    public void CreateLink(string relationship, string inwardIssue, string outwardIssue )
     {
+      //var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      //var url = string.Format("{0}/rest/api/2/issueLink", options.JiraBaseUrl, fromIssue);
+      //var data = new { type = new { name = relationship }, inwardIsssue = new { key = fromIssue }, outwardIssue = new { key = toIssue }, comment = new { body=""} };
+      //var json = JsonConvert.SerializeObject( data );
+      //var response = this.PostToJira(url, json, "POST");
+
       var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
-      var url = string.Format("{0}/rest/api/2/issue/{1}/remotelink", options.JiraBaseUrl, fromIssue);
-
-      /*
-      { 
-          "object": { 
-              "url":"http://www.mycompany.com/support?id=1", 
-              "title":"Crazy customer support issue"
-          } 
-      } 
-       */
-
-
-      /*
-      {
-          "globalId": "system=http://www.mycompany.com/support&id=1",
-          "application": {                                            
-               "type":"com.acme.tracker",                      
-               "name":"My Acme Tracker"
-          },
-          "relationship":"causes",                           
-          "object": {                                            
-              "url":"http://www.mycompany.com/support?id=1",     
-              "title":"TSTSUP-111",                             
-              "summary":"Crazy customer support issue",        
-              "icon": {                                         
-                  "url16x16":"http://www.openwebgraphics.com/resources/data/3321/16x16_voice-support.png",    
-                  "title":"Support Ticket"     
-              },
-              "status": {                                           
-                  "resolved": true,                                          
-                  "icon": {                                                       
-                      "url16x16":"http://www.openwebgraphics.com/resources/data/47/accept.png",
-                      "title":"Case Closed",                                     
-                      "link":"http://www.mycompany.com/support?id=1&details=closed"
-                  }
-              }
-          }
-      }
-      */
-
-
-    
+      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, inwardIssue);
+      var data = new { update = new { issuelinks = new[] { new { add = new { type = new { name = relationship }, inwardIssue = new { key = outwardIssue } } } } } };
+      var json = JsonConvert.SerializeObject(data);
+      var response = this.PostToJira(url, json, "PUT");    
     }
 
     private string PostToJira(string url, string data, string method)

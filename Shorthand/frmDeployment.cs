@@ -53,7 +53,7 @@ namespace Shorthand
     private void btnJIRA_Click(object sender, EventArgs e)
     {
       var jira = new Jira();
-      jira.CreateIssue("ARG", "my summary", "my description", "Task");
+      jira.CreateLink( "Production", "ARG-47", "ARG-66");
 
     }
 
