@@ -18,9 +18,17 @@ namespace Shorthand
 {
   public partial class frmDeployment : Form
   {
+    private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+
     public frmDeployment()
     {
       InitializeComponent();
+
+      lblREQ_IssueNumber.Text = string.Format("{0} #", _jiraOptions.REQ_ProjectKey);
+      lblDPLY_IssueNumber.Text = string.Format("{0} #", _jiraOptions.DPLY_ProjectKey);
+      lblUAT_IssueNumber.Text  = string.Format("{0} #", _jiraOptions.UAT_ProjectKey);
+
+      this.RefreshUI();
     }
 
     private void btnBuild_Click(object sender, EventArgs e)
@@ -28,10 +36,15 @@ namespace Shorthand
       var delivery = this.BuildDelivery();
 
       var references = new Dictionary<string, string>();
-      references.Add("requestIssueKey", string.Format("TALEP-{0}", txtTalep.Text));
-      //references.Add("deploymentIssueKey", string.Format("DPLY-{0}", txtDPLY.Text));
-      references.Add("uatIssueKey", string.Format("UAT-{0}", txtTalep.Text));
       references.Add("internalIssueKey", txtInternal.Text);
+      references.Add("requestIssueKey", string.Format("{0}-{1}", _jiraOptions.REQ_ProjectKey, txtREQ.Text));
+
+      var deploymentIssueKey = string.IsNullOrEmpty(txtDPLY.Text) ? "" : string.Format("{0}-{1}", _jiraOptions.DPLY_ProjectKey, txtDPLY.Text);
+      references.Add("deploymentIssueKey", deploymentIssueKey);
+
+      var uatIssueKey = string.IsNullOrEmpty(txtUAT.Text) ? "" : string.Format("{0}-{1}", _jiraOptions.UAT_ProjectKey, txtUAT.Text);
+      references.Add("uatIssueKey", uatIssueKey);
+
       references.Add("gitProjectName", cmbGitProjectName.SelectedText);
       references.Add("gitMergeRequestNo", txtGitMergeRequestNo.Text);
 
@@ -59,8 +72,13 @@ namespace Shorthand
 
     private void rdbProduction_CheckedChanged(object sender, EventArgs e)
     {
+      this.RefreshUI();
+    }
+
+    private void RefreshUI()
+    {
       txtDPLY.Enabled = rdbProduction.Checked;
-      txtUAT.Enabled  = rdbProduction.Checked;
+      txtUAT.Enabled = rdbProduction.Checked;
       cmbGitProjectName.Enabled = rdbProduction.Checked;
       txtGitMergeRequestNo.Enabled = rdbProduction.Checked;
     }

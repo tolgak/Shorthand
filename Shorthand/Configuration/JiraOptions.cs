@@ -13,5 +13,8 @@ namespace Shorthand
     public string JiraBaseUrl { get; set; }    
     public string Username { get; set; }
     public string Password { get; set; }
+    public string REQ_ProjectKey { get; set; }
+    public string DPLY_ProjectKey { get; set; }
+    public string UAT_ProjectKey{ get; set; }
   }
 }

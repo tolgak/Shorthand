@@ -51,3 +51,4 @@ C:\_development\cSharp\Shorthand\PragmaTouchUtils\obj\Debug\PragmaTouchUtils.frm
 C:\_development\cSharp\Shorthand\PragmaTouchUtils\obj\Debug\PragmaTouchUtils.csproj.GenerateResource.Cache
 C:\_development\cSharp\Shorthand\PragmaTouchUtils\obj\Debug\PragmaTouchUtils.dll
 C:\_development\cSharp\Shorthand\PragmaTouchUtils\obj\Debug\PragmaTouchUtils.pdb
+C:\_development\cSharp\Shorthand\PragmaTouchUtils\obj\Debug\PragmaTouchUtils.csprojResolveAssemblyReference.cache
