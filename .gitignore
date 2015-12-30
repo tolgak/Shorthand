@@ -17,6 +17,31 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#Ignore files build by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.dll
+*.lib
+*.sbr
+*.orig
+\obj
+\bin
+
 # =========================
 # Operating System Files
 # =========================
