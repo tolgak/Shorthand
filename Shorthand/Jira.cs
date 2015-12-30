@@ -12,6 +12,7 @@ namespace Shorthand
 {
   public class Jira
   {
+    // https://docs.atlassian.com/jira/REST/latest
     // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials
     // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials/jira-rest-api-example-add-comment
     public void AddCommentToIssue(string issueKey, string comment)
@@ -53,7 +54,33 @@ namespace Shorthand
       return issueKey;
     }
 
-    // https://docs.atlassian.com/jira/REST/latest/#d2e4925
+    public void SetDescription(string issueKey, string description)
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
+      var data = new{ update = new{ description = new [] { new { set = description} } } };
+      var json = JsonConvert.SerializeObject(data);
+      var response = this.PostToJira(url, json, "PUT");
+    }
+
+    public string GetIssue(string issueKey)
+    {
+      // create new
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
+      var response = this.PostToJira(url, null, "GET");
+
+      var responseObj = new { key = "", fields = new { issueLinks = new[] {  new{ key = ""} }}};
+      var issue = JsonConvert.DeserializeAnonymousType(response, responseObj);
+
+
+      return response;
+
+    }
+
+
+
+    // https://docs.atlassian.com/jira/REST/latest
     // https://developer.atlassian.com/jiradev/jira-platform/guides/other/guide-jira-remote-issue-links/jira-rest-api-for-remote-issue-links
     public void CreateLink(string relationship, string inwardIssue, string outwardIssue )
     {

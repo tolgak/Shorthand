@@ -32,7 +32,8 @@ namespace Shorthand
       txtRemoteBinPath.DataBindTo(options, "RemoteBinPath", this.ControlValueChanged);
       txtArchiveToolPath.DataBindTo(options, "ArchiveToolPath", this.ControlValueChanged);
       txtArchiveToolSwitches.DataBindTo(options, "ArchiveToolSwitches", this.ControlValueChanged);
-      txtDestinationFolder.DataBindTo(options, "DestinationFolder", this.ControlValueChanged);
+      txtTestDeliveryFolder.DataBindTo(options, "TestDeliveryFolder", this.ControlValueChanged);
+      txtProductionDeliveryFolder.DataBindTo(options, "ProductionDeliveryFolder", this.ControlValueChanged);
     }
 
     private void ControlValueChanged(object sender, EventArgs e)

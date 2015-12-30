@@ -37,7 +37,7 @@ namespace Shorthand
       var fileName = string.Format("IBU-{0}.exe", references["requestIssueKey"].Replace("-", " "));
       return new StringBuilder().AppendLine("TALEP COMMENT")
                                 .AppendLine("----------------------------")
-                                .AppendFormattedLine("İşlev *{0}\\{1}* uygulaması ile test edilebilir.", options.RemoteBinPath, fileName)
+                                .AppendFormattedLine("İşlev *{0}\\{1}* uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
                                 .AppendLine("")
                                 .AppendLine("")
                                 .ToString();

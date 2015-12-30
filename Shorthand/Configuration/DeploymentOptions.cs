@@ -18,6 +18,8 @@ namespace Shorthand
     public string ArchiveToolSwitches { get; set; }
     public string DestinationFolder { get; set; }
 
+    public string TestDeliveryFolder { get; set; }
+    public string ProductionDeliveryFolder { get; set; }
 
   }
 }

@@ -35,11 +35,15 @@
       this.label4 = new System.Windows.Forms.Label();
       this.txtArchiveToolPath = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.txtDestinationFolder = new System.Windows.Forms.TextBox();
-      this.label2 = new System.Windows.Forms.Label();
       this.txtRemoteBinPath = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.txtProductionDeliveryFolder = new System.Windows.Forms.TextBox();
+      this.txtTestDeliveryFolder = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
+      this.label6 = new System.Windows.Forms.Label();
       this.groupBox1.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // label1
@@ -84,7 +88,7 @@
       this.label4.AutoSize = true;
       this.label4.Location = new System.Drawing.Point(10, 58);
       this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(85, 17);
+      this.label4.Size = new System.Drawing.Size(86, 17);
       this.label4.TabIndex = 11;
       this.label4.Text = "Tool switches";
       // 
@@ -104,23 +108,6 @@
       this.label3.TabIndex = 9;
       this.label3.Text = "Path";
       // 
-      // txtDestinationFolder
-      // 
-      this.txtDestinationFolder.Location = new System.Drawing.Point(134, 209);
-      this.txtDestinationFolder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-      this.txtDestinationFolder.Name = "txtDestinationFolder";
-      this.txtDestinationFolder.Size = new System.Drawing.Size(228, 25);
-      this.txtDestinationFolder.TabIndex = 3;
-      // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(14, 212);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(114, 17);
-      this.label2.TabIndex = 9;
-      this.label2.Text = "Destination Folder";
-      // 
       // txtRemoteBinPath
       // 
       this.txtRemoteBinPath.Location = new System.Drawing.Point(125, 65);
@@ -138,14 +125,58 @@
       this.label5.TabIndex = 11;
       this.label5.Text = "Remote bin path ";
       // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.label6);
+      this.groupBox2.Controls.Add(this.label2);
+      this.groupBox2.Controls.Add(this.txtProductionDeliveryFolder);
+      this.groupBox2.Controls.Add(this.txtTestDeliveryFolder);
+      this.groupBox2.Location = new System.Drawing.Point(10, 203);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(370, 99);
+      this.groupBox2.TabIndex = 3;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Delivery folders";
+      // 
+      // txtProductionDeliveryFolder
+      // 
+      this.txtProductionDeliveryFolder.Location = new System.Drawing.Point(106, 55);
+      this.txtProductionDeliveryFolder.Name = "txtProductionDeliveryFolder";
+      this.txtProductionDeliveryFolder.Size = new System.Drawing.Size(246, 25);
+      this.txtProductionDeliveryFolder.TabIndex = 2;
+      // 
+      // txtTestDeliveryFolder
+      // 
+      this.txtTestDeliveryFolder.Location = new System.Drawing.Point(106, 24);
+      this.txtTestDeliveryFolder.Name = "txtTestDeliveryFolder";
+      this.txtTestDeliveryFolder.Size = new System.Drawing.Size(246, 25);
+      this.txtTestDeliveryFolder.TabIndex = 1;
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(10, 27);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(32, 17);
+      this.label2.TabIndex = 12;
+      this.label2.Text = "Test";
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(10, 58);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(71, 17);
+      this.label6.TabIndex = 14;
+      this.label6.Text = "Production";
+      // 
       // ucDeploymentOptions
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.txtRemoteBinPath);
       this.Controls.Add(this.label5);
-      this.Controls.Add(this.txtDestinationFolder);
-      this.Controls.Add(this.label2);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.txtLocalBinPath);
       this.Controls.Add(this.label1);
@@ -153,6 +184,8 @@
       this.Name = "ucDeploymentOptions";
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -167,9 +200,12 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox txtArchiveToolPath;
     private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.TextBox txtDestinationFolder;
-    private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox txtRemoteBinPath;
     private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.TextBox txtProductionDeliveryFolder;
+    private System.Windows.Forms.TextBox txtTestDeliveryFolder;
   }
 }

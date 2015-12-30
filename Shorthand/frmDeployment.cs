@@ -33,6 +33,18 @@ namespace Shorthand
 
     private void btnBuild_Click(object sender, EventArgs e)
     {
+      if ( string.IsNullOrEmpty(txtInternal.Text) )
+      { 
+        MessageBox.Show(this, "Please provide an internal issue key", "Error");
+        return;
+      }
+
+      if (string.IsNullOrEmpty(txtREQ.Text))
+      {
+        MessageBox.Show(this, "Please provide the request issue number", "Error");
+        return;
+      }
+
       var delivery = this.BuildDelivery();
 
       var references = new Dictionary<string, string>();

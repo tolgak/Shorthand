@@ -21,24 +21,30 @@ namespace Shorthand
       var requestIssueKey = references["requestIssueKey"];
       var deploymentIssueKey = references["deploymentIssueKey"];
 
+
+      //var issue = jira.GetIssue(internalIssueKey);
+
+
       if ( string.IsNullOrEmpty(deploymentIssueKey) )
-      {        
-        var description = this.BuilDeploymentDescription(references);
+      {                
         var summary = string.Format("Deploy {0}", internalIssueKey);
-        deploymentIssueKey = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, description, "Task");
+        deploymentIssueKey = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, "", "Task");
         references["deploymentIssueKey"] = deploymentIssueKey;
-      }
+
+        var description = this.BuilDeploymentDescription(references);
+        jira.SetDescription (deploymentIssueKey, description);
+      }      
       jira.CreateLink("Production", internalIssueKey, deploymentIssueKey);
 
 
 
       var uatIssueKey = references["uatIssueKey"];
       if ( string.IsNullOrEmpty(uatIssueKey) )
-      {
-        var description = this.BuildUATDescription(references);
+      {        
         var summary = string.Format("UAT for {0}", requestIssueKey);
+        var description = this.BuildUATDescription(references);
         uatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
-        references["uatIssueKey"] = uatIssueKey;
+        references["uatIssueKey"] = uatIssueKey;       
       }
       jira.CreateLink("UAT", uatIssueKey, requestIssueKey);
     
@@ -66,10 +72,11 @@ namespace Shorthand
     private string BuilDeploymentDescription(Dictionary<string, string> references)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+      var deploymentIssueKey = references["deploymentIssueKey"];
       return new StringBuilder().AppendLine(references["internalIssueKey"])
                                 .AppendFormattedLine("merge request http://sisgit.bilgi.networks/sofdev/{0}/merge_requests/{1}", references["gitProjectName"], references["gitMergeRequestNo"])
                                 .AppendLine("{noformat}")
-                                .AppendFormattedLine("{0}\\IBU-{1}.rar", options.DestinationFolder, references["requestIssueKey"].Replace("-"," "))
+                                .AppendFormattedLine("{0}\\{1}.rar", options.ProductionDeliveryFolder, deploymentIssueKey)
                                 .AppendLine("{noformat}")
                                 .AppendLine("")
                                 .AppendLine("Bu arşivdeki exe dosyalar uygulama dizinine kopyalanacak.")
