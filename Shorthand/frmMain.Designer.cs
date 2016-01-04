@@ -33,11 +33,11 @@
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuDeploymentHelper = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
-      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.mnuMain.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -67,7 +67,7 @@
       // mnuItemExit
       // 
       this.mnuItemExit.Name = "mnuItemExit";
-      this.mnuItemExit.Size = new System.Drawing.Size(152, 22);
+      this.mnuItemExit.Size = new System.Drawing.Size(96, 22);
       this.mnuItemExit.Text = "Exit";
       this.mnuItemExit.Click += new System.EventHandler(this.mnuItemExit_Click);
       // 
@@ -78,7 +78,7 @@
             this.toolStripMenuItem1,
             this.settingsToolStripMenuItem});
       this.mnuTools.Name = "mnuTools";
-      this.mnuTools.Size = new System.Drawing.Size(51, 21);
+      this.mnuTools.Size = new System.Drawing.Size(52, 21);
       this.mnuTools.Text = "Tools";
       // 
       // mnuDeploymentHelper
@@ -87,6 +87,11 @@
       this.mnuDeploymentHelper.Size = new System.Drawing.Size(189, 22);
       this.mnuDeploymentHelper.Text = "Deployment Helper";
       this.mnuDeploymentHelper.Click += new System.EventHandler(this.mnuDeploymentHelper_Click);
+      // 
+      // toolStripMenuItem1
+      // 
+      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(186, 6);
       // 
       // settingsToolStripMenuItem
       // 
@@ -115,16 +120,10 @@
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
       // 
-      // toolStripMenuItem1
-      // 
-      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(186, 6);
-      // 
       // frmMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
       this.ClientSize = new System.Drawing.Size(784, 561);
       this.Controls.Add(this.appStat);
       this.Controls.Add(this.mnuMain);

@@ -28,12 +28,12 @@ namespace Shorthand
       if ( options == null )
         throw new Exception(string.Format("Configuration content does not contain {0} item!", this.ItemClassName));
 
-      txtLocalBinPath.DataBindTo(options, "LocalBinPath", this.ControlValueChanged);
-      txtRemoteBinPath.DataBindTo(options, "RemoteBinPath", this.ControlValueChanged);
+      txtLocalBinPath.DataBindTo(options, "LocalBinPath", this.ControlValueChanged);      
       txtArchiveToolPath.DataBindTo(options, "ArchiveToolPath", this.ControlValueChanged);
       txtArchiveToolSwitches.DataBindTo(options, "ArchiveToolSwitches", this.ControlValueChanged);
       txtTestDeliveryFolder.DataBindTo(options, "TestDeliveryFolder", this.ControlValueChanged);
       txtProductionDeliveryFolder.DataBindTo(options, "ProductionDeliveryFolder", this.ControlValueChanged);
+      txtDefaultGitProjectName.DataBindTo(options, "DefaultGitProjectName", this.ControlValueChanged);
     }
 
     private void ControlValueChanged(object sender, EventArgs e)

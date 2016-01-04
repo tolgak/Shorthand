@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PragmaTouchUtils;
+using System.Text.RegularExpressions;
 
 namespace Shorthand
 {
@@ -47,8 +48,11 @@ namespace Shorthand
       var response = this.PostToJira(url, json, "POST");
 
       // update assignee
+      if (!response.Success)
+        return string.Empty;
+
       var responseObj = new { id="", key="", self=""};
-      var issueKey = JsonConvert.DeserializeAnonymousType(response, responseObj).key ;
+      var issueKey = JsonConvert.DeserializeAnonymousType(response.Result, responseObj).key ;
       this.AssignIssueTo(issueKey, string.IsNullOrEmpty(assignee) ? options.Username : assignee);
 
       return issueKey;
@@ -63,21 +67,27 @@ namespace Shorthand
       var response = this.PostToJira(url, json, "PUT");
     }
 
-    public string GetIssue(string issueKey)
+    public Issuelink[] GetLinksOfIssue(string issueKey)
     {
-      // create new
-      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
-      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
-      var response = this.PostToJira(url, null, "GET");
+      var response = this.json_GetIssue(issueKey);
+      if (!response.Success)
+        return new Issuelink[0] { };
 
-      var responseObj = new { key = "", fields = new { issueLinks = new[] {  new{ key = ""} }}};
-      var issue = JsonConvert.DeserializeAnonymousType(response, responseObj);
+      var regex = new Regex("\"issuelinks\":\\[(?<Links>.*?)\\]", RegexOptions.Multiline| RegexOptions.CultureInvariant);
+      var m = regex.Match(response.Result);
+      if (!m.Success)
+        return new Issuelink[0]{};
 
-
-      return response;
-
+      var issueLinks = "[" + m.Groups["Links"].Value + "]";       
+      return JsonConvert.DeserializeObject<Issuelink[]>(issueLinks);
     }
 
+    private JsonResponse json_GetIssue(string issueKey)
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
+      return this.PostToJira(url, null, "GET");
+    }
 
 
     // https://docs.atlassian.com/jira/REST/latest
@@ -97,7 +107,7 @@ namespace Shorthand
       var response = this.PostToJira(url, json, "PUT");    
     }
 
-    private string PostToJira(string url, string data, string method)
+    private JsonResponse PostToJira(string url, string data, string method)
     {
       var request = WebRequest.Create(url) as HttpWebRequest;
       request.ContentType = "application/json";
@@ -112,11 +122,21 @@ namespace Shorthand
       var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
       var base64Credentials = this.GetEncodedCredentials(options.Username, options.Password);
       request.Headers.Add("Authorization", "Basic " + base64Credentials);
-      var response = request.GetResponse() as HttpWebResponse;
-      using ( var reader = new StreamReader(response.GetResponseStream()) )
+      
+      try
       {
-        return reader.ReadToEnd();
+        var response = request.GetResponse() as HttpWebResponse;
+        using ( var reader = new StreamReader(response.GetResponseStream()) )
+        {          
+          return new JsonResponse { Success = true, Result = reader.ReadToEnd(), StatusCode = response.StatusCode, Description = response.StatusDescription};
+        }
       }
+      catch (WebException ex)
+      {
+        var r = ex.Response as HttpWebResponse;        
+        return new JsonResponse { Success = false, Result = string.Empty, StatusCode = r.StatusCode, Description = r.StatusDescription };
+      }
+
     }
 
     private string GetEncodedCredentials(string userName, string password)

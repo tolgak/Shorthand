@@ -25,7 +25,7 @@ namespace Shorthand
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var newFileName = string.Format("IBU-{0}.exe", references["requestIssueKey"].Replace("-", " "));
-      var qualifiedNewName = Path.Combine(options.RemoteBinPath, newFileName);
+      var qualifiedNewName = Path.Combine(options.TestDeliveryFolder, newFileName);
       var qualifiedOldName = Path.Combine(options.LocalBinPath, "IBU.exe");
       
       File.Copy(qualifiedOldName, qualifiedNewName, true);

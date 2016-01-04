@@ -96,7 +96,9 @@
     </Compile>
     <Compile Include="Configuration\IConfigContentEditor.cs" />
     <Compile Include="IDelivery.cs" />
+    <Compile Include="IssueLink.cs" />
     <Compile Include="Jira.cs" />
+    <Compile Include="JsonResponse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Configuration\frmConfigurationDlg.resx">

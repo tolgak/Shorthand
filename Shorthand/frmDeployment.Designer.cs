@@ -30,7 +30,7 @@
     {
       this.panel1 = new System.Windows.Forms.Panel();
       this.btnJIRA = new System.Windows.Forms.Button();
-      this.lblDPLY_IssueNumber = new System.Windows.Forms.Label();
+      this.lblDPLY_IssueKey = new System.Windows.Forms.Label();
       this.txtDPLY = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
       this.rdbTest = new System.Windows.Forms.RadioButton();
@@ -40,10 +40,10 @@
       this.cmbGitProjectName = new System.Windows.Forms.ComboBox();
       this.label4 = new System.Windows.Forms.Label();
       this.txtGitMergeRequestNo = new System.Windows.Forms.TextBox();
-      this.lblUAT_IssueNumber = new System.Windows.Forms.Label();
+      this.lblUAT_IssueKey = new System.Windows.Forms.Label();
       this.txtUAT = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.lblREQ_IssueNumber = new System.Windows.Forms.Label();
+      this.lblREQ_IssueKey = new System.Windows.Forms.Label();
       this.txtInternal = new System.Windows.Forms.TextBox();
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
@@ -53,7 +53,7 @@
       // panel1
       // 
       this.panel1.Controls.Add(this.btnJIRA);
-      this.panel1.Controls.Add(this.lblDPLY_IssueNumber);
+      this.panel1.Controls.Add(this.lblDPLY_IssueKey);
       this.panel1.Controls.Add(this.txtDPLY);
       this.panel1.Controls.Add(this.label6);
       this.panel1.Controls.Add(this.rdbTest);
@@ -63,10 +63,10 @@
       this.panel1.Controls.Add(this.cmbGitProjectName);
       this.panel1.Controls.Add(this.label4);
       this.panel1.Controls.Add(this.txtGitMergeRequestNo);
-      this.panel1.Controls.Add(this.lblUAT_IssueNumber);
+      this.panel1.Controls.Add(this.lblUAT_IssueKey);
       this.panel1.Controls.Add(this.txtUAT);
       this.panel1.Controls.Add(this.label2);
-      this.panel1.Controls.Add(this.lblREQ_IssueNumber);
+      this.panel1.Controls.Add(this.lblREQ_IssueKey);
       this.panel1.Controls.Add(this.txtInternal);
       this.panel1.Controls.Add(this.txtREQ);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -87,22 +87,22 @@
       this.btnJIRA.UseVisualStyleBackColor = true;
       this.btnJIRA.Click += new System.EventHandler(this.btnJIRA_Click);
       // 
-      // lblDPLY_IssueNumber
+      // lblDPLY_IssueKey
       // 
-      this.lblDPLY_IssueNumber.AutoSize = true;
-      this.lblDPLY_IssueNumber.Location = new System.Drawing.Point(62, 84);
-      this.lblDPLY_IssueNumber.Name = "lblDPLY_IssueNumber";
-      this.lblDPLY_IssueNumber.Size = new System.Drawing.Size(48, 17);
-      this.lblDPLY_IssueNumber.TabIndex = 24;
-      this.lblDPLY_IssueNumber.Text = "DPLY #";
+      this.lblDPLY_IssueKey.AutoSize = true;
+      this.lblDPLY_IssueKey.Location = new System.Drawing.Point(62, 84);
+      this.lblDPLY_IssueKey.Name = "lblDPLY_IssueKey";
+      this.lblDPLY_IssueKey.Size = new System.Drawing.Size(37, 17);
+      this.lblDPLY_IssueKey.TabIndex = 24;
+      this.lblDPLY_IssueKey.Text = "DPLY";
       // 
       // txtDPLY
       // 
-      this.txtDPLY.Enabled = false;
       this.txtDPLY.Location = new System.Drawing.Point(121, 81);
       this.txtDPLY.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtDPLY.Name = "txtDPLY";
-      this.txtDPLY.Size = new System.Drawing.Size(71, 25);
+      this.txtDPLY.ReadOnly = true;
+      this.txtDPLY.Size = new System.Drawing.Size(97, 25);
       this.txtDPLY.TabIndex = 2;
       // 
       // label6
@@ -110,7 +110,7 @@
       this.label6.AutoSize = true;
       this.label6.Location = new System.Drawing.Point(266, 84);
       this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(66, 17);
+      this.label6.Size = new System.Drawing.Size(67, 17);
       this.label6.TabIndex = 22;
       this.label6.Text = "Deliver To";
       // 
@@ -119,7 +119,7 @@
       this.rdbTest.AutoSize = true;
       this.rdbTest.Location = new System.Drawing.Point(494, 82);
       this.rdbTest.Name = "rdbTest";
-      this.rdbTest.Size = new System.Drawing.Size(49, 21);
+      this.rdbTest.Size = new System.Drawing.Size(50, 21);
       this.rdbTest.TabIndex = 7;
       this.rdbTest.Text = "Test";
       this.rdbTest.UseVisualStyleBackColor = true;
@@ -161,12 +161,6 @@
       // 
       this.cmbGitProjectName.Enabled = false;
       this.cmbGitProjectName.FormattingEnabled = true;
-      this.cmbGitProjectName.Items.AddRange(new object[] {
-            "Bilgi.Els",
-            "Bilgi.Els.BackOffice",
-            "Bilgi.Scientia.Integration",
-            "Bilgi.Sis.BackOffice",
-            "BilgiCampus"});
       this.cmbGitProjectName.Location = new System.Drawing.Point(399, 11);
       this.cmbGitProjectName.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.cmbGitProjectName.Name = "cmbGitProjectName";
@@ -191,22 +185,22 @@
       this.txtGitMergeRequestNo.Size = new System.Drawing.Size(135, 25);
       this.txtGitMergeRequestNo.TabIndex = 5;
       // 
-      // lblUAT_IssueNumber
+      // lblUAT_IssueKey
       // 
-      this.lblUAT_IssueNumber.AutoSize = true;
-      this.lblUAT_IssueNumber.Location = new System.Drawing.Point(62, 119);
-      this.lblUAT_IssueNumber.Name = "lblUAT_IssueNumber";
-      this.lblUAT_IssueNumber.Size = new System.Drawing.Size(43, 17);
-      this.lblUAT_IssueNumber.TabIndex = 15;
-      this.lblUAT_IssueNumber.Text = "UAT #";
+      this.lblUAT_IssueKey.AutoSize = true;
+      this.lblUAT_IssueKey.Location = new System.Drawing.Point(62, 119);
+      this.lblUAT_IssueKey.Name = "lblUAT_IssueKey";
+      this.lblUAT_IssueKey.Size = new System.Drawing.Size(32, 17);
+      this.lblUAT_IssueKey.TabIndex = 15;
+      this.lblUAT_IssueKey.Text = "UAT";
       // 
       // txtUAT
       // 
-      this.txtUAT.Enabled = false;
       this.txtUAT.Location = new System.Drawing.Point(121, 116);
       this.txtUAT.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtUAT.Name = "txtUAT";
-      this.txtUAT.Size = new System.Drawing.Size(71, 25);
+      this.txtUAT.ReadOnly = true;
+      this.txtUAT.Size = new System.Drawing.Size(97, 25);
       this.txtUAT.TabIndex = 3;
       // 
       // label2
@@ -218,14 +212,14 @@
       this.label2.TabIndex = 13;
       this.label2.Text = "Internal Issue Key";
       // 
-      // lblREQ_IssueNumber
+      // lblREQ_IssueKey
       // 
-      this.lblREQ_IssueNumber.AutoSize = true;
-      this.lblREQ_IssueNumber.Location = new System.Drawing.Point(62, 48);
-      this.lblREQ_IssueNumber.Name = "lblREQ_IssueNumber";
-      this.lblREQ_IssueNumber.Size = new System.Drawing.Size(45, 17);
-      this.lblREQ_IssueNumber.TabIndex = 12;
-      this.lblREQ_IssueNumber.Text = "REQ #";
+      this.lblREQ_IssueKey.AutoSize = true;
+      this.lblREQ_IssueKey.Location = new System.Drawing.Point(62, 48);
+      this.lblREQ_IssueKey.Name = "lblREQ_IssueKey";
+      this.lblREQ_IssueKey.Size = new System.Drawing.Size(33, 17);
+      this.lblREQ_IssueKey.TabIndex = 12;
+      this.lblREQ_IssueKey.Text = "REQ";
       // 
       // txtInternal
       // 
@@ -240,7 +234,8 @@
       this.txtREQ.Location = new System.Drawing.Point(121, 46);
       this.txtREQ.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtREQ.Name = "txtREQ";
-      this.txtREQ.Size = new System.Drawing.Size(71, 25);
+      this.txtREQ.ReadOnly = true;
+      this.txtREQ.Size = new System.Drawing.Size(97, 25);
       this.txtREQ.TabIndex = 1;
       // 
       // txtDump
@@ -286,17 +281,17 @@
     private System.Windows.Forms.ComboBox cmbGitProjectName;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox txtGitMergeRequestNo;
-    private System.Windows.Forms.Label lblUAT_IssueNumber;
+    private System.Windows.Forms.Label lblUAT_IssueKey;
     private System.Windows.Forms.TextBox txtUAT;
     private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Label lblREQ_IssueNumber;
+    private System.Windows.Forms.Label lblREQ_IssueKey;
     private System.Windows.Forms.TextBox txtInternal;
     private System.Windows.Forms.TextBox txtREQ;
     private System.Windows.Forms.TextBox txtDump;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.RadioButton rdbTest;
     private System.Windows.Forms.RadioButton rdbProduction;
-    private System.Windows.Forms.Label lblDPLY_IssueNumber;
+    private System.Windows.Forms.Label lblDPLY_IssueKey;
     private System.Windows.Forms.TextBox txtDPLY;
     private System.Windows.Forms.Button btnJIRA;
     //private System.Windows.Forms.TextBox txtDump;

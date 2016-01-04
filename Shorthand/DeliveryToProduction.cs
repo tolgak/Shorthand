@@ -17,13 +17,9 @@ namespace Shorthand
     {
       var jira = new Jira();
 
-      var internalIssueKey = references["internalIssueKey"];
-      var requestIssueKey = references["requestIssueKey"];
+      var internalIssueKey   = references["internalIssueKey"];
+      var requestIssueKey    = references["requestIssueKey"];
       var deploymentIssueKey = references["deploymentIssueKey"];
-
-
-      //var issue = jira.GetIssue(internalIssueKey);
-
 
       if ( string.IsNullOrEmpty(deploymentIssueKey) )
       {                
@@ -90,8 +86,6 @@ namespace Shorthand
                                 .AppendLine("")
                                 .ToString();
     }
-
-
 
 
     private string BuilComment(Dictionary<string, string> references)
