@@ -13,64 +13,86 @@ namespace Shorthand
   {
     private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
 
-    public void Deliver(Dictionary<string, string> references)
+    public void Deliver(DeliveryContext ctx)
+    {
+      //this.PrepareJira(ctx);
+      this.DeployExecutables(ctx);         
+    }
+
+    private void PrepareJira(DeliveryContext ctx)
     {
       var jira = new Jira();
 
-      var internalIssueKey   = references["internalIssueKey"];
-      var requestIssueKey    = references["requestIssueKey"];
-      var deploymentIssueKey = references["deploymentIssueKey"];
+      var internalIssueKey = ctx.InternalIssueKey;
+      var requestIssueKey = ctx.RequestIssueKey;
+      var deploymentIssueKey = ctx.DeploymentIssueKey;
 
-      if ( string.IsNullOrEmpty(deploymentIssueKey) )
-      {                
+      if (string.IsNullOrEmpty(deploymentIssueKey))
+      {
         var summary = string.Format("Deploy {0}", internalIssueKey);
         deploymentIssueKey = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, "", "Task");
-        references["deploymentIssueKey"] = deploymentIssueKey;
+        ctx.DeploymentIssueKey = deploymentIssueKey;
 
-        var description = this.BuilDeploymentDescription(references);
-        jira.SetDescription (deploymentIssueKey, description);
-      }      
-      jira.CreateLink("Production", internalIssueKey, deploymentIssueKey);
-
-
-
-      var uatIssueKey = references["uatIssueKey"];
-      if ( string.IsNullOrEmpty(uatIssueKey) )
-      {        
-        var summary = string.Format("UAT for {0}", requestIssueKey);
-        var description = this.BuildUATDescription(references);
-        uatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
-        references["uatIssueKey"] = uatIssueKey;       
+        var description = this.BuilDeploymentDescription(ctx);
+        jira.SetDescription(deploymentIssueKey, description);
+        jira.CreateLink("Production", internalIssueKey, deploymentIssueKey);
       }
-      jira.CreateLink("UAT", uatIssueKey, requestIssueKey);
-    
-    
-      //this.DeployExecutables(references);         
+
+      var uatIssueKey = ctx.UatIssueKey;
+      if (string.IsNullOrEmpty(uatIssueKey))
+      {
+        var summary = string.Format("UAT for {0}", requestIssueKey);
+        var description = this.BuildUATDescription(ctx);
+        uatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
+        ctx.UatIssueKey = uatIssueKey;
+
+        jira.CreateLink("UAT", uatIssueKey, requestIssueKey);
+      }
+      
     }
 
-
-    private void DeployExecutables(Dictionary<string, string> references)
+    private void DeployExecutables(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-      var localBinPath = options.LocalBinPath;
-      var zipFileName =  references["deploymentIssueKey"] + ".zip";
-      var qualifiedZipFileName = Path.Combine(options.DestinationFolder,zipFileName);
+      var tempFolder = Path.GetTempPath();
+      var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
+      var destinationFolder = Path.Combine(tempFolder, nf.Name);
 
-      var startInfo = new ProcessStartInfo(options.ArchiveToolPath);
-      startInfo.WorkingDirectory = localBinPath;
-      var argumentToWinrar = string.Format("{0} {1} \"{2}\"", options.ArchiveToolSwitches, qualifiedZipFileName, "IBU.exe");
-      startInfo. Arguments = argumentToWinrar;
-      var p = Process.Start(startInfo);
-      p.WaitForExit();
+      try
+      {
+        var files = new List<string>();
+        files.AddRange(Directory.GetFiles(options.LocalBinPath + @"\exe", "*.exe"));
+        files.AddRange(Directory.GetFiles(options.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql"));
+        foreach (string file in files)
+        {
+          var destinationfile = destinationFolder + "\\" + Path.GetFileName(file);
+          File.Copy(file, destinationfile, true);
+        }
 
+        var zipFileName = ctx.DeploymentIssueKey + ".zip";
+        var qualifiedZipFileName = destinationFolder + zipFileName;
+
+        var startInfo = new ProcessStartInfo(options.ArchiveToolPath);
+        startInfo.WorkingDirectory = destinationFolder;
+        var argumentToWinrar = string.Format("{0} {1} \"{2}\"", options.ArchiveToolSwitches, qualifiedZipFileName, "*.*");
+        startInfo.Arguments = argumentToWinrar;
+        var p = Process.Start(startInfo);
+        p.WaitForExit();
+
+        File.Copy(qualifiedZipFileName, options.ProductionDeliveryFolder + "\\" + zipFileName, true);
+      }
+      finally
+      {
+        Directory.Delete(destinationFolder, true);
+      }
     }
 
-    private string BuilDeploymentDescription(Dictionary<string, string> references)
+    private string BuilDeploymentDescription(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-      var deploymentIssueKey = references["deploymentIssueKey"];
-      return new StringBuilder().AppendLine(references["internalIssueKey"])
-                                .AppendFormattedLine("merge request http://sisgit.bilgi.networks/sofdev/{0}/merge_requests/{1}", references["gitProjectName"], references["gitMergeRequestNo"])
+      var deploymentIssueKey = ctx.DeploymentIssueKey;
+      return new StringBuilder().AppendLine(ctx.InternalIssueKey)
+                                //.AppendFormattedLine("merge request http://sisgit.bilgi.networks/sofdev/{0}/merge_requests/{1}", ctx.GitProjectName, ctx.GitMergeRequestNo)
                                 .AppendLine("{noformat}")
                                 .AppendFormattedLine("{0}\\{1}.rar", options.ProductionDeliveryFolder, deploymentIssueKey)
                                 .AppendLine("{noformat}")
@@ -80,25 +102,28 @@ namespace Shorthand
                                 .ToString();
     }
 
-    private string BuildUATDescription(Dictionary<string, string> references)
+    private string BuildUATDescription(DeliveryContext ctx)
     {
       return new StringBuilder().AppendLine("*Test Adımları*")
                                 .AppendLine("")
                                 .ToString();
     }
 
-
-    private string BuilComment(Dictionary<string, string> references)
+    private string BuildComment(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       return new StringBuilder().AppendLine("GIT DESCRIPTION")
                                 .AppendLine("----------------------------")
-                                .AppendLine(references["internalIssueKey"])
-                                .AppendLine(references["requestIssueKey"])
-                                .AppendLine(references["uatIssueKey"])
-                                .AppendLine(references["deploymentIssueKey"])
+                                .AppendLine(ctx.InternalIssueKey)
+                                .AppendLine(ctx.RequestIssueKey)
+                                .AppendLine(ctx.UatIssueKey)
+                                .AppendLine(ctx.DeploymentIssueKey)
                                 .ToString();
     }
+
+
+
+
 
 
 

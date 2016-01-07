@@ -53,16 +53,16 @@
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(14, 35);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(94, 17);
+      this.label1.Size = new System.Drawing.Size(99, 17);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Local bin path ";
+      this.label1.Text = "Local bin folder";
       // 
       // txtLocalBinPath
       // 
-      this.txtLocalBinPath.Location = new System.Drawing.Point(125, 32);
+      this.txtLocalBinPath.Location = new System.Drawing.Point(116, 32);
       this.txtLocalBinPath.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.txtLocalBinPath.Name = "txtLocalBinPath";
-      this.txtLocalBinPath.Size = new System.Drawing.Size(238, 25);
+      this.txtLocalBinPath.Size = new System.Drawing.Size(246, 25);
       this.txtLocalBinPath.TabIndex = 0;
       // 
       // groupBox1
@@ -177,9 +177,9 @@
       // 
       // txtDefaultGitProjectName
       // 
-      this.txtDefaultGitProjectName.Location = new System.Drawing.Point(110, 24);
+      this.txtDefaultGitProjectName.Location = new System.Drawing.Point(122, 24);
       this.txtDefaultGitProjectName.Name = "txtDefaultGitProjectName";
-      this.txtDefaultGitProjectName.Size = new System.Drawing.Size(242, 25);
+      this.txtDefaultGitProjectName.Size = new System.Drawing.Size(230, 25);
       this.txtDefaultGitProjectName.TabIndex = 1;
       // 
       // ucDeploymentOptions

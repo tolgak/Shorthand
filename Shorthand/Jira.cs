@@ -13,6 +13,19 @@ namespace Shorthand
 {
   public class Jira
   {
+
+    private Action<string> _logger;
+
+    public Jira()
+    {
+
+    }
+
+    public Jira(Action<string> logger) : this() 
+    {
+      _logger = logger;
+    }
+
     // https://docs.atlassian.com/jira/REST/latest
     // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials
     // https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials/jira-rest-api-example-add-comment
@@ -24,6 +37,7 @@ namespace Shorthand
       var json = JsonConvert.SerializeObject( data );
 
       var response = this.PostToJira(url, json, "POST");
+      this.Log("Comment added to issue");
     }
 
     public void AssignIssueTo(string issueKey, string assignee)
@@ -69,26 +83,26 @@ namespace Shorthand
 
     public Issuelink[] GetLinksOfIssue(string issueKey)
     {
-      var response = this.json_GetIssue(issueKey);
+      var response = this.json_GetIssue(issueKey);     
       if (!response.Success)
+      {
+        this.Log(string.Format("{0} : could not find issue", issueKey));
         return new Issuelink[0] { };
+      }
+      else
+        this.Log(string.Format("{0} : found issue", issueKey));
 
       var regex = new Regex("\"issuelinks\":\\[(?<Links>.*?)\\]", RegexOptions.Multiline| RegexOptions.CultureInvariant);
       var m = regex.Match(response.Result);
       if (!m.Success)
         return new Issuelink[0]{};
 
-      var issueLinks = "[" + m.Groups["Links"].Value + "]";       
-      return JsonConvert.DeserializeObject<Issuelink[]>(issueLinks);
-    }
+      var issueLinks = "[" + m.Groups["Links"].Value + "]";
+      var issueObjects = JsonConvert.DeserializeObject<Issuelink[]>(issueLinks);
+      this.Log(string.Format("{0} : links queried, has {1}", issueKey, issueObjects.Count()));
 
-    private JsonResponse json_GetIssue(string issueKey)
-    {
-      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
-      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
-      return this.PostToJira(url, null, "GET");
+      return issueObjects;
     }
-
 
     // https://docs.atlassian.com/jira/REST/latest
     // https://developer.atlassian.com/jiradev/jira-platform/guides/other/guide-jira-remote-issue-links/jira-rest-api-for-remote-issue-links
@@ -106,6 +120,27 @@ namespace Shorthand
       var json = JsonConvert.SerializeObject(data);
       var response = this.PostToJira(url, json, "PUT");    
     }
+
+
+
+
+
+
+    private void Log(string line)
+    {
+      if (_logger != null)
+        _logger(string.Format("{0} {1}\r\n", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), line));
+
+    }
+
+    private JsonResponse json_GetIssue(string issueKey)
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url = string.Format("{0}/rest/api/2/issue/{1}", options.JiraBaseUrl, issueKey);
+      return this.PostToJira(url, null, "GET");
+    }
+
+
 
     private JsonResponse PostToJira(string url, string data, string method)
     {
@@ -145,6 +180,8 @@ namespace Shorthand
       byte[] byteCredentials = UTF8Encoding.UTF8.GetBytes(mergedCredentials);
       return Convert.ToBase64String(byteCredentials);
     }
+
+
 
   }
 

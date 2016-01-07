@@ -11,34 +11,40 @@ namespace Shorthand
   public class DeliveryToTest : IDelivery
   {
 
-    public void Deliver(Dictionary<string, string> references)
+    public void Deliver(DeliveryContext ctx)
     {
-
-
-
-
-
-
+      this.PrepareJira(ctx);
+      this.DeployExecutables(ctx);
     }
 
-    public void Prepare(Dictionary<string, string> references)
+    private void PrepareJira(DeliveryContext ctx)
+    {
+      var jira = new Jira();
+
+      var requestIssueKey = ctx.RequestIssueKey;
+      if (string.IsNullOrEmpty(requestIssueKey))
+        return;
+
+      var comment = this.BuilRequestComment(ctx);
+      jira.AddCommentToIssue(requestIssueKey, comment);      
+    }
+
+    private void DeployExecutables(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-      var newFileName = string.Format("IBU-{0}.exe", references["requestIssueKey"].Replace("-", " "));
+
+      var newFileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
       var qualifiedNewName = Path.Combine(options.TestDeliveryFolder, newFileName);
-      var qualifiedOldName = Path.Combine(options.LocalBinPath, "IBU.exe");
-      
+      var qualifiedOldName = Path.Combine(options.LocalBinPath + @"\exe\", "IBU.exe");
       File.Copy(qualifiedOldName, qualifiedNewName, true);
     }
 
-    public string BuilComment(Dictionary<string, string> references)
+    private string BuilRequestComment(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-      var fileName = string.Format("IBU-{0}.exe", references["requestIssueKey"].Replace("-", " "));
-      return new StringBuilder().AppendLine("TALEP COMMENT")
-                                .AppendLine("----------------------------")
-                                .AppendFormattedLine("İşlev *{0}\\{1}* uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
-                                .AppendLine("")
+      var fileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
+
+      return new StringBuilder().AppendFormattedLine("İşlev *{0}\\{1}* uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
                                 .AppendLine("")
                                 .ToString();
     }

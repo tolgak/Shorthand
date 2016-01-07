@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Shorthand
 {
@@ -14,6 +16,16 @@ namespace Shorthand
     {
       return sb.AppendFormat(format + "\r\n", args);
     }
+
+    public delegate void InvokeIfRequiredDelegate<T>(T obj) where T : ISynchronizeInvoke;
+
+    public static void InvokeIfRequired<T>(this T obj, InvokeIfRequiredDelegate<T> action) where T : ISynchronizeInvoke
+    {
+      if (obj.InvokeRequired)      
+        obj.Invoke(action, new object[] { obj });      
+      else      
+        action(obj);      
+    } 
 
   }
 

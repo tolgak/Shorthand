@@ -19,6 +19,7 @@ namespace Shorthand
   {
     private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
     private DeploymentOptions _deplyOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+    private Jira _jira;
 
     public frmDeployment()
     {
@@ -28,36 +29,50 @@ namespace Shorthand
       lblDPLY_IssueKey.Text = _jiraOptions.DPLY_ProjectKey;
       lblUAT_IssueKey.Text  = _jiraOptions.UAT_ProjectKey;
 
-      cmbGitProjectName.Items.Add("Bilgi.Els");
-      cmbGitProjectName.Items.Add("Bilgi.Els.BackOffice");
       cmbGitProjectName.Items.Add("Bilgi.Scientia.Integration");
       cmbGitProjectName.Items.Add("Bilgi.Sis.BackOffice");
       cmbGitProjectName.Items.Add("BilgiCampus");
-      cmbGitProjectName.SelectedItem = _deplyOptions.DefaultGitProjectName;
 
+      _jira = new Jira( (x) => this.Dump(x) );
+      
       this.RefreshUI();
     }
 
     private void btnBuild_Click(object sender, EventArgs e)
     {
-      if ( string.IsNullOrEmpty(txtInternal.Text) )
-      { 
-        MessageBox.Show(this, "Please provide an internal issue key", "Error");
+      if (string.IsNullOrEmpty(txtInternal.Text))
+      {
+        this.Dump("ERROR: Please provide an internal issue key\r\n");
         return;
       }
 
-      this.QueryLinkedIssues();
-      if (string.IsNullOrEmpty(txtREQ.Text))
+      if (rdbProduction.Checked)
+        this.Dump("Delivering to production\r\n");
+      if (rdbTest.Checked)
+        this.Dump("Delivering to test\r\n");
+
+      txtREQ.Clear();
+      txtDPLY.Clear();
+      txtUAT.Clear();
+      Application.DoEvents();
+
+      var ctx = this.BuildDeliveryContext(txtInternal.Text);
+      if (string.IsNullOrEmpty(ctx.RequestIssueKey))
       {
-        MessageBox.Show(this, "Can not locate request issue key", "Error");
+        this.Dump("ERROR: Can not locate request issue key\r\n");
         return;
       }
+
+      ctx.GitProjectName = "";
+      ctx.GitMergeRequestNo = "";
+
+      txtREQ.Text = ctx.RequestIssueKey;
+      txtDPLY.Text = ctx.DeploymentIssueKey;
+      txtUAT.Text = ctx.UatIssueKey;
+      Application.DoEvents();
 
       var delivery = this.BuildDelivery();
-      var references = this.BuildReferences();
-
-      //delivery.Deliver(references);
-      //txtDump.Text = delivery.BuilComment(references);
+      delivery.Deliver(ctx);
     }
 
 
@@ -72,36 +87,33 @@ namespace Shorthand
 
     }
 
-    private void QueryLinkedIssues()
+    private DeliveryContext BuildDeliveryContext(string issueKey)
     {
-      var linksOfInternalIssue = this.GetLinksOfIssue(txtInternal.Text);
-      var reqIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.REQ_ProjectKey));
-      txtREQ.Text = reqIssueKey;
-      txtDPLY.Text = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.DPLY_ProjectKey));
+      var ctx = new DeliveryContext();
+      var linksOfInternalIssue = this.GetLinksOfIssue(issueKey);
+      ctx.InternalIssueKey   = issueKey;
+      ctx.RequestIssueKey    = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.REQ_ProjectKey));
+      ctx.DeploymentIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.DPLY_ProjectKey));
 
-      if (!string.IsNullOrEmpty(reqIssueKey))
+      if (!string.IsNullOrEmpty(ctx.RequestIssueKey))
       {
-        var linksOfReqIssue = this.GetLinksOfIssue(reqIssueKey);
-        txtUAT.Text = linksOfReqIssue.FirstOrDefault(x => x.Contains(_jiraOptions.UAT_ProjectKey));
+        var linksOfReqIssue = this.GetLinksOfIssue(ctx.RequestIssueKey);
+        ctx.UatIssueKey = linksOfReqIssue.FirstOrDefault(x => x.Contains(_jiraOptions.UAT_ProjectKey));
       }
+
+      return ctx;
     }
 
-    private Dictionary<string, string> BuildReferences()
-    {
-      var references = new Dictionary<string, string>();
-      references.Add("internalIssueKey", txtInternal.Text);
-      references.Add("requestIssueKey", txtREQ.Text);
 
-      var deploymentIssueKey = string.IsNullOrEmpty(txtDPLY.Text) ? "" : txtDPLY.Text;
-      references.Add("deploymentIssueKey", deploymentIssueKey);
+                   
+    private string[] GetLinksOfIssue(string issueKey)
+    {      
+      var issueLinks = _jira.GetLinksOfIssue(issueKey);
+      var q =     (from x in issueLinks where x.inwardIssue  != null select x.inwardIssue.key)
+            .Union(from x in issueLinks where x.outwardIssue != null select x.outwardIssue.key)
+            .ToArray();
 
-      var uatIssueKey = string.IsNullOrEmpty(txtUAT.Text) ? "" : txtUAT.Text;
-      references.Add("uatIssueKey", uatIssueKey);
-
-      references.Add("gitProjectName", cmbGitProjectName.SelectedText);
-      references.Add("gitMergeRequestNo", txtGitMergeRequestNo.Text);
-
-      return references;
+      return q;
     }
 
     private IDelivery BuildDelivery()
@@ -114,31 +126,24 @@ namespace Shorthand
 
       return null;
     }
-                   
-    private string[] GetLinksOfIssue(string issueKey)
-    {
-      var jira = new Jira();
-      var issueLinks = jira.GetLinksOfIssue(issueKey);
-      var q =     (from x in issueLinks where x.inwardIssue != null select x.inwardIssue.key)
-            .Union(from x in issueLinks where x.outwardIssue != null select x.outwardIssue.key)
-            .ToArray();
-
-      return q;
-    }
 
     private void Dump(string line)
-    { 
-      txtDump.Text = txtDump.Text + line + "\r\n";
+    {       
+      txtDump.InvokeIfRequired( (x) => { x.Text = x.Text + line;} );
     }
 
     private void RefreshUI()
     {
       txtDPLY.Enabled = rdbProduction.Checked;
-
-
       txtUAT.Enabled = rdbProduction.Checked;
+
       cmbGitProjectName.Enabled = rdbProduction.Checked;
       txtGitMergeRequestNo.Enabled = rdbProduction.Checked;
+    }
+
+    private void btnClearLog_Click(object sender, EventArgs e)
+    {
+      txtDump.Clear();
     }
 
 

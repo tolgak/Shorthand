@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Configuration\JiraOptions.cs" />
     <Compile Include="ControlExtensions.cs" />
+    <Compile Include="DeliveryContext.cs" />
     <Compile Include="DeliveryToProduction.cs" />
     <Compile Include="DeliveryToTest.cs" />
     <Compile Include="Extensions.cs" />

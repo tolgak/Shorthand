@@ -8,7 +8,7 @@ namespace Shorthand
 {
   public interface IDelivery
   {
-    void Deliver(Dictionary<string, string> references);
+    void Deliver(DeliveryContext ctx);
 
     //void Prepare(Dictionary<string, string> references);
     //string BuilComment(Dictionary<string, string> references);

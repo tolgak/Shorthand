@@ -29,6 +29,7 @@
     private void InitializeComponent()
     {
       this.panel1 = new System.Windows.Forms.Panel();
+      this.btnClearLog = new System.Windows.Forms.Button();
       this.btnJIRA = new System.Windows.Forms.Button();
       this.lblDPLY_IssueKey = new System.Windows.Forms.Label();
       this.txtDPLY = new System.Windows.Forms.TextBox();
@@ -52,6 +53,7 @@
       // 
       // panel1
       // 
+      this.panel1.Controls.Add(this.btnClearLog);
       this.panel1.Controls.Add(this.btnJIRA);
       this.panel1.Controls.Add(this.lblDPLY_IssueKey);
       this.panel1.Controls.Add(this.txtDPLY);
@@ -75,15 +77,25 @@
       this.panel1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(674, 201);
-      this.panel1.TabIndex = 11;
+      this.panel1.TabIndex = 0;
+      // 
+      // btnClearLog
+      // 
+      this.btnClearLog.Location = new System.Drawing.Point(265, 159);
+      this.btnClearLog.Name = "btnClearLog";
+      this.btnClearLog.Size = new System.Drawing.Size(108, 25);
+      this.btnClearLog.TabIndex = 25;
+      this.btnClearLog.Text = "Clear Log";
+      this.btnClearLog.UseVisualStyleBackColor = true;
+      this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
       // 
       // btnJIRA
       // 
       this.btnJIRA.Location = new System.Drawing.Point(113, 159);
       this.btnJIRA.Name = "btnJIRA";
       this.btnJIRA.Size = new System.Drawing.Size(146, 25);
-      this.btnJIRA.TabIndex = 25;
-      this.btnJIRA.Text = "Create JIRA  issue";
+      this.btnJIRA.TabIndex = 9;
+      this.btnJIRA.Text = "JIRA api test";
       this.btnJIRA.UseVisualStyleBackColor = true;
       this.btnJIRA.Click += new System.EventHandler(this.btnJIRA_Click);
       // 
@@ -121,6 +133,7 @@
       this.rdbTest.Name = "rdbTest";
       this.rdbTest.Size = new System.Drawing.Size(50, 21);
       this.rdbTest.TabIndex = 7;
+      this.rdbTest.TabStop = true;
       this.rdbTest.Text = "Test";
       this.rdbTest.UseVisualStyleBackColor = true;
       // 
@@ -226,7 +239,7 @@
       this.txtInternal.Location = new System.Drawing.Point(121, 11);
       this.txtInternal.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtInternal.Name = "txtInternal";
-      this.txtInternal.Size = new System.Drawing.Size(135, 25);
+      this.txtInternal.Size = new System.Drawing.Size(97, 25);
       this.txtInternal.TabIndex = 0;
       // 
       // txtREQ
@@ -249,7 +262,7 @@
       this.txtDump.Name = "txtDump";
       this.txtDump.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.txtDump.Size = new System.Drawing.Size(674, 250);
-      this.txtDump.TabIndex = 12;
+      this.txtDump.TabIndex = 1;
       // 
       // frmDeployment
       // 
@@ -294,6 +307,7 @@
     private System.Windows.Forms.Label lblDPLY_IssueKey;
     private System.Windows.Forms.TextBox txtDPLY;
     private System.Windows.Forms.Button btnJIRA;
+    private System.Windows.Forms.Button btnClearLog;
     //private System.Windows.Forms.TextBox txtDump;
   }
 }
