@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 namespace Shorthand
 {
 
-  //public class Rootobject
-  //{
-  //  public Issuelink[] issuelinks { get; set; }
-  //}
-
   public class Issuelink
   {
     public string id { get; set; }

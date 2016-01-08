@@ -84,6 +84,9 @@ namespace Shorthand
 
     private void btnJIRA_Click(object sender, EventArgs e)
     {
+      var internalIssueKey = txtInternal.Text;
+      var transitions = _jira.GetTransitionsForIssue(internalIssueKey);
+      var q = transitions.FirstOrDefault( x => x.name == "Deployed For Test");
 
     }
 

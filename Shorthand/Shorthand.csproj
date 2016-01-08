@@ -98,6 +98,7 @@
     <Compile Include="Configuration\IConfigContentEditor.cs" />
     <Compile Include="IDelivery.cs" />
     <Compile Include="IssueLink.cs" />
+    <Compile Include="IssueTransition.cs" />
     <Compile Include="Jira.cs" />
     <Compile Include="JsonResponse.cs" />
     <Compile Include="Program.cs" />

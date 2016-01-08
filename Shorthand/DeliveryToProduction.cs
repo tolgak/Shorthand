@@ -16,7 +16,7 @@ namespace Shorthand
     public void Deliver(DeliveryContext ctx)
     {
       //this.PrepareJira(ctx);
-      this.DeployExecutables(ctx);         
+      //this.DeployExecutables(ctx);         
     }
 
     private void PrepareJira(DeliveryContext ctx)
@@ -27,6 +27,7 @@ namespace Shorthand
       var requestIssueKey = ctx.RequestIssueKey;
       var deploymentIssueKey = ctx.DeploymentIssueKey;
 
+      // create deployment issue if it does not exist
       if (string.IsNullOrEmpty(deploymentIssueKey))
       {
         var summary = string.Format("Deploy {0}", internalIssueKey);
@@ -35,9 +36,12 @@ namespace Shorthand
 
         var description = this.BuilDeploymentDescription(ctx);
         jira.SetDescription(deploymentIssueKey, description);
+
+        // link internal issue to deployment issue
         jira.CreateLink("Production", internalIssueKey, deploymentIssueKey);
       }
 
+      // create uat issue if it does not exist
       var uatIssueKey = ctx.UatIssueKey;
       if (string.IsNullOrEmpty(uatIssueKey))
       {
@@ -46,9 +50,15 @@ namespace Shorthand
         uatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
         ctx.UatIssueKey = uatIssueKey;
 
+        // link uat issue to requested issue
         jira.CreateLink("UAT", uatIssueKey, requestIssueKey);
       }
-      
+
+      // advance workflow for internal issue
+      var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
+      var q = transitions.FirstOrDefault(x => x.name == "Waiting For Production");
+      if (q != null)
+        jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);          
     }
 
     private void DeployExecutables(DeliveryContext ctx)

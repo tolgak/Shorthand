@@ -121,9 +121,33 @@ namespace Shorthand
       var response = this.PostToJira(url, json, "PUT");    
     }
 
+    public IssueTransition[] GetTransitionsForIssue(string issueKey)
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url = string.Format("{0}/rest/api/2/issue/{1}/transitions", options.JiraBaseUrl, issueKey);
+      var response = this.PostToJira(url, null, "GET");
+      
+      var regex = new Regex("\"transitions\":\\[(?<Transitions>.*?)\\]", RegexOptions.Multiline | RegexOptions.CultureInvariant);
+      var m = regex.Match(response.Result);
+      if (!m.Success)
+        return new IssueTransition[0] { };
+
+      var transitions = "[" + m.Groups["Transitions"].Value + "]";
+      var transitionObjects = JsonConvert.DeserializeObject<IssueTransition[]>(transitions);
+            
+      return transitionObjects;
+    }
 
 
+    public JsonResponse SetTransitionForIssue(string issueKey, string transitionId)
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+      var url = string.Format("{0}/rest/api/2/issue/{1}/transitions", options.JiraBaseUrl, issueKey);
+      var data = new { transition = new { id = transitionId } };
+      var json = JsonConvert.SerializeObject(data);
 
+      return this.PostToJira(url, json, "POST");
+    }
 
 
     private void Log(string line)

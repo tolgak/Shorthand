@@ -24,15 +24,23 @@ namespace Shorthand
       var requestIssueKey = ctx.RequestIssueKey;
       if (string.IsNullOrEmpty(requestIssueKey))
         return;
-
+      
+      // announce that testers can test by adding comment to requested issue
       var comment = this.BuilRequestComment(ctx);
-      jira.AddCommentToIssue(requestIssueKey, comment);      
+      jira.AddCommentToIssue(requestIssueKey, comment);
+      
+      // advance workflow for internal issue
+      var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
+      var q = transitions.FirstOrDefault(x => x.name == "Deployed For Test");
+      if ( q != null )
+      jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);                    
     }
 
     private void DeployExecutables(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
 
+      // copy executable to remote executable folder
       var newFileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
       var qualifiedNewName = Path.Combine(options.TestDeliveryFolder, newFileName);
       var qualifiedOldName = Path.Combine(options.LocalBinPath + @"\exe\", "IBU.exe");
