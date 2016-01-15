@@ -15,8 +15,8 @@ namespace Shorthand
 
     public void Deliver(DeliveryContext ctx)
     {
-      //this.PrepareJira(ctx);
-      //this.DeployExecutables(ctx);         
+      this.PrepareJira(ctx);
+      this.DeployExecutables(ctx);         
     }
 
     private void PrepareJira(DeliveryContext ctx)

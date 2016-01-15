@@ -29,6 +29,10 @@ namespace Shorthand
         ConfigContent.ApplicationName = "Dev Shorthand";
         ConfigContent.Current.LoadConfiguration();
 
+        var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
+        this.Width = options.Width;
+        this.Height = options.Height;
+
         //_clpHook = new ClipboardHook();
       }
       finally
@@ -42,8 +46,6 @@ namespace Shorthand
     {
 
     }
-
-
  
     private void mnuItemExit_Click(object sender, EventArgs e)
     {
@@ -65,7 +67,11 @@ namespace Shorthand
 
     public void OnFinalSelection(object sender, ConfigEventArgs args)
     {
-
+      if ( args.ChangedOptions.Contains("GuiOptions") )
+      {
+        this.Width  = (args.content.GetConfigContentItem("GuiOptions") as GuiOptions).Width;
+        this.Height = (args.content.GetConfigContentItem("GuiOptions") as GuiOptions).Height;
+      }
     }
 
 

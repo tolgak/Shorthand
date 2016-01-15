@@ -59,11 +59,18 @@
     <Compile Include="Configuration\frmConfigurationDlg.Designer.cs">
       <DependentUpon>frmConfigurationDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\GuiOptions.cs" />
     <Compile Include="Configuration\ucDeploymentOptions.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Configuration\ucDeploymentOptions.Designer.cs">
       <DependentUpon>ucDeploymentOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ucGuiOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ucGuiOptions.Designer.cs">
+      <DependentUpon>ucGuiOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\ucJiraOptions.cs">
       <SubType>UserControl</SubType>
@@ -108,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ucDeploymentOptions.resx">
       <DependentUpon>ucDeploymentOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ucGuiOptions.resx">
+      <DependentUpon>ucGuiOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ucOptionEditorBase.resx">
       <DependentUpon>ucOptionEditorBase.cs</DependentUpon>

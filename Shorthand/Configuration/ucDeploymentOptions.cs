@@ -24,7 +24,7 @@ namespace Shorthand
 
     protected override void LoadInitial()
     {
-      DeploymentOptions options = _currentConfig.GetConfigContentItem(this.ItemClassName) as DeploymentOptions;
+      var options = _currentConfig.GetConfigContentItem(this.ItemClassName) as DeploymentOptions;
       if ( options == null )
         throw new Exception(string.Format("Configuration content does not contain {0} item!", this.ItemClassName));
 
