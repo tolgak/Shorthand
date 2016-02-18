@@ -5,16 +5,20 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Xsl;
 
 namespace Shorthand
 {
   public partial class frmXsltSandbox : Form
   {
+
     public frmXsltSandbox()
     {
       InitializeComponent();
@@ -36,9 +40,9 @@ namespace Shorthand
           browser.DocumentText = html;
           tabSource.SelectedTab = tabHTML;
         }
-        catch ( Exception exception)
+        catch ( Exception exception )
         {
-          MessageBox.Show(exception.Message);  
+          MessageBox.Show(exception.Message);
         }
       }
       finally
@@ -56,8 +60,8 @@ namespace Shorthand
       orgDoc.LoadXml(xml);
 
       // read xsl
-      using ( var stream = new StringReader(xsl) )
-      using ( var reader = XmlReader.Create(stream) )
+      using ( var stringReader = new StringReader(xsl) )
+      using ( var reader = XmlReader.Create(stringReader) )
       {
         var trans = new XslCompiledTransform();
         trans.Load(reader);
@@ -70,9 +74,13 @@ namespace Shorthand
         html = sb.ToString();
       }
 
-      css = "<style type=\"text/css\" >" + css + "</style>";
-      return html.Replace("<style type=\"text/css\" />", css);        
+      css = string.Format("<style>{0}</style>", css);
+      return html.Replace("<style />", css);
     }
+
+
+
+
 
 
   }

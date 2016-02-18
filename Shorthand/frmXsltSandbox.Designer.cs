@@ -36,17 +36,16 @@
       this.txtSourceXML = new System.Windows.Forms.RichTextBox();
       this.tabCSS = new System.Windows.Forms.TabPage();
       this.txtSourceCSS = new System.Windows.Forms.RichTextBox();
-      this.pnlTop = new System.Windows.Forms.Panel();
-      this.btnRun = new System.Windows.Forms.Button();
-      this.btnValidate = new System.Windows.Forms.Button();
       this.tabHTML = new System.Windows.Forms.TabPage();
       this.browser = new System.Windows.Forms.WebBrowser();
+      this.pnlTop = new System.Windows.Forms.Panel();
+      this.btnRun = new System.Windows.Forms.Button();
       this.tabSource.SuspendLayout();
       this.tabXSL.SuspendLayout();
       this.tabXML.SuspendLayout();
       this.tabCSS.SuspendLayout();
-      this.pnlTop.SuspendLayout();
       this.tabHTML.SuspendLayout();
+      this.pnlTop.SuspendLayout();
       this.SuspendLayout();
       // 
       // tabSource
@@ -56,6 +55,7 @@
       this.tabSource.Controls.Add(this.tabCSS);
       this.tabSource.Controls.Add(this.tabHTML);
       this.tabSource.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tabSource.Font = new System.Drawing.Font("Consolas", 9.75F);
       this.tabSource.ItemSize = new System.Drawing.Size(75, 25);
       this.tabSource.Location = new System.Drawing.Point(6, 52);
       this.tabSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -80,6 +80,7 @@
       // txtSourceXSL
       // 
       this.txtSourceXSL.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.txtSourceXSL.EnableAutoDragDrop = true;
       this.txtSourceXSL.Location = new System.Drawing.Point(3, 4);
       this.txtSourceXSL.Name = "txtSourceXSL";
       this.txtSourceXSL.Size = new System.Drawing.Size(772, 503);
@@ -102,6 +103,7 @@
       // txtSourceXML
       // 
       this.txtSourceXML.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.txtSourceXML.Font = new System.Drawing.Font("Consolas", 9.75F);
       this.txtSourceXML.Location = new System.Drawing.Point(3, 4);
       this.txtSourceXML.Name = "txtSourceXML";
       this.txtSourceXML.Size = new System.Drawing.Size(772, 503);
@@ -129,36 +131,6 @@
       this.txtSourceCSS.TabIndex = 0;
       this.txtSourceCSS.Text = "";
       // 
-      // pnlTop
-      // 
-      this.pnlTop.Controls.Add(this.btnRun);
-      this.pnlTop.Controls.Add(this.btnValidate);
-      this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-      this.pnlTop.Location = new System.Drawing.Point(6, 7);
-      this.pnlTop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-      this.pnlTop.Name = "pnlTop";
-      this.pnlTop.Size = new System.Drawing.Size(786, 45);
-      this.pnlTop.TabIndex = 6;
-      // 
-      // btnRun
-      // 
-      this.btnRun.Location = new System.Drawing.Point(88, 11);
-      this.btnRun.Name = "btnRun";
-      this.btnRun.Size = new System.Drawing.Size(75, 25);
-      this.btnRun.TabIndex = 1;
-      this.btnRun.Text = "Run";
-      this.btnRun.UseVisualStyleBackColor = true;
-      this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
-      // 
-      // btnValidate
-      // 
-      this.btnValidate.Location = new System.Drawing.Point(7, 11);
-      this.btnValidate.Name = "btnValidate";
-      this.btnValidate.Size = new System.Drawing.Size(75, 25);
-      this.btnValidate.TabIndex = 0;
-      this.btnValidate.Text = "Validate";
-      this.btnValidate.UseVisualStyleBackColor = true;
-      // 
       // tabHTML
       // 
       this.tabHTML.Controls.Add(this.browser);
@@ -180,6 +152,26 @@
       this.browser.Size = new System.Drawing.Size(772, 505);
       this.browser.TabIndex = 8;
       // 
+      // pnlTop
+      // 
+      this.pnlTop.Controls.Add(this.btnRun);
+      this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
+      this.pnlTop.Location = new System.Drawing.Point(6, 7);
+      this.pnlTop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+      this.pnlTop.Name = "pnlTop";
+      this.pnlTop.Size = new System.Drawing.Size(786, 45);
+      this.pnlTop.TabIndex = 6;
+      // 
+      // btnRun
+      // 
+      this.btnRun.Location = new System.Drawing.Point(13, 10);
+      this.btnRun.Name = "btnRun";
+      this.btnRun.Size = new System.Drawing.Size(75, 25);
+      this.btnRun.TabIndex = 1;
+      this.btnRun.Text = "Run";
+      this.btnRun.UseVisualStyleBackColor = true;
+      this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+      // 
       // frmXsltSandbox
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -196,8 +188,8 @@
       this.tabXSL.ResumeLayout(false);
       this.tabXML.ResumeLayout(false);
       this.tabCSS.ResumeLayout(false);
-      this.pnlTop.ResumeLayout(false);
       this.tabHTML.ResumeLayout(false);
+      this.pnlTop.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }
@@ -211,7 +203,6 @@
     private System.Windows.Forms.RichTextBox txtSourceXSL;
     private System.Windows.Forms.RichTextBox txtSourceXML;
     private System.Windows.Forms.Button btnRun;
-    private System.Windows.Forms.Button btnValidate;
     private System.Windows.Forms.TabPage tabCSS;
     private System.Windows.Forms.RichTextBox txtSourceCSS;
     private System.Windows.Forms.TabPage tabHTML;

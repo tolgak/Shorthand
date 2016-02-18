@@ -154,7 +154,6 @@ namespace Shorthand
     {
       if (_logger != null)
         _logger(string.Format("{0} {1}\r\n", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), line));
-
     }
 
     private JsonResponse json_GetIssue(string issueKey)
