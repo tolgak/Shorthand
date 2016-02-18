@@ -18,53 +18,46 @@ namespace Shorthand
     public frmXsltSandbox()
     {
       InitializeComponent();
+      tabSource.SelectedTab = tabXSL;
     }
 
     private void btnRun_Click(object sender, EventArgs e)
     {
-      this.go();
+      Cursor.Current = Cursors.WaitCursor;
+      try
+      {
+        try
+        {
+          var html = this.RunTransform(txtSourceXML.Text, txtSourceXSL.Text, txtSourceCSS.Text);
+          browser.Navigate("about:blank");
+          if ( browser.Document != null )
+            browser.Document.Write(string.Empty);
 
-      //var myXslTrans = new XslCompiledTransform();
-      //myXslTrans.Load("stylesheet.xsl");
-      //myXslTrans.Transform("source.xml", "result.html"); 
-
-      //using (var xslSourceStream = new MemoryStream())
-      //using (var xmlSourceStream = new MemoryStream())
-      //using (var resultStream = new FileStream("sample_schedule.htm", FileMode.OpenOrCreate))
-      //{
-      //  txtSourceXSL.SaveFile(xslSourceStream, RichTextBoxStreamType.UnicodePlainText);        
-      //  xslSourceStream.Seek(0, SeekOrigin.Begin);
-
-      //  txtSourceXML.SaveFile(xmlSourceStream, RichTextBoxStreamType.UnicodePlainText);
-      //  xmlSourceStream.Seek(0, SeekOrigin.Begin);
-
-      //  var xslReader = XmlReader.Create(xslSourceStream);
-      //  var myXslTrans = new XslCompiledTransform();      
-      //  myXslTrans.Load(xslReader);
-
-      //  var xmlReader = XmlReader.Create(xmlSourceStream);
-
-      //  var writer = XmlWriter.Create(resultStream);
-      //  myXslTrans.Transform(xmlReader, writer);       
-        
-      //  resultStream.Flush();
-      //}
-
-
+          browser.DocumentText = html;
+          tabSource.SelectedTab = tabHTML;
+        }
+        catch ( Exception exception)
+        {
+          MessageBox.Show(exception.Message);  
+        }
+      }
+      finally
+      {
+        Cursor.Current = Cursors.Default;
+      }
     }
 
-
-    private void go()
+    private string RunTransform(string xml, string xsl, string css)
     {
       var html = string.Empty;
 
       // read xml
       var orgDoc = new XmlDocument();
-      orgDoc.LoadXml(txtSourceXML.Text);
+      orgDoc.LoadXml(xml);
 
       // read xsl
-      using ( var stream = new StringReader(txtSourceXSL.Text))
-      using ( var reader = XmlReader.Create(stream))
+      using ( var stream = new StringReader(xsl) )
+      using ( var reader = XmlReader.Create(stream) )
       {
         var trans = new XslCompiledTransform();
         trans.Load(reader);
@@ -77,22 +70,10 @@ namespace Shorthand
         html = sb.ToString();
       }
 
-
-      var css = "<style type=\"text/css\" >" + txtSourceCSS.Text + "</style>";
-      html = html.Replace("<style type=\"text/css\" />", css);
-      
-      browser.Navigate("about:blank");
-      if (browser.Document != null)      
-        browser.Document.Write(string.Empty);
-      
-      browser.DocumentText = html;
-
-      
-
-      Application.DoEvents();
+      css = "<style type=\"text/css\" >" + css + "</style>";
+      return html.Replace("<style type=\"text/css\" />", css);        
     }
 
 
-
-}
+  }
 }
