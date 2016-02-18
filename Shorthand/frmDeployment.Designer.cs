@@ -129,6 +129,7 @@
       // rdbTest
       // 
       this.rdbTest.AutoSize = true;
+      this.rdbTest.Checked = true;
       this.rdbTest.Location = new System.Drawing.Point(494, 82);
       this.rdbTest.Name = "rdbTest";
       this.rdbTest.Size = new System.Drawing.Size(50, 21);
@@ -140,12 +141,10 @@
       // rdbProduction
       // 
       this.rdbProduction.AutoSize = true;
-      this.rdbProduction.Checked = true;
       this.rdbProduction.Location = new System.Drawing.Point(399, 82);
       this.rdbProduction.Name = "rdbProduction";
       this.rdbProduction.Size = new System.Drawing.Size(89, 21);
       this.rdbProduction.TabIndex = 6;
-      this.rdbProduction.TabStop = true;
       this.rdbProduction.Text = "Production";
       this.rdbProduction.UseVisualStyleBackColor = true;
       this.rdbProduction.CheckedChanged += new System.EventHandler(this.rdbProduction_CheckedChanged);

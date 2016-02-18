@@ -66,9 +66,9 @@ namespace Shorthand
       ctx.GitProjectName = "";
       ctx.GitMergeRequestNo = "";
 
-      txtREQ.Text = ctx.RequestIssueKey;
+      txtREQ.Text  = ctx.RequestIssueKey;
       txtDPLY.Text = ctx.DeploymentIssueKey;
-      txtUAT.Text = ctx.UatIssueKey;
+      txtUAT.Text  = ctx.UatIssueKey;
       Application.DoEvents();
 
       var delivery = this.BuildDelivery();

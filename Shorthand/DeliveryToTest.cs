@@ -33,7 +33,7 @@ namespace Shorthand
       var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
       var q = transitions.FirstOrDefault(x => x.name == "Deployed For Test");
       if ( q != null )
-      jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);                    
+        jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);                    
     }
 
     private void DeployExecutables(DeliveryContext ctx)
@@ -51,8 +51,9 @@ namespace Shorthand
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var fileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
+      
 
-      return new StringBuilder().AppendFormattedLine("İşlev *{0}\\{1}* uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
+      return new StringBuilder().AppendFormattedLine("İşlev \{\{{0}\}\} adresindeki \{\{{1}\}\} uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
                                 .AppendLine("")
                                 .ToString();
     }
