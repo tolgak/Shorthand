@@ -276,7 +276,6 @@
       this.Name = "frmDeployment";
       this.Padding = new System.Windows.Forms.Padding(5);
       this.ShowInTaskbar = false;
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Deployment Helper";
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();

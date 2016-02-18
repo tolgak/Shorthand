@@ -59,10 +59,23 @@ namespace Shorthand
       frm.Show();
     }
 
+    private void mnuXsltSandbox_Click(object sender, EventArgs e)
+    {
+      var frm = new frmXsltSandbox();
+      frm.MdiParent = this;
+      frm.Show();
+    }
+
+
+
     private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
     {
       frmConfigurationDlg.ShowConfigurationDlg(ConfigContent.Current, this, this.OnFinalSelection);
     }
+
+
+
+
 
 
     public void OnFinalSelection(object sender, ConfigEventArgs args)
@@ -73,6 +86,8 @@ namespace Shorthand
         this.Height = (args.content.GetConfigContentItem("GuiOptions") as GuiOptions).Height;
       }
     }
+
+
 
 
 

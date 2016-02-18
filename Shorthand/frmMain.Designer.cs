@@ -38,6 +38,7 @@
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
+      this.mnuXsltSandbox = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuMain.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -75,6 +76,7 @@
       // 
       this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDeploymentHelper,
+            this.mnuXsltSandbox,
             this.toolStripMenuItem1,
             this.settingsToolStripMenuItem});
       this.mnuTools.Name = "mnuTools";
@@ -120,6 +122,13 @@
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
       // 
+      // mnuXsltSandbox
+      // 
+      this.mnuXsltSandbox.Name = "mnuXsltSandbox";
+      this.mnuXsltSandbox.Size = new System.Drawing.Size(189, 22);
+      this.mnuXsltSandbox.Text = "XSLT sandbox";
+      this.mnuXsltSandbox.Click += new System.EventHandler(this.mnuXsltSandbox_Click);
+      // 
       // frmMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -154,6 +163,7 @@
     private System.Windows.Forms.ToolStripMenuItem mnuWindow;
     private System.Windows.Forms.StatusStrip appStat;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+    private System.Windows.Forms.ToolStripMenuItem mnuXsltSandbox;
 
   }
 }

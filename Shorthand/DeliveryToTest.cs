@@ -53,7 +53,7 @@ namespace Shorthand
       var fileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
       
 
-      return new StringBuilder().AppendFormattedLine("İşlev \{\{{0}\}\} adresindeki \{\{{1}\}\} uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
+      return new StringBuilder().AppendFormattedLine("İşlev {{ {0} }} adresindeki {{ {1} }} uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
                                 .AppendLine("")
                                 .ToString();
     }
