@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using PragmaTouchUtils;
+using System.Reflection;
 
 namespace Shorthand
 {
@@ -42,10 +43,7 @@ namespace Shorthand
 
     }
 
-    private void frmCommentBuilder_Load(object sender, EventArgs e)
-    {
 
-    }
  
     private void mnuItemExit_Click(object sender, EventArgs e)
     {
@@ -66,7 +64,12 @@ namespace Shorthand
       frm.Show();
     }
 
-
+    private void mnuDataDump_Click(object sender, EventArgs e)
+    {
+      var frm = new frmDataDump();
+      frm.MdiParent = this;
+      frm.Show();
+    }
 
     private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -86,6 +89,22 @@ namespace Shorthand
         this.Height = (args.content.GetConfigContentItem("GuiOptions") as GuiOptions).Height;
       }
     }
+
+    private void SetVersionInfo()
+    {
+      Version versionInfo = Assembly.GetExecutingAssembly().GetName().Version;
+      DateTime startDate = new DateTime(2000, 1, 1);
+      int diffDays = versionInfo.Build;
+      DateTime computedDate = startDate.AddDays(diffDays);
+      string lastBuilt = computedDate.ToShortDateString();
+      this.Text = string.Format("{0} - Version {1} ({2})", this.Text, versionInfo.ToString(), lastBuilt);
+    }
+
+    private void frmMain_Load(object sender, EventArgs e)
+    {
+      this.SetVersionInfo();
+    }
+
 
 
 

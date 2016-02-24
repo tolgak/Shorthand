@@ -33,12 +33,13 @@
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuDeploymentHelper = new System.Windows.Forms.ToolStripMenuItem();
+      this.mnuXsltSandbox = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
-      this.mnuXsltSandbox = new System.Windows.Forms.ToolStripMenuItem();
+      this.mnuDataDump = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuMain.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -77,6 +78,7 @@
       this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDeploymentHelper,
             this.mnuXsltSandbox,
+            this.mnuDataDump,
             this.toolStripMenuItem1,
             this.settingsToolStripMenuItem});
       this.mnuTools.Name = "mnuTools";
@@ -86,19 +88,26 @@
       // mnuDeploymentHelper
       // 
       this.mnuDeploymentHelper.Name = "mnuDeploymentHelper";
-      this.mnuDeploymentHelper.Size = new System.Drawing.Size(189, 22);
-      this.mnuDeploymentHelper.Text = "Deployment Helper";
+      this.mnuDeploymentHelper.Size = new System.Drawing.Size(190, 22);
+      this.mnuDeploymentHelper.Text = "Deployment helper";
       this.mnuDeploymentHelper.Click += new System.EventHandler(this.mnuDeploymentHelper_Click);
+      // 
+      // mnuXsltSandbox
+      // 
+      this.mnuXsltSandbox.Name = "mnuXsltSandbox";
+      this.mnuXsltSandbox.Size = new System.Drawing.Size(190, 22);
+      this.mnuXsltSandbox.Text = "XSLT sandbox";
+      this.mnuXsltSandbox.Click += new System.EventHandler(this.mnuXsltSandbox_Click);
       // 
       // toolStripMenuItem1
       // 
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(186, 6);
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(187, 6);
       // 
       // settingsToolStripMenuItem
       // 
       this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-      this.settingsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+      this.settingsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
       this.settingsToolStripMenuItem.Text = "Settings";
       this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
       // 
@@ -122,12 +131,12 @@
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
       // 
-      // mnuXsltSandbox
+      // mnuDataDump
       // 
-      this.mnuXsltSandbox.Name = "mnuXsltSandbox";
-      this.mnuXsltSandbox.Size = new System.Drawing.Size(189, 22);
-      this.mnuXsltSandbox.Text = "XSLT sandbox";
-      this.mnuXsltSandbox.Click += new System.EventHandler(this.mnuXsltSandbox_Click);
+      this.mnuDataDump.Name = "mnuDataDump";
+      this.mnuDataDump.Size = new System.Drawing.Size(190, 22);
+      this.mnuDataDump.Text = "Data dump to Excel";
+      this.mnuDataDump.Click += new System.EventHandler(this.mnuDataDump_Click);
       // 
       // frmMain
       // 
@@ -143,7 +152,7 @@
       this.Name = "frmMain";
       this.Padding = new System.Windows.Forms.Padding(2);
       this.Text = "DevShorthand";
-      this.Load += new System.EventHandler(this.frmCommentBuilder_Load);
+      this.Load += new System.EventHandler(this.frmMain_Load);
       this.mnuMain.ResumeLayout(false);
       this.mnuMain.PerformLayout();
       this.ResumeLayout(false);
@@ -164,6 +173,7 @@
     private System.Windows.Forms.StatusStrip appStat;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem mnuXsltSandbox;
+    private System.Windows.Forms.ToolStripMenuItem mnuDataDump;
 
   }
 }

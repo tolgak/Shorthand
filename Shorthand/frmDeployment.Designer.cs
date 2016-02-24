@@ -254,6 +254,7 @@
       // 
       this.txtDump.BackColor = System.Drawing.Color.Black;
       this.txtDump.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.txtDump.Font = new System.Drawing.Font("Courier New", 12F);
       this.txtDump.ForeColor = System.Drawing.Color.Lime;
       this.txtDump.Location = new System.Drawing.Point(5, 206);
       this.txtDump.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

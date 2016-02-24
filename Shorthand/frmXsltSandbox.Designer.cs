@@ -61,7 +61,7 @@
       this.tabSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.tabSource.Name = "tabSource";
       this.tabSource.SelectedIndex = 0;
-      this.tabSource.Size = new System.Drawing.Size(786, 544);
+      this.tabSource.Size = new System.Drawing.Size(672, 402);
       this.tabSource.TabIndex = 0;
       // 
       // tabXSL
@@ -72,7 +72,7 @@
       this.tabXSL.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.tabXSL.Name = "tabXSL";
       this.tabXSL.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-      this.tabXSL.Size = new System.Drawing.Size(778, 511);
+      this.tabXSL.Size = new System.Drawing.Size(664, 369);
       this.tabXSL.TabIndex = 0;
       this.tabXSL.Text = "XSL";
       this.tabXSL.UseVisualStyleBackColor = true;
@@ -83,7 +83,7 @@
       this.txtSourceXSL.EnableAutoDragDrop = true;
       this.txtSourceXSL.Location = new System.Drawing.Point(3, 4);
       this.txtSourceXSL.Name = "txtSourceXSL";
-      this.txtSourceXSL.Size = new System.Drawing.Size(772, 503);
+      this.txtSourceXSL.Size = new System.Drawing.Size(658, 361);
       this.txtSourceXSL.TabIndex = 0;
       this.txtSourceXSL.Text = resources.GetString("txtSourceXSL.Text");
       // 
@@ -159,7 +159,7 @@
       this.pnlTop.Location = new System.Drawing.Point(6, 7);
       this.pnlTop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.pnlTop.Name = "pnlTop";
-      this.pnlTop.Size = new System.Drawing.Size(786, 45);
+      this.pnlTop.Size = new System.Drawing.Size(672, 45);
       this.pnlTop.TabIndex = 6;
       // 
       // btnRun
@@ -176,7 +176,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(798, 603);
+      this.ClientSize = new System.Drawing.Size(684, 461);
       this.Controls.Add(this.tabSource);
       this.Controls.Add(this.pnlTop);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
