@@ -11,6 +11,9 @@ namespace Shorthand
   public class DeliveryToTest : IDelivery
   {
 
+    private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+    private DeploymentOptions _deploymentOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+
     public void Deliver(DeliveryContext ctx)
     {
       this.PrepareJira(ctx);
@@ -31,32 +34,52 @@ namespace Shorthand
       
       // advance workflow for internal issue
       var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
-      var q = transitions.FirstOrDefault(x => x.name == "Deployed For Test");
+      var q = transitions.FirstOrDefault(x => x.name == "Deployed for Test");
       if ( q != null )
-        jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);                    
+        jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);
+
+
+      // create uat issue if it does not exist
+      if (string.IsNullOrEmpty(ctx.UatIssueKey))
+      {
+        var summary = string.Format("UAT for {0}", ctx.RequestIssueKey);
+        var description = this.BuildUATDescription(ctx);
+        ctx.UatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
+
+        // link uat issue to request issue
+        jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey);
+      }                     
     }
 
     private void DeployExecutables(DeliveryContext ctx)
     {
-      var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-
       // copy executable to remote executable folder
       var newFileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
-      var qualifiedNewName = Path.Combine(options.TestDeliveryFolder, newFileName);
-      var qualifiedOldName = Path.Combine(options.LocalBinPath + @"\exe\", "IBU.exe");
+      var qualifiedNewName = Path.Combine(_deploymentOptions.TestDeliveryFolder, newFileName);
+      var qualifiedOldName = Path.Combine(_deploymentOptions.LocalBinPath + @"\exe\", "IBU.exe");
       File.Copy(qualifiedOldName, qualifiedNewName, true);
     }
 
     private string BuilRequestComment(DeliveryContext ctx)
     {
-      var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var fileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
-      
-
-      return new StringBuilder().AppendFormattedLine("İşlev {{ {0} }} adresindeki {{ {1} }} uygulaması ile test edilebilir.", options.TestDeliveryFolder, fileName)
+      return new StringBuilder().AppendFormattedLine("İşlev *{0}* adresindeki *{1}* uygulaması ile  *ibu_test* veritabanında test edilebilir.", _deploymentOptions.TestDeliveryFolder, fileName)
                                 .AppendLine("")
                                 .ToString();
     }
+
+    private string BuildUATDescription(DeliveryContext ctx)
+    {    
+      return new StringBuilder().AppendLine("*Test Adımları*")
+                                .AppendLine("# *ibu_test* veritabanına login olunur")
+                                .AppendLine()
+                                .AppendLine("# Ekran görüntüsü bu işe eklenir")
+                                .AppendFormattedLine("# {0} Done ile kapatılır", ctx.UatIssueKey)
+                                .AppendFormattedLine("# {0} Passed ile kapatılır", ctx.RequestIssueKey)
+                                .AppendLine("")
+                                .ToString();
+    }
+
 
   }
 }

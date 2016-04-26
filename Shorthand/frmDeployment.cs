@@ -11,7 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PragmaTouchUtils;
-
+using System.Reflection;
+using System.Net.Mail;
 
 namespace Shorthand
 {
@@ -84,10 +85,10 @@ namespace Shorthand
 
     private void btnJIRA_Click(object sender, EventArgs e)
     {
-      var internalIssueKey = txtInternal.Text;
-      var transitions = _jira.GetTransitionsForIssue(internalIssueKey);
-      var q = transitions.FirstOrDefault( x => x.name == "Deployed For Test");
-
+      SendMail();
+      //var internalIssueKey = txtInternal.Text;
+      //var transitions = _jira.GetTransitionsForIssue(internalIssueKey);
+      //var q = transitions.FirstOrDefault(x => x.name == "Deployed for Test");
     }
 
     private DeliveryContext BuildDeliveryContext(string issueKey)
@@ -97,6 +98,7 @@ namespace Shorthand
       ctx.InternalIssueKey   = issueKey;
       ctx.RequestIssueKey    = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.REQ_ProjectKey));
       ctx.DeploymentIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.DPLY_ProjectKey));
+
 
       if (!string.IsNullOrEmpty(ctx.RequestIssueKey))
       {
@@ -122,7 +124,7 @@ namespace Shorthand
     private IDelivery BuildDelivery()
     {
       if ( rdbProduction.Checked )
-        return new DeliveryToProduction();
+        return new DeliveryToProduction( x => this.Dump(x));
 
       if ( rdbTest.Checked )
         return new DeliveryToTest();
@@ -135,11 +137,11 @@ namespace Shorthand
       txtDump.InvokeIfRequired( (x) => { x.Text = x.Text + line;} );
     }
 
+
+
     private void RefreshUI()
     {
-      txtDPLY.Enabled = rdbProduction.Checked;
-      txtUAT.Enabled = rdbProduction.Checked;
-
+      cmbGitProjectName.SelectedIndex = cmbGitProjectName.Items.IndexOf(_deplyOptions.DefaultGitProjectName);
       cmbGitProjectName.Enabled = rdbProduction.Checked;
       txtGitMergeRequestNo.Enabled = rdbProduction.Checked;
     }
@@ -147,6 +149,22 @@ namespace Shorthand
     private void btnClearLog_Click(object sender, EventArgs e)
     {
       txtDump.Clear();
+    }
+
+    public void SendMail()
+    {
+      var mail = new MailMessage("tolgak@bilgi.edu.tr", "tolga.kurkcuoglu@gmail.com");
+      var client = new SmtpClient();
+
+      client.Port = 25;
+      client.DeliveryMethod = SmtpDeliveryMethod.Network;
+      client.UseDefaultCredentials = true;
+      client.Host = "stone.bilgi.edu.tr";
+      mail.Subject = "this is a test email.";
+      mail.Body = "this is my test email body";
+      client.Send(mail);
+
+
     }
 
 

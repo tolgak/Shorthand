@@ -6,52 +6,51 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PragmaTouchUtils;
+using System.Reflection;
+using System.Net.Mail;
 
 namespace Shorthand
 {
   public class DeliveryToProduction : IDelivery
   {
     private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+    private Action<string> _logger;
+
+    public DeliveryToProduction()
+    {
+
+    }
+
+    public DeliveryToProduction(Action<string> logger) : this() 
+    {
+      _logger = logger;
+    }
+
 
     public void Deliver(DeliveryContext ctx)
     {
       this.PrepareJira(ctx);
-      this.DeployExecutables(ctx);         
+      _logger?.Invoke( $"\n* **Internal Issue :** {ctx.InternalIssueKey}\n* **Request Issue :** {ctx.RequestIssueKey}\n* **Deployment Issue :** {ctx.DeploymentIssueKey}\n* **Uat Issue :** {ctx.UatIssueKey}"
+                       .Replace("\n", Environment.NewLine));
+
+      this.DeployExecutables(ctx);
     }
 
     private void PrepareJira(DeliveryContext ctx)
     {
       var jira = new Jira();
 
-      var internalIssueKey = ctx.InternalIssueKey;
-      var requestIssueKey = ctx.RequestIssueKey;
-      var deploymentIssueKey = ctx.DeploymentIssueKey;
-
       // create deployment issue if it does not exist
-      if (string.IsNullOrEmpty(deploymentIssueKey))
+      if (string.IsNullOrEmpty(ctx.DeploymentIssueKey))
       {
-        var summary = string.Format("Deploy {0}", internalIssueKey);
-        deploymentIssueKey = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, "", "Task");
-        ctx.DeploymentIssueKey = deploymentIssueKey;
+        var summary = $"Deploy {ctx.InternalIssueKey}";
+        ctx.DeploymentIssueKey = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, "", "Task");
 
         var description = this.BuilDeploymentDescription(ctx);
-        jira.SetDescription(deploymentIssueKey, description);
+        jira.SetDescription(ctx.DeploymentIssueKey, description);
 
         // link internal issue to deployment issue
-        jira.CreateLink("Production", internalIssueKey, deploymentIssueKey);
-      }
-
-      // create uat issue if it does not exist
-      var uatIssueKey = ctx.UatIssueKey;
-      if (string.IsNullOrEmpty(uatIssueKey))
-      {
-        var summary = string.Format("UAT for {0}", requestIssueKey);
-        var description = this.BuildUATDescription(ctx);
-        uatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
-        ctx.UatIssueKey = uatIssueKey;
-
-        // link uat issue to requested issue
-        jira.CreateLink("UAT", uatIssueKey, requestIssueKey);
+        jira.CreateLink("Production", ctx.InternalIssueKey, ctx.DeploymentIssueKey);
       }
 
       // advance workflow for internal issue
@@ -64,7 +63,7 @@ namespace Shorthand
     private void DeployExecutables(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-      var tempFolder = Path.GetTempPath();
+      var tempFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
       var destinationFolder = Path.Combine(tempFolder, nf.Name);
 
@@ -84,8 +83,7 @@ namespace Shorthand
 
         var startInfo = new ProcessStartInfo(options.ArchiveToolPath);
         startInfo.WorkingDirectory = destinationFolder;
-        var argumentToWinrar = string.Format("{0} {1} \"{2}\"", options.ArchiveToolSwitches, qualifiedZipFileName, "*.*");
-        startInfo.Arguments = argumentToWinrar;
+        startInfo.Arguments = $"{options.ArchiveToolSwitches} {qualifiedZipFileName} *.*";
         var p = Process.Start(startInfo);
         p.WaitForExit();
 
@@ -102,24 +100,16 @@ namespace Shorthand
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var deploymentIssueKey = ctx.DeploymentIssueKey;
       return new StringBuilder().AppendLine(ctx.InternalIssueKey)
-                                //.AppendFormattedLine("merge request http://sisgit.bilgi.networks/sofdev/{0}/merge_requests/{1}", ctx.GitProjectName, ctx.GitMergeRequestNo)
+                                .AppendFormattedLine("merge request http://sisgit.bilgi.networks/sofdev/{0}/merge_requests", ctx.GitProjectName)
                                 .AppendLine("{noformat}")
-                                .AppendFormattedLine("{0}\\{1}.rar", options.ProductionDeliveryFolder, deploymentIssueKey)
-                                .AppendLine("{noformat}")
-                                .AppendLine("")
+                                .AppendFormattedLine("{0}\\{1}.rar", options.ProductionDeliveryFolder, deploymentIssueKey)                                                                
                                 .AppendLine("Bu arşivdeki exe dosyalar uygulama dizinine kopyalanacak.")
                                 .AppendLine("Varsa sql script dosyaları pandora.ibu veritabanında çalıştırılacak.")
+                                .AppendLine("{noformat}")
                                 .ToString();
     }
 
-    private string BuildUATDescription(DeliveryContext ctx)
-    {
-      return new StringBuilder().AppendLine("*Test Adımları*")
-                                .AppendLine("")
-                                .ToString();
-    }
-
-    private string BuildComment(DeliveryContext ctx)
+    private string BuildGitComment(DeliveryContext ctx)
     {
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       return new StringBuilder().AppendLine("GIT DESCRIPTION")
@@ -132,6 +122,11 @@ namespace Shorthand
     }
 
 
+    private void Log(string line)
+    {
+      _logger?.Invoke($"{DateTime.Now.ToString("dd.MM.yyyy HH: mm:ss")} {line}\n"
+                       .Replace("\n", Environment.NewLine));
+    }
 
 
 

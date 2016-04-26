@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
       this.panel1 = new System.Windows.Forms.Panel();
       this.btnClearLog = new System.Windows.Forms.Button();
       this.btnJIRA = new System.Windows.Forms.Button();
@@ -81,7 +82,7 @@
       // 
       // btnClearLog
       // 
-      this.btnClearLog.Location = new System.Drawing.Point(265, 159);
+      this.btnClearLog.Location = new System.Drawing.Point(121, 159);
       this.btnClearLog.Name = "btnClearLog";
       this.btnClearLog.Size = new System.Drawing.Size(108, 25);
       this.btnClearLog.TabIndex = 25;
@@ -91,11 +92,11 @@
       // 
       // btnJIRA
       // 
-      this.btnJIRA.Location = new System.Drawing.Point(113, 159);
+      this.btnJIRA.Location = new System.Drawing.Point(399, 159);
       this.btnJIRA.Name = "btnJIRA";
       this.btnJIRA.Size = new System.Drawing.Size(146, 25);
       this.btnJIRA.TabIndex = 9;
-      this.btnJIRA.Text = "JIRA api test";
+      this.btnJIRA.Text = "Tester";
       this.btnJIRA.UseVisualStyleBackColor = true;
       this.btnJIRA.Click += new System.EventHandler(this.btnJIRA_Click);
       // 
@@ -104,7 +105,7 @@
       this.lblDPLY_IssueKey.AutoSize = true;
       this.lblDPLY_IssueKey.Location = new System.Drawing.Point(62, 84);
       this.lblDPLY_IssueKey.Name = "lblDPLY_IssueKey";
-      this.lblDPLY_IssueKey.Size = new System.Drawing.Size(37, 17);
+      this.lblDPLY_IssueKey.Size = new System.Drawing.Size(36, 17);
       this.lblDPLY_IssueKey.TabIndex = 24;
       this.lblDPLY_IssueKey.Text = "DPLY";
       // 
@@ -122,7 +123,7 @@
       this.label6.AutoSize = true;
       this.label6.Location = new System.Drawing.Point(266, 84);
       this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(67, 17);
+      this.label6.Size = new System.Drawing.Size(66, 17);
       this.label6.TabIndex = 22;
       this.label6.Text = "Deliver To";
       // 
@@ -132,7 +133,7 @@
       this.rdbTest.Checked = true;
       this.rdbTest.Location = new System.Drawing.Point(494, 82);
       this.rdbTest.Name = "rdbTest";
-      this.rdbTest.Size = new System.Drawing.Size(50, 21);
+      this.rdbTest.Size = new System.Drawing.Size(49, 21);
       this.rdbTest.TabIndex = 7;
       this.rdbTest.TabStop = true;
       this.rdbTest.Text = "Test";
@@ -202,7 +203,7 @@
       this.lblUAT_IssueKey.AutoSize = true;
       this.lblUAT_IssueKey.Location = new System.Drawing.Point(62, 119);
       this.lblUAT_IssueKey.Name = "lblUAT_IssueKey";
-      this.lblUAT_IssueKey.Size = new System.Drawing.Size(32, 17);
+      this.lblUAT_IssueKey.Size = new System.Drawing.Size(31, 17);
       this.lblUAT_IssueKey.TabIndex = 15;
       this.lblUAT_IssueKey.Text = "UAT";
       // 
@@ -254,7 +255,7 @@
       // 
       this.txtDump.BackColor = System.Drawing.Color.Black;
       this.txtDump.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.txtDump.Font = new System.Drawing.Font("Courier New", 12F);
+      this.txtDump.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.txtDump.ForeColor = System.Drawing.Color.Lime;
       this.txtDump.Location = new System.Drawing.Point(5, 206);
       this.txtDump.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -273,6 +274,7 @@
       this.Controls.Add(this.txtDump);
       this.Controls.Add(this.panel1);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.Name = "frmDeployment";
       this.Padding = new System.Windows.Forms.Padding(5);
