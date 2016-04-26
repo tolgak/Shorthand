@@ -141,7 +141,7 @@ namespace Shorthand
 
     private void RefreshUI()
     {
-      cmbGitProjectName.SelectedIndex = cmbGitProjectName.Items.IndexOf(_deplyOptions.DefaultGitProjectName);
+      //cmbGitProjectName.SelectedIndex = cmbGitProjectName.Items.IndexOf(_deplyOptions.DefaultGitProjectName);
       cmbGitProjectName.Enabled = rdbProduction.Checked;
       txtGitMergeRequestNo.Enabled = rdbProduction.Checked;
     }

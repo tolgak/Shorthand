@@ -29,9 +29,6 @@ namespace Shorthand
       if (options == null)
         throw new Exception(string.Format("Configuration content does not contain {0} item!", this.ItemClassName));
 
-
-
-
       txtWidth.DataBindTo(options, "Width", this.ControlValueChanged);
       txtHeight.DataBindTo(options, "Height", this.ControlValueChanged);
       //txtPassword.DataBindTo(options, "Password", this.ControlValueChanged);
@@ -46,8 +43,6 @@ namespace Shorthand
     {
       this.Modified = true;
     }
-
-
 
   }
 

@@ -17,16 +17,6 @@ namespace Shorthand
   //  public const string AssigneeOfIssue = "{0}/rest/api/2/issue/{1}/assignee";
   //}
 
-
-  public class ApiMethod
-  {
-    public const string POST = "POST";
-    public const string GET  = "GET";
-    public const string PUT  = "PUT";
-    public const string DELETE = "DELETE";
-  }
-
-
   public class Jira
   {
     

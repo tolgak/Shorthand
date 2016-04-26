@@ -6,6 +6,14 @@ namespace Shorthand
 {
   public enum DeliverTo { None, Production, Test }
 
+  public class ApiMethod
+  {
+    public const string POST = "POST";
+    public const string GET = "GET";
+    public const string PUT = "PUT";
+    public const string DELETE = "DELETE";
+  }
+
   public static class Extensions
   {  
     public static StringBuilder AppendFormattedLine(this StringBuilder sb, string format, params object[] args)

@@ -33,7 +33,7 @@ namespace Shorthand
       txtArchiveToolSwitches.DataBindTo(options, "ArchiveToolSwitches", this.ControlValueChanged);
       txtTestDeliveryFolder.DataBindTo(options, "TestDeliveryFolder", this.ControlValueChanged);
       txtProductionDeliveryFolder.DataBindTo(options, "ProductionDeliveryFolder", this.ControlValueChanged);
-      txtDefaultGitProjectName.DataBindTo(options, "DefaultGitProjectName", this.ControlValueChanged);
+      
     }
 
     private void ControlValueChanged(object sender, EventArgs e)
