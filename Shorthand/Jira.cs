@@ -108,10 +108,10 @@ namespace Shorthand
     }
 
     // https://developer.atlassian.com/jiradev/jira-platform/guides/other/guide-jira-remote-issue-links/jira-rest-api-for-remote-issue-links
-    public void CreateLink(string relationship, string inwardIssue, string outwardIssue )
+    public void CreateLink(string relationship, string inwardIssue, string outwardIssue, string commentBody = "")
     {
       var url = $"{_options.JiraBaseUrl}/rest/api/2/issueLink";
-      var data = new { type = new { name = relationship }, inwardIssue = new { key = inwardIssue }, outwardIssue = new { key = outwardIssue }, comment = new { body = "UAT created" } };
+      var data = new { type = new { name = relationship }, inwardIssue = new { key = inwardIssue }, outwardIssue = new { key = outwardIssue }, comment = new { body = commentBody } };
       var response = this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
 
       if (response.Success)

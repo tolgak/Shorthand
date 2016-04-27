@@ -8,6 +8,16 @@ namespace Shorthand
 
   // http://sisgit.bilgi.networks/help/api/merge_requests.md
   // Create MR : POST to http://sisgit.bilgi.networks/api/v3/projects/53/merge_requests
+  // id(required) - The ID of a project
+  // source_branch(required) - The source branch
+  // target_branch(required) - The target branch
+
+  // assignee_id(optional) - Assignee user ID
+  // title(required) - Title of MR
+  // description(optional) - Description of MR
+  // target_project_id(optional) - The target project(numeric id)
+
+
   // include in header PRIVATE-TOKEN : Xwzn7JSDYgayTJrspdPF
   public class GitLab
   {
@@ -25,13 +35,11 @@ namespace Shorthand
     }
 
 
-    public void CreateMergeRequest(int projectId )
+    public void CreateMergeRequest(int projectId, string sourceBranch, string targetBranch, string title, string description = "", string assigneeId = "")
     {
-      //int projectId = 53;
       var url = $"{_options.Url}/api/v3/projects/{projectId}/merge_requests";
-      var data = new { };
+      var data = new { id = projectId, source_branch = sourceBranch, target_branch = targetBranch, title = title, description = description, assignee_id = assigneeId };
       this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
-
     }
 
     private JsonResponse SendApiRequest(string url, string data, string method)

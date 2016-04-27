@@ -74,6 +74,12 @@ namespace Shorthand
 
       var delivery = this.BuildDelivery();
       delivery.Deliver(ctx);
+
+      txtREQ.Text  = ctx.RequestIssueKey;
+      txtDPLY.Text = ctx.DeploymentIssueKey;
+      txtUAT.Text  = ctx.UatIssueKey;
+      this.Dump("DONE.");
+
     }
 
 

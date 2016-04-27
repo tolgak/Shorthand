@@ -38,7 +38,6 @@ namespace Shorthand
       if ( q != null )
         jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);
 
-
       // create uat issue if it does not exist
       if (string.IsNullOrEmpty(ctx.UatIssueKey))
       {
@@ -47,7 +46,7 @@ namespace Shorthand
         ctx.UatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
 
         // link uat issue to request issue
-        jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey);
+        jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey, "UAT oluşturuldu.");
       }                     
     }
 
@@ -71,8 +70,7 @@ namespace Shorthand
     private string BuildUATDescription(DeliveryContext ctx)
     {    
       return new StringBuilder().AppendLine("*Test Adımları*")
-                                .AppendLine("# *ibu_test* veritabanına login olunur")
-                                .AppendLine()
+                                .AppendLine("# *ibu_test* veritabanına login olunur")                                
                                 .AppendLine("# Ekran görüntüsü bu işe eklenir")
                                 .AppendFormattedLine("# {0} Done ile kapatılır", ctx.UatIssueKey)
                                 .AppendFormattedLine("# {0} Passed ile kapatılır", ctx.RequestIssueKey)

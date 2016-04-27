@@ -30,10 +30,21 @@ namespace Shorthand
     public void Deliver(DeliveryContext ctx)
     {
       this.PrepareJira(ctx);
-      _logger?.Invoke( $"\n* **Internal Issue :** {ctx.InternalIssueKey}\n* **Request Issue :** {ctx.RequestIssueKey}\n* **Deployment Issue :** {ctx.DeploymentIssueKey}\n* **Uat Issue :** {ctx.UatIssueKey}"
-                       .Replace("\n", Environment.NewLine));
-
       this.DeployExecutables(ctx);
+      this.CreateMR(ctx);
+    }
+
+    private void CreateMR(DeliveryContext ctx)
+    {
+      var git = new GitLab();
+
+      int projectId = 53; // Bilgi.Sis.BackOffice
+      var sourceBranch = $"feature/{ctx.InternalIssueKey}";
+      var title = $"feature/{ctx.InternalIssueKey}";
+      var description = this.BuildGitDescription(ctx);
+      var assigneeId = "";
+
+      git.CreateMergeRequest(projectId, sourceBranch, "master", title, description, assigneeId);
     }
 
     private void PrepareJira(DeliveryContext ctx)
@@ -50,12 +61,14 @@ namespace Shorthand
         jira.SetDescription(ctx.DeploymentIssueKey, description);
 
         // link internal issue to deployment issue
-        jira.CreateLink("Production", ctx.InternalIssueKey, ctx.DeploymentIssueKey);
+        jira.CreateLink("Production", ctx.InternalIssueKey, ctx.DeploymentIssueKey, "Deployment oluşturuldu");
+
+        this.Log($"Deployment created : {ctx.DeploymentIssueKey}");
       }
 
       // advance workflow for internal issue
       var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
-      var q = transitions.FirstOrDefault(x => x.name == "Waiting For Production");
+      var q = transitions.FirstOrDefault(x => x.name == "Waiting for Production");
       if (q != null)
         jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);          
     }
@@ -109,15 +122,15 @@ namespace Shorthand
                                 .ToString();
     }
 
-    private string BuildGitComment(DeliveryContext ctx)
+    private string BuildGitDescription(DeliveryContext ctx)
     {
-      var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-      return new StringBuilder().AppendLine("GIT DESCRIPTION")
-                                .AppendLine("----------------------------")
-                                .AppendLine(ctx.InternalIssueKey)
-                                .AppendLine(ctx.RequestIssueKey)
-                                .AppendLine(ctx.UatIssueKey)
-                                .AppendLine(ctx.DeploymentIssueKey)
+      _logger?.Invoke($"\n* **Internal Issue :** {ctx.InternalIssueKey}\n* **Request Issue :** {ctx.RequestIssueKey}\n* **Deployment Issue :** {ctx.DeploymentIssueKey}\n* **Uat Issue :** {ctx.UatIssueKey}"
+                       .Replace("\n", Environment.NewLine));
+
+      return new StringBuilder().AppendFormattedLine("* **Internal Issue :** {0}", ctx.InternalIssueKey)
+                                .AppendFormattedLine("* **Request Issue :** {0}", ctx.RequestIssueKey)
+                                .AppendFormattedLine("* **Deployment Issue :** {0}", ctx.DeploymentIssueKey)
+                                .AppendFormattedLine("* **Uat Issue :** {0}", ctx.UatIssueKey)
                                 .ToString();
     }
 
