@@ -10,6 +10,8 @@ namespace Shorthand
     public string DefaultGitProjectName { get; set; }
     public string Url { get; set; }
     public string PrivateToken { get; set; }
+
+    public bool IsActive { get { return !string.IsNullOrEmpty(this.PrivateToken) && !string.IsNullOrEmpty(this.Url); } }
   }
 
 }

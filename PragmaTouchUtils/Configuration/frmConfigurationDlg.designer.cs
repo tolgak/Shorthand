@@ -59,7 +59,7 @@
       // 
       // btnApply
       // 
-      this.btnApply.Anchor = ( ( System.Windows.Forms.AnchorStyles ) ( ( System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right ) ) );
+      this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnApply.Location = new System.Drawing.Point(317, 2);
       this.btnApply.Name = "btnApply";
       this.btnApply.Size = new System.Drawing.Size(87, 28);
@@ -70,7 +70,7 @@
       // 
       // btnSave
       // 
-      this.btnSave.Anchor = ( ( System.Windows.Forms.AnchorStyles ) ( ( System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right ) ) );
+      this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnSave.Location = new System.Drawing.Point(451, 2);
       this.btnSave.Name = "btnSave";
@@ -82,7 +82,7 @@
       // 
       // btnCancel
       // 
-      this.btnCancel.Anchor = ( ( System.Windows.Forms.AnchorStyles ) ( ( System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right ) ) );
+      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnCancel.Location = new System.Drawing.Point(545, 2);
       this.btnCancel.Name = "btnCancel";
@@ -106,8 +106,8 @@
       // pnlContent
       // 
       this.pnlContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.pnlContent.Controls.Add(this.lblHeader);
       this.pnlContent.Controls.Add(this.lblIntro);
+      this.pnlContent.Controls.Add(this.lblHeader);
       this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pnlContent.Location = new System.Drawing.Point(206, 0);
       this.pnlContent.Name = "pnlContent";
@@ -119,7 +119,7 @@
       // 
       this.lblHeader.BackColor = System.Drawing.Color.Gray;
       this.lblHeader.Dock = System.Windows.Forms.DockStyle.Top;
-      this.lblHeader.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ( ( byte ) ( 162 ) ));
+      this.lblHeader.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.lblHeader.ForeColor = System.Drawing.Color.White;
       this.lblHeader.Location = new System.Drawing.Point(3, 3);
       this.lblHeader.Name = "lblHeader";
@@ -130,7 +130,7 @@
       // lblIntro
       // 
       this.lblIntro.AutoSize = true;
-      this.lblIntro.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( ( byte ) ( 162 ) ));
+      this.lblIntro.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.lblIntro.Location = new System.Drawing.Point(51, 182);
       this.lblIntro.Name = "lblIntro";
       this.lblIntro.Size = new System.Drawing.Size(359, 19);
@@ -164,7 +164,7 @@
       // 
       // imageList1
       // 
-      this.imageList1.ImageStream = ( ( System.Windows.Forms.ImageListStreamer ) ( resources.GetObject("imageList1.ImageStream") ) );
+      this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
       this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
       this.imageList1.Images.SetKeyName(0, "GoToNextHS.png");
       this.imageList1.Images.SetKeyName(1, "VSFolder_closed.bmp");
@@ -181,8 +181,8 @@
       this.ClientSize = new System.Drawing.Size(647, 403);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);
-      this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( ( byte ) ( 162 ) ));
-      this.Icon = ( ( System.Drawing.Icon ) ( resources.GetObject("$this.Icon") ) );
+      this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Location = new System.Drawing.Point(50, 50);
       this.MaximizeBox = false;
       this.MinimizeBox = false;

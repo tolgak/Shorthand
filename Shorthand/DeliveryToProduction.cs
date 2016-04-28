@@ -44,7 +44,8 @@ namespace Shorthand
       var description = this.BuildGitDescription(ctx);
       var assigneeId = "";
 
-      git.CreateMergeRequest(projectId, sourceBranch, "master", title, description, assigneeId);
+      var mr_id = git.CreateMergeRequest(projectId, sourceBranch, "master", title, description, assigneeId);
+      ctx.GitMergeRequestNo = mr_id;
     }
 
     private void PrepareJira(DeliveryContext ctx)
