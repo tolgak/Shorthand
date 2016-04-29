@@ -13,6 +13,17 @@ namespace Shorthand
 
     private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
     private DeploymentOptions _deploymentOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+    private Action<string> _logger;
+
+    public DeliveryToTest()
+    {
+
+    }
+
+    public DeliveryToTest(Action<string> logger) : this() 
+    {
+      _logger = logger;
+    }
 
     public void Deliver(DeliveryContext ctx)
     {
@@ -22,6 +33,7 @@ namespace Shorthand
 
     private void PrepareJira(DeliveryContext ctx)
     {
+      this.Log("Preparing Jira");
       var jira = new Jira();
 
       var requestIssueKey = ctx.RequestIssueKey;
@@ -52,6 +64,8 @@ namespace Shorthand
 
     private void DeployExecutables(DeliveryContext ctx)
     {
+      this.Log("Deploying executables");
+
       // copy executable to remote executable folder
       var newFileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
       var qualifiedNewName = Path.Combine(_deploymentOptions.TestDeliveryFolder, newFileName);
@@ -78,6 +92,9 @@ namespace Shorthand
                                 .ToString();
     }
 
-
+    private void Log(string line)
+    {
+      _logger?.Invoke(line);
+    }
   }
 }

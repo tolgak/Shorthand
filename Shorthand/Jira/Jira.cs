@@ -194,7 +194,7 @@ namespace Shorthand
 
     private void Log(string line)
     {
-      _logger?.Invoke($"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}\n".Replace("\n", Environment.NewLine));
+      _logger?.Invoke($"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}");
     }
 
   }

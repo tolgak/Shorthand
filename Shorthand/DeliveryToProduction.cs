@@ -36,9 +36,10 @@ namespace Shorthand
 
     private void CreateMR(DeliveryContext ctx)
     {
+      this.Log("Creating merge request");
       var git = new GitLab();
-
-      int projectId = 53; // Bilgi.Sis.BackOffice
+            
+      int projectId = ctx.GitProjectId;
       var sourceBranch = $"feature/{ctx.InternalIssueKey}";
       var title = $"feature/{ctx.InternalIssueKey}";
       var description = this.BuildGitDescription(ctx);
@@ -50,8 +51,9 @@ namespace Shorthand
 
     private void PrepareJira(DeliveryContext ctx)
     {
+      this.Log("Preparing Jira");
       var jira = new Jira();
-
+      
       // create deployment issue if it does not exist
       if (string.IsNullOrEmpty(ctx.DeploymentIssueKey))
       {
@@ -76,6 +78,8 @@ namespace Shorthand
 
     private void DeployExecutables(DeliveryContext ctx)
     {
+      this.Log("Deploying executables");
+
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var tempFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
@@ -138,8 +142,7 @@ namespace Shorthand
 
     private void Log(string line)
     {
-      _logger?.Invoke($"{DateTime.Now.ToString("dd.MM.yyyy HH: mm:ss")} {line}\n"
-                       .Replace("\n", Environment.NewLine));
+      _logger?.Invoke(line);
     }
 
 

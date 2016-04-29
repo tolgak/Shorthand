@@ -110,7 +110,6 @@ namespace Shorthand
       var projectWebUrl = $"{ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}";
       lblMergeRequestLink.Links.Add(0, lblMergeRequestLink.Text.Length, projectWebUrl);
 
-
       var delivery = this.BuildDelivery();
       delivery.Deliver(ctx);
 
@@ -118,8 +117,10 @@ namespace Shorthand
       txtDPLY.Text = ctx.DeploymentIssueKey;
       txtUAT.Text  = ctx.UatIssueKey;
       txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
-      this.Dump("DONE.");
+      Application.DoEvents();
 
+      this.SendMail(ctx);
+      this.Dump("DONE.");
     }
 
 
@@ -131,7 +132,11 @@ namespace Shorthand
 
     private void btnJIRA_Click(object sender, EventArgs e)
     {
+      var ctx = this.BuildDeliveryContext("APP-263", 53);
+      Application.DoEvents();
 
+      this.SendMail(ctx);
+      this.Dump("DONE.");
     }
 
     private DeliveryContext BuildDeliveryContext(string issueKey, int projectId)
@@ -178,17 +183,17 @@ namespace Shorthand
     private IDelivery BuildDelivery()
     {
       if ( rdbProduction.Checked )
-        return new DeliveryToProduction( x => this.Dump(x));
+        return new DeliveryToProduction(x => this.Dump(x));
 
       if ( rdbTest.Checked )
-        return new DeliveryToTest();
+        return new DeliveryToTest(x => this.Dump(x));
 
       return null;
     }
 
     private void Dump(string line)
     {       
-      txtDump.InvokeIfRequired( (x) => { x.Text = x.Text + line + "\r\n";} );
+      txtDump.InvokeIfRequired( (x) => { x.Text = x.Text + $"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}" + "\r\n"; } );
     }
 
 
@@ -203,20 +208,36 @@ namespace Shorthand
       txtDump.Clear();
     }
 
-    public void SendMail()
+    public void SendMail(DeliveryContext ctx)
     {
-      var mail = new MailMessage("tolgak@bilgi.edu.tr", "tolga.kurkcuoglu@gmail.com");
-      var client = new SmtpClient();
+      this.Dump("Sending notification mail...");
 
-      client.Port = 25;
+      var mail = new MailMessage("tolga.kurkcuoglu@gmail.com", "tolgak@bilgi.edu.tr");      
+      mail.Subject = "DevShorthand - Delivery Notification";
+
+      var sb = new StringBuilder();
+      sb.AppendLine("Deployment done.")
+        .AppendLine("")
+        .AppendLine("Jira Details")
+        .AppendLine("------------")
+        .AppendLine($"Internal Issue Key : {ctx.InternalIssueKey}")
+        .AppendLine($"Request Issue Key : {ctx.RequestIssueKey}")
+        .AppendLine($"Deyloyment Issue Key : {ctx.DeploymentIssueKey}")
+        .AppendLine($"UAT Issue Key : {ctx.UatIssueKey}")
+        .AppendLine("")
+        .AppendLine("Git Details")
+        .AppendLine("------------")
+        .AppendLine($"Project : {ctx.GitProjectName}")
+        .AppendLine($"Project Url : {ctx.GitProjectWebUrl}")
+        .AppendLine($"Merge Req : {ctx.GitMergeRequestNo}");
+      mail.Body = sb.ToString();
+
+      var client = new SmtpClient("smtp.gmail.com", 587);
       client.DeliveryMethod = SmtpDeliveryMethod.Network;
-      client.UseDefaultCredentials = true;
-      client.Host = "stone.bilgi.edu.tr";
-      mail.Subject = "this is a test email.";
-      mail.Body = "this is my test email body";
+      client.UseDefaultCredentials = false;
+      client.Credentials = new NetworkCredential("tolga.kurkcuoglu@gmail.com", "31415926tk");
+      client.EnableSsl = true;
       client.Send(mail);
-
-
     }
 
 
