@@ -26,7 +26,7 @@ namespace Shorthand
     private GitLabOptions _gitLabOptions = ConfigContent.Current.GetConfigContentItem("GitLabOptions") as GitLabOptions;
 
     private DeploymentOptions _deplyOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-    
+
     public frmDeployment()
     {
       InitializeComponent();
@@ -34,19 +34,24 @@ namespace Shorthand
       _jira = new Jira(x => this.Dump(x));
       imgJiraActive.Image = _jiraOptions.IsActive ? Resources.greenOrb : Resources.redOrb;
 
-      lblREQ_IssueKey.Text  = _jiraOptions.REQ_ProjectKey;
+      lblREQ_IssueKey.Text = _jiraOptions.REQ_ProjectKey;
       lblDPLY_IssueKey.Text = _jiraOptions.DPLY_ProjectKey;
-      lblUAT_IssueKey.Text  = _jiraOptions.UAT_ProjectKey;
-     
-      _gitLab = new GitLab( x => this.Dump(x) );
+      lblUAT_IssueKey.Text = _jiraOptions.UAT_ProjectKey;
+
+      lblREQ_Status.Text = string.Empty;
+      lblDPLY_Status.Text = string.Empty;
+      lblUAT_Status.Text = string.Empty;
+
+
+      _gitLab = new GitLab(x => this.Dump(x));
       imgGitLabActive.Image = _gitLabOptions.IsActive ? Resources.greenOrb : Resources.redOrb;
-      if ( _gitLabOptions.IsActive)
+      if (_gitLabOptions.IsActive)
       {
         var projects = _gitLab.GetProjects();
         var items = (from x in projects
                      orderby x.name
-                     select new Tuple<string, int>(x.name, x.id) ).ToArray();
-        
+                     select new Tuple<string, int>(x.name, x.id)).ToArray();
+
         cmbGitProjectName.DisplayMember = "Item1";
         cmbGitProjectName.ValueMember = "Item2";
         cmbGitProjectName.Items.AddRange(items);
@@ -54,99 +59,93 @@ namespace Shorthand
 
         lblMergeRequestLink.LinkClicked += (x, y) => { Process.Start(y.Link.LinkData as string); };
       }
-     
-      this.RefreshUI();
+
     }
 
-    private void btnBuild_Click(object sender, EventArgs e)
+
+    private bool SanityCheck()
     {
+      this.Dump("Sanity Check");
+
       if (!_jiraOptions.IsActive)
       {
-        
         this.Dump("ERROR: Please configure jira options");
-        return;
+        return false;
       }
 
       if (!_gitLabOptions.IsActive)
       {
-        
         this.Dump("ERROR: Please configure GitLab options");
-        return;
+        return false;
       }
 
       if (string.IsNullOrEmpty(txtInternal.Text))
       {
         this.Dump("ERROR: Please provide an internal issue key");
-        return;
+        return false;
       }
+
+      return true;
+    }
+
+    private void btnBuild_Click(object sender, EventArgs e)
+    {
+      if (!this.SanityCheck())
+        return;
 
       if (rdbProduction.Checked)
         this.Dump("Delivering to production");
       if (rdbTest.Checked)
         this.Dump("Delivering to test");
 
-      txtREQ.Clear();
-      txtDPLY.Clear();
-      txtUAT.Clear();
-      txtGitMergeRequestNo.Clear();
-      lblMergeRequestLink.Text = $"merge request state unknown";
-      Application.DoEvents();
-
-      var projectId = (cmbGitProjectName.SelectedItem as Tuple<string, int>).Item2;
-      var ctx = this.BuildDeliveryContext(txtInternal.Text, projectId);
-      if (string.IsNullOrEmpty(ctx.RequestIssueKey))
+      try
       {
-        this.Dump("ERROR: Can not locate request issue key");
-        return;
+        var projectId = (cmbGitProjectName.SelectedItem as Tuple<string, int>).Item2;
+        var ctx = this.BuildDeliveryContext(txtInternal.Text, projectId);
+        if (string.IsNullOrEmpty(ctx.RequestIssueKey))
+        {
+          this.Dump("ERROR: Can not locate request issue");
+          return;
+        }
+
+        var delivery = this.BuildDelivery();
+        delivery.Deliver(ctx);
+
+        txtREQ.Text = ctx.RequestIssueKey;
+        txtDPLY.Text = ctx.DeploymentIssueKey;
+        txtUAT.Text = ctx.UatIssueKey;
+        txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
+        Application.DoEvents();
+
+        this.SendMail(ctx);
       }
-      
-      txtREQ.Text  = ctx.RequestIssueKey;
-      txtDPLY.Text = ctx.DeploymentIssueKey;
-      txtUAT.Text  = ctx.UatIssueKey;
-      txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
-      
-      lblMergeRequestLink.Links.Clear();
-      lblMergeRequestLink.Text = $"merge request state {ctx.GitMergeRequestState}";
-      var projectWebUrl = $"{ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}";
-      lblMergeRequestLink.Links.Add(0, lblMergeRequestLink.Text.Length, projectWebUrl);
+      catch (Exception ex)
+      {
+        this.Dump(ex.Message);
+      }
+      finally
+      {        
+        this.Dump("DONE.");
+      }
 
-      var delivery = this.BuildDelivery();
-      delivery.Deliver(ctx);
-
-      txtREQ.Text  = ctx.RequestIssueKey;
-      txtDPLY.Text = ctx.DeploymentIssueKey;
-      txtUAT.Text  = ctx.UatIssueKey;
-      txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
-      Application.DoEvents();
-
-      this.SendMail(ctx);
-      this.Dump("DONE.");
     }
 
 
 
-    private void rdbProduction_CheckedChanged(object sender, EventArgs e)
+
+    private void btnRefresh_Click(object sender, EventArgs e)
     {
       this.RefreshUI();
     }
 
-    private void btnJIRA_Click(object sender, EventArgs e)
-    {
-      var ctx = this.BuildDeliveryContext("APP-263", 53);
-      Application.DoEvents();
-
-      this.SendMail(ctx);
-      this.Dump("DONE.");
-    }
 
     private DeliveryContext BuildDeliveryContext(string issueKey, int projectId)
     {
-
-// Jira
-      var ctx = new DeliveryContext();
+      // Jira
+      var ctx = new DeliveryContext();      
       var linksOfInternalIssue = this.GetLinksOfIssue(issueKey);
-      ctx.InternalIssueKey   = issueKey;
-      ctx.RequestIssueKey    = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.REQ_ProjectKey));
+      ctx.InternalIssueKey = issueKey;
+      ctx.RequestIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.REQ_ProjectKey));
       ctx.DeploymentIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.DPLY_ProjectKey));
       if (!string.IsNullOrEmpty(ctx.RequestIssueKey))
       {
@@ -154,7 +153,7 @@ namespace Shorthand
         ctx.UatIssueKey = linksOfReqIssue.FirstOrDefault(x => x.Contains(_jiraOptions.UAT_ProjectKey));
       }
 
-// GitLab      
+      // GitLab      
       var project = _gitLab.GetProjectById(projectId);
       var mergeReq = _gitLab.GetMergeRequestByInternalIssueKey(projectId, issueKey);
       var mergeReqNo = mergeReq?.iid ?? 0;
@@ -169,11 +168,11 @@ namespace Shorthand
     }
 
 
-                   
+
     private string[] GetLinksOfIssue(string issueKey)
-    {      
+    {
       var issueLinks = _jira.GetLinksOfIssue(issueKey);
-      var q =     (from x in issueLinks where x.inwardIssue  != null select x.inwardIssue.key)
+      var q = (from x in issueLinks where x.inwardIssue != null select x.inwardIssue.key)
             .Union(from x in issueLinks where x.outwardIssue != null select x.outwardIssue.key)
             .ToArray();
 
@@ -182,25 +181,59 @@ namespace Shorthand
 
     private IDelivery BuildDelivery()
     {
-      if ( rdbProduction.Checked )
+      if (rdbProduction.Checked)
         return new DeliveryToProduction(x => this.Dump(x));
 
-      if ( rdbTest.Checked )
+      if (rdbTest.Checked)
         return new DeliveryToTest(x => this.Dump(x));
 
       return null;
     }
 
     private void Dump(string line)
-    {       
-      txtDump.InvokeIfRequired( (x) => { x.Text = x.Text + $"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}" + "\r\n"; } );
+    {
+      txtDump.InvokeIfRequired((x) => { x.Text = x.Text + $"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}" + "\r\n"; });
     }
 
 
 
     private void RefreshUI()
-    {      
+    {
+      if (!this.SanityCheck())
+        return;
 
+      lblREQ_Status.Text = string.Empty;
+      lblDPLY_Status.Text = string.Empty;
+      lblUAT_Status.Text = string.Empty;
+
+      txtREQ.Clear();
+      txtDPLY.Clear();
+      txtUAT.Clear();
+      txtGitMergeRequestNo.Clear();
+      lblMergeRequestLink.Text = $"merge request state unknown";
+      Application.DoEvents();
+
+      var projectId = (cmbGitProjectName.SelectedItem as Tuple<string, int>).Item2;
+      var ctx = this.BuildDeliveryContext(txtInternal.Text, projectId);
+      if (string.IsNullOrEmpty(ctx.RequestIssueKey))
+      {
+        this.Dump("ERROR: Can not locate request issue");
+        return;
+      }
+
+      txtREQ.Text = ctx.RequestIssueKey;
+      txtDPLY.Text = ctx.DeploymentIssueKey;
+      txtUAT.Text = ctx.UatIssueKey;
+      txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
+
+      lblREQ_Status.Text = _jira.GetStatusOfIssue(ctx.InternalIssueKey);
+      lblDPLY_Status.Text = _jira.GetStatusOfIssue(ctx.DeploymentIssueKey);
+      lblUAT_Status.Text = _jira.GetStatusOfIssue(ctx.UatIssueKey);
+
+      lblMergeRequestLink.Links.Clear();
+      lblMergeRequestLink.Text = $"merge request state {ctx.GitMergeRequestState}";
+      var projectWebUrl = $"{ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}";
+      lblMergeRequestLink.Links.Add(0, lblMergeRequestLink.Text.Length, projectWebUrl);
     }
 
     private void btnClearLog_Click(object sender, EventArgs e)
@@ -212,8 +245,8 @@ namespace Shorthand
     {
       this.Dump("Sending notification mail...");
 
-      var mail = new MailMessage("tolga.kurkcuoglu@gmail.com", "tolgak@bilgi.edu.tr");      
-      mail.Subject = "DevShorthand - Delivery Notification";
+      var mail = new MailMessage("tolga.kurkcuoglu@gmail.com", "tolgak@bilgi.edu.tr");
+      mail.Subject = "Deployment and merge request notification";
 
       var sb = new StringBuilder();
       sb.AppendLine("Deployment done.")
@@ -240,6 +273,11 @@ namespace Shorthand
       client.Send(mail);
     }
 
+    private void btnTest_Click(object sender, EventArgs e)
+    {
+      //_jira.AddAttachment("APP-263", "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\bin\\sql\\junk.txt");
 
+      var fileNames = _jira.ListAttachmentsOfIssue("APP-263");
+    }
   }
 }

@@ -33,17 +33,19 @@ namespace Shorthand
 
     private void PrepareJira(DeliveryContext ctx)
     {
-      this.Log("Preparing Jira");
+      _logger?.Invoke("Preparing Jira");
+
       var jira = new Jira();
 
       var requestIssueKey = ctx.RequestIssueKey;
       if (string.IsNullOrEmpty(requestIssueKey))
         return;
       
-      // announce that testers can test by adding comment to requested issue
+      // announce that testers can test by adding comment to request issue
       var comment = this.BuilRequestComment(ctx);
       jira.AddCommentToIssue(requestIssueKey, comment);
       
+
       // advance workflow for internal issue
       var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
       var q = transitions.FirstOrDefault(x => x.name == "Deployed for Test");
@@ -59,12 +61,13 @@ namespace Shorthand
 
         // link uat issue to request issue
         jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey, "UAT oluşturuldu.");
-      }                     
+      }
+
     }
 
     private void DeployExecutables(DeliveryContext ctx)
     {
-      this.Log("Deploying executables");
+      _logger?.Invoke("Deploying executables");
 
       // copy executable to remote executable folder
       var newFileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
@@ -74,17 +77,20 @@ namespace Shorthand
     }
 
     private string BuilRequestComment(DeliveryContext ctx)
-    {
-      var fileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
+    {      
+      var fileName = $"IBU-{ctx.RequestIssueKey.Replace("-", " ")}.exe";
       return new StringBuilder().AppendFormattedLine("İşlev *{0}* adresindeki *{1}* uygulaması ile  *ibu_test* veritabanında test edilebilir.", _deploymentOptions.TestDeliveryFolder, fileName)
                                 .AppendLine("")
                                 .ToString();
     }
 
     private string BuildUATDescription(DeliveryContext ctx)
-    {    
+    {
+      var fileName = $"IBU-{ctx.RequestIssueKey.Replace("-", " ")}.exe";
       return new StringBuilder().AppendLine("*Test Adımları*")
-                                .AppendLine("# *ibu_test* veritabanına login olunur")                                
+                                .AppendFormattedLine("# *{0}* adresindeki *{1}* uygulaması çalıştırılır.", _deploymentOptions.TestDeliveryFolder, fileName)
+                                .AppendLine("# *ibu_test* veritabanına login olunur")
+                                .AppendLine("# ...")
                                 .AppendLine("# Ekran görüntüsü bu işe eklenir")
                                 .AppendFormattedLine("# {0} Done ile kapatılır", ctx.UatIssueKey)
                                 .AppendFormattedLine("# {0} Passed ile kapatılır", ctx.RequestIssueKey)
@@ -92,9 +98,6 @@ namespace Shorthand
                                 .ToString();
     }
 
-    private void Log(string line)
-    {
-      _logger?.Invoke(line);
-    }
+
   }
 }

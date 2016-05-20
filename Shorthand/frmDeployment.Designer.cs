@@ -30,11 +30,13 @@
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
       this.panel1 = new System.Windows.Forms.Panel();
+      this.imgGitLabActive = new System.Windows.Forms.PictureBox();
+      this.imgJiraActive = new System.Windows.Forms.PictureBox();
       this.lblMergeRequestLink = new System.Windows.Forms.LinkLabel();
       this.checkBox3 = new System.Windows.Forms.CheckBox();
       this.checkBox2 = new System.Windows.Forms.CheckBox();
       this.btnClearLog = new System.Windows.Forms.Button();
-      this.btnJIRA = new System.Windows.Forms.Button();
+      this.btnRefresh = new System.Windows.Forms.Button();
       this.lblDPLY_IssueKey = new System.Windows.Forms.Label();
       this.txtDPLY = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
@@ -52,8 +54,10 @@
       this.txtInternal = new System.Windows.Forms.TextBox();
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
-      this.imgGitLabActive = new System.Windows.Forms.PictureBox();
-      this.imgJiraActive = new System.Windows.Forms.PictureBox();
+      this.btnTest = new System.Windows.Forms.Button();
+      this.lblREQ_Status = new System.Windows.Forms.Label();
+      this.lblDPLY_Status = new System.Windows.Forms.Label();
+      this.lblUAT_Status = new System.Windows.Forms.Label();
       this.panel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.imgGitLabActive)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.imgJiraActive)).BeginInit();
@@ -61,13 +65,17 @@
       // 
       // panel1
       // 
+      this.panel1.Controls.Add(this.lblUAT_Status);
+      this.panel1.Controls.Add(this.lblDPLY_Status);
+      this.panel1.Controls.Add(this.lblREQ_Status);
+      this.panel1.Controls.Add(this.btnTest);
       this.panel1.Controls.Add(this.imgGitLabActive);
       this.panel1.Controls.Add(this.imgJiraActive);
       this.panel1.Controls.Add(this.lblMergeRequestLink);
       this.panel1.Controls.Add(this.checkBox3);
       this.panel1.Controls.Add(this.checkBox2);
       this.panel1.Controls.Add(this.btnClearLog);
-      this.panel1.Controls.Add(this.btnJIRA);
+      this.panel1.Controls.Add(this.btnRefresh);
       this.panel1.Controls.Add(this.lblDPLY_IssueKey);
       this.panel1.Controls.Add(this.txtDPLY);
       this.panel1.Controls.Add(this.label6);
@@ -89,8 +97,29 @@
       this.panel1.Location = new System.Drawing.Point(5, 5);
       this.panel1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(697, 201);
+      this.panel1.Size = new System.Drawing.Size(753, 201);
       this.panel1.TabIndex = 0;
+      // 
+      // imgGitLabActive
+      // 
+      this.imgGitLabActive.Location = new System.Drawing.Point(443, 117);
+      this.imgGitLabActive.Name = "imgGitLabActive";
+      this.imgGitLabActive.Padding = new System.Windows.Forms.Padding(5);
+      this.imgGitLabActive.Size = new System.Drawing.Size(38, 36);
+      this.imgGitLabActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.imgGitLabActive.TabIndex = 31;
+      this.imgGitLabActive.TabStop = false;
+      // 
+      // imgJiraActive
+      // 
+      this.imgJiraActive.InitialImage = null;
+      this.imgJiraActive.Location = new System.Drawing.Point(399, 117);
+      this.imgJiraActive.Name = "imgJiraActive";
+      this.imgJiraActive.Padding = new System.Windows.Forms.Padding(5);
+      this.imgJiraActive.Size = new System.Drawing.Size(38, 36);
+      this.imgJiraActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.imgJiraActive.TabIndex = 30;
+      this.imgJiraActive.TabStop = false;
       // 
       // lblMergeRequestLink
       // 
@@ -122,7 +151,7 @@
       // 
       // btnClearLog
       // 
-      this.btnClearLog.Location = new System.Drawing.Point(121, 159);
+      this.btnClearLog.Location = new System.Drawing.Point(123, 159);
       this.btnClearLog.Name = "btnClearLog";
       this.btnClearLog.Size = new System.Drawing.Size(108, 25);
       this.btnClearLog.TabIndex = 25;
@@ -130,15 +159,15 @@
       this.btnClearLog.UseVisualStyleBackColor = true;
       this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
       // 
-      // btnJIRA
+      // btnRefresh
       // 
-      this.btnJIRA.Location = new System.Drawing.Point(399, 159);
-      this.btnJIRA.Name = "btnJIRA";
-      this.btnJIRA.Size = new System.Drawing.Size(146, 25);
-      this.btnJIRA.TabIndex = 9;
-      this.btnJIRA.Text = "Tester";
-      this.btnJIRA.UseVisualStyleBackColor = true;
-      this.btnJIRA.Click += new System.EventHandler(this.btnJIRA_Click);
+      this.btnRefresh.Location = new System.Drawing.Point(9, 159);
+      this.btnRefresh.Name = "btnRefresh";
+      this.btnRefresh.Size = new System.Drawing.Size(108, 25);
+      this.btnRefresh.TabIndex = 9;
+      this.btnRefresh.Text = "Refresh";
+      this.btnRefresh.UseVisualStyleBackColor = true;
+      this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
       // 
       // lblDPLY_IssueKey
       // 
@@ -188,16 +217,15 @@
       this.rdbProduction.TabIndex = 6;
       this.rdbProduction.Text = "Production";
       this.rdbProduction.UseVisualStyleBackColor = true;
-      this.rdbProduction.CheckedChanged += new System.EventHandler(this.rdbProduction_CheckedChanged);
       // 
       // btnBuild
       // 
-      this.btnBuild.Location = new System.Drawing.Point(15, 159);
+      this.btnBuild.Location = new System.Drawing.Point(578, 159);
       this.btnBuild.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.btnBuild.Name = "btnBuild";
       this.btnBuild.Size = new System.Drawing.Size(92, 25);
       this.btnBuild.TabIndex = 8;
-      this.btnBuild.Text = "Build";
+      this.btnBuild.Text = "Deploy";
       this.btnBuild.UseVisualStyleBackColor = true;
       this.btnBuild.Click += new System.EventHandler(this.btnBuild_Click);
       // 
@@ -304,36 +332,56 @@
       this.txtDump.Multiline = true;
       this.txtDump.Name = "txtDump";
       this.txtDump.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtDump.Size = new System.Drawing.Size(697, 259);
+      this.txtDump.Size = new System.Drawing.Size(753, 299);
       this.txtDump.TabIndex = 1;
       // 
-      // imgGitLabActive
+      // btnTest
       // 
-      this.imgGitLabActive.Location = new System.Drawing.Point(443, 117);
-      this.imgGitLabActive.Name = "imgGitLabActive";
-      this.imgGitLabActive.Padding = new System.Windows.Forms.Padding(5);
-      this.imgGitLabActive.Size = new System.Drawing.Size(38, 36);
-      this.imgGitLabActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-      this.imgGitLabActive.TabIndex = 31;
-      this.imgGitLabActive.TabStop = false;
+      this.btnTest.Location = new System.Drawing.Point(240, 159);
+      this.btnTest.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+      this.btnTest.Name = "btnTest";
+      this.btnTest.Size = new System.Drawing.Size(92, 25);
+      this.btnTest.TabIndex = 32;
+      this.btnTest.Text = "Test";
+      this.btnTest.UseVisualStyleBackColor = true;
+      this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
       // 
-      // imgJiraActive
+      // lblREQ_Status
       // 
-      this.imgJiraActive.InitialImage = null;
-      this.imgJiraActive.Location = new System.Drawing.Point(399, 117);
-      this.imgJiraActive.Name = "imgJiraActive";
-      this.imgJiraActive.Padding = new System.Windows.Forms.Padding(5);
-      this.imgJiraActive.Size = new System.Drawing.Size(38, 36);
-      this.imgJiraActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-      this.imgJiraActive.TabIndex = 30;
-      this.imgJiraActive.TabStop = false;
+      this.lblREQ_Status.AutoSize = true;
+      this.lblREQ_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblREQ_Status.Location = new System.Drawing.Point(8, 54);
+      this.lblREQ_Status.Name = "lblREQ_Status";
+      this.lblREQ_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblREQ_Status.TabIndex = 33;
+      this.lblREQ_Status.Text = "Status";
+      // 
+      // lblDPLY_Status
+      // 
+      this.lblDPLY_Status.AutoSize = true;
+      this.lblDPLY_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblDPLY_Status.Location = new System.Drawing.Point(9, 88);
+      this.lblDPLY_Status.Name = "lblDPLY_Status";
+      this.lblDPLY_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblDPLY_Status.TabIndex = 34;
+      this.lblDPLY_Status.Text = "Status";
+      // 
+      // lblUAT_Status
+      // 
+      this.lblUAT_Status.AutoSize = true;
+      this.lblUAT_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblUAT_Status.Location = new System.Drawing.Point(9, 123);
+      this.lblUAT_Status.Name = "lblUAT_Status";
+      this.lblUAT_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblUAT_Status.TabIndex = 35;
+      this.lblUAT_Status.Text = "Status";
       // 
       // frmDeployment
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-      this.ClientSize = new System.Drawing.Size(707, 470);
+      this.ClientSize = new System.Drawing.Size(763, 510);
       this.Controls.Add(this.txtDump);
       this.Controls.Add(this.panel1);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
@@ -372,13 +420,17 @@
     private System.Windows.Forms.RadioButton rdbProduction;
     private System.Windows.Forms.Label lblDPLY_IssueKey;
     private System.Windows.Forms.TextBox txtDPLY;
-    private System.Windows.Forms.Button btnJIRA;
+    private System.Windows.Forms.Button btnRefresh;
     private System.Windows.Forms.Button btnClearLog;
     private System.Windows.Forms.CheckBox checkBox3;
     private System.Windows.Forms.CheckBox checkBox2;
     private System.Windows.Forms.LinkLabel lblMergeRequestLink;
     private System.Windows.Forms.PictureBox imgGitLabActive;
     private System.Windows.Forms.PictureBox imgJiraActive;
+    private System.Windows.Forms.Button btnTest;
+    private System.Windows.Forms.Label lblUAT_Status;
+    private System.Windows.Forms.Label lblDPLY_Status;
+    private System.Windows.Forms.Label lblREQ_Status;
     //private System.Windows.Forms.TextBox txtDump;
   }
 }

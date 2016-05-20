@@ -33,6 +33,16 @@ namespace Shorthand
     public Fields fields { get; set; }
   }
 
+  public class Outwardissue
+  {
+    public string id { get; set; }
+    public string key { get; set; }
+    public string self { get; set; }
+    public Fields fields { get; set; }
+  }
+
+
+
   public class Fields
   {
     public string summary { get; set; }
@@ -78,12 +88,6 @@ namespace Shorthand
     public bool subtask { get; set; }
   }
 
-  public class Outwardissue
-  {
-    public string id { get; set; }
-    public string key { get; set; }
-    public string self { get; set; }
-    public Fields fields { get; set; }
-  }
+
 
 }

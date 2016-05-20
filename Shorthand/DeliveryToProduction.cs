@@ -14,6 +14,8 @@ namespace Shorthand
   public class DeliveryToProduction : IDelivery
   {
     private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+    private DeploymentOptions _dplyOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+
     private Action<string> _logger;
 
     public DeliveryToProduction()
@@ -69,6 +71,12 @@ namespace Shorthand
         this.Log($"Deployment created : {ctx.DeploymentIssueKey}");
       }
 
+
+      // attach sql script file to deployment issue
+      var sqlFilePath = Directory.GetFiles(_dplyOptions.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql").FirstOrDefault();
+      jira.AddAttachment(ctx.DeploymentIssueKey, sqlFilePath);
+
+
       // advance workflow for internal issue
       var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
       var q = transitions.FirstOrDefault(x => x.name == "Waiting for Production");
@@ -80,7 +88,7 @@ namespace Shorthand
     {
       this.Log("Deploying executables");
 
-      var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+      //var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var tempFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
       var destinationFolder = Path.Combine(tempFolder, nf.Name);
@@ -88,8 +96,8 @@ namespace Shorthand
       try
       {
         var files = new List<string>();
-        files.AddRange(Directory.GetFiles(options.LocalBinPath + @"\exe", "*.exe"));
-        files.AddRange(Directory.GetFiles(options.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql"));
+        files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\exe", "*.exe"));
+        files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql"));
         foreach (string file in files)
         {
           var destinationfile = destinationFolder + "\\" + Path.GetFileName(file);
@@ -99,13 +107,13 @@ namespace Shorthand
         var zipFileName = ctx.DeploymentIssueKey + ".zip";
         var qualifiedZipFileName = destinationFolder + zipFileName;
 
-        var startInfo = new ProcessStartInfo(options.ArchiveToolPath);
+        var startInfo = new ProcessStartInfo(_dplyOptions.ArchiveToolPath);
         startInfo.WorkingDirectory = destinationFolder;
-        startInfo.Arguments = $"{options.ArchiveToolSwitches} {qualifiedZipFileName} *.*";
+        startInfo.Arguments = $"{_dplyOptions.ArchiveToolSwitches} {qualifiedZipFileName} *.*";
         var p = Process.Start(startInfo);
         p.WaitForExit();
 
-        File.Copy(qualifiedZipFileName, options.ProductionDeliveryFolder + "\\" + zipFileName, true);
+        File.Copy(qualifiedZipFileName, _dplyOptions.ProductionDeliveryFolder + "\\" + zipFileName, true);
       }
       finally
       {

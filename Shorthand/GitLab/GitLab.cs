@@ -56,8 +56,7 @@ namespace Shorthand
     public MergeRequestResponse GetMergeRequestByInternalIssueKey(int projectId, string internalIssueKey)
     {            
       var mergeRequests = this.GetMergeRequests(projectId);
-      return mergeRequests.FirstOrDefault(x => (x.title.Contains(internalIssueKey.ToLower())       || x.title.Contains(internalIssueKey))
-                                            && (x.description.Contains(internalIssueKey.ToLower()) || x.description.Contains(internalIssueKey)));
+      return mergeRequests.FirstOrDefault(x => x.source_branch.Contains(internalIssueKey) );
     }
 
     public int GetMergeRequestById(int projectId, int mergeReqId)
@@ -77,8 +76,11 @@ namespace Shorthand
       var jsonResponse = this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
 
       var mrResponse = JsonConvert.DeserializeObject<MergeRequestResponse>(jsonResponse.Result);
-      return mrResponse.id;
+      return mrResponse.iid;
     }
+
+
+
 
     private JsonResponse SendApiRequest(string url, string data, string method)
     {
@@ -106,8 +108,6 @@ namespace Shorthand
         return new JsonResponse { Success = false, Result = string.Empty, StatusCode = r.StatusCode, Description = r.StatusDescription };
       }
     }
-
-
 
   }
 
