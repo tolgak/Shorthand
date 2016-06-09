@@ -32,20 +32,24 @@ namespace Shorthand
       InitializeComponent();
 
       _jira = new Jira(x => this.Dump(x));
-      imgJiraActive.Image = _jiraOptions.IsActive ? Resources.greenOrb : Resources.redOrb;
+      if (!_jiraOptions.IsActive)
+        this.Dump("jira options are invalid");
+      else
+      {
+        lblREQ_IssueKey.Text = _jiraOptions.REQ_ProjectKey;
+        lblDPLY_IssueKey.Text = _jiraOptions.DPLY_ProjectKey;
+        lblUAT_IssueKey.Text = _jiraOptions.UAT_ProjectKey;
 
-      lblREQ_IssueKey.Text = _jiraOptions.REQ_ProjectKey;
-      lblDPLY_IssueKey.Text = _jiraOptions.DPLY_ProjectKey;
-      lblUAT_IssueKey.Text = _jiraOptions.UAT_ProjectKey;
-
-      lblREQ_Status.Text = string.Empty;
-      lblDPLY_Status.Text = string.Empty;
-      lblUAT_Status.Text = string.Empty;
+        lblREQ_Status.Text = string.Empty;
+        lblDPLY_Status.Text = string.Empty;
+        lblUAT_Status.Text = string.Empty;
+      }
 
 
       _gitLab = new GitLab(x => this.Dump(x));
-      imgGitLabActive.Image = _gitLabOptions.IsActive ? Resources.greenOrb : Resources.redOrb;
-      if (_gitLabOptions.IsActive)
+      if ( !_gitLabOptions.IsActive )
+        this.Dump("gitLab options are invalid");
+      else
       {
         var projects = _gitLab.GetProjects();
         var items = (from x in projects
@@ -226,9 +230,9 @@ namespace Shorthand
       txtUAT.Text = ctx.UatIssueKey;
       txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
 
-      lblREQ_Status.Text = _jira.GetStatusOfIssue(ctx.InternalIssueKey);
-      lblDPLY_Status.Text = _jira.GetStatusOfIssue(ctx.DeploymentIssueKey);
-      lblUAT_Status.Text = _jira.GetStatusOfIssue(ctx.UatIssueKey);
+      lblREQ_Status.Text  = string.IsNullOrEmpty(ctx.InternalIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.InternalIssueKey);
+      lblDPLY_Status.Text = string.IsNullOrEmpty(ctx.DeploymentIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.DeploymentIssueKey);
+      lblUAT_Status.Text  = string.IsNullOrEmpty(ctx.UatIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.UatIssueKey);
 
       lblMergeRequestLink.Links.Clear();
       lblMergeRequestLink.Text = $"merge request state {ctx.GitMergeRequestState}";
@@ -275,9 +279,7 @@ namespace Shorthand
 
     private void btnTest_Click(object sender, EventArgs e)
     {
-      //_jira.AddAttachment("APP-263", "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\bin\\sql\\junk.txt");
 
-      var fileNames = _jira.ListAttachmentsOfIssue("APP-263");
     }
   }
 }

@@ -28,10 +28,13 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
       this.panel1 = new System.Windows.Forms.Panel();
-      this.imgGitLabActive = new System.Windows.Forms.PictureBox();
-      this.imgJiraActive = new System.Windows.Forms.PictureBox();
+      this.lblUAT_Status = new System.Windows.Forms.Label();
+      this.lblDPLY_Status = new System.Windows.Forms.Label();
+      this.lblREQ_Status = new System.Windows.Forms.Label();
+      this.btnTest = new System.Windows.Forms.Button();
       this.lblMergeRequestLink = new System.Windows.Forms.LinkLabel();
       this.checkBox3 = new System.Windows.Forms.CheckBox();
       this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -54,13 +57,8 @@
       this.txtInternal = new System.Windows.Forms.TextBox();
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
-      this.btnTest = new System.Windows.Forms.Button();
-      this.lblREQ_Status = new System.Windows.Forms.Label();
-      this.lblDPLY_Status = new System.Windows.Forms.Label();
-      this.lblUAT_Status = new System.Windows.Forms.Label();
+      this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
       this.panel1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.imgGitLabActive)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.imgJiraActive)).BeginInit();
       this.SuspendLayout();
       // 
       // panel1
@@ -69,8 +67,6 @@
       this.panel1.Controls.Add(this.lblDPLY_Status);
       this.panel1.Controls.Add(this.lblREQ_Status);
       this.panel1.Controls.Add(this.btnTest);
-      this.panel1.Controls.Add(this.imgGitLabActive);
-      this.panel1.Controls.Add(this.imgJiraActive);
       this.panel1.Controls.Add(this.lblMergeRequestLink);
       this.panel1.Controls.Add(this.checkBox3);
       this.panel1.Controls.Add(this.checkBox2);
@@ -100,31 +96,51 @@
       this.panel1.Size = new System.Drawing.Size(753, 201);
       this.panel1.TabIndex = 0;
       // 
-      // imgGitLabActive
+      // lblUAT_Status
       // 
-      this.imgGitLabActive.Location = new System.Drawing.Point(443, 117);
-      this.imgGitLabActive.Name = "imgGitLabActive";
-      this.imgGitLabActive.Padding = new System.Windows.Forms.Padding(5);
-      this.imgGitLabActive.Size = new System.Drawing.Size(38, 36);
-      this.imgGitLabActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-      this.imgGitLabActive.TabIndex = 31;
-      this.imgGitLabActive.TabStop = false;
+      this.lblUAT_Status.AutoSize = true;
+      this.lblUAT_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblUAT_Status.Location = new System.Drawing.Point(185, 120);
+      this.lblUAT_Status.Name = "lblUAT_Status";
+      this.lblUAT_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblUAT_Status.TabIndex = 35;
+      this.lblUAT_Status.Text = "Status";
       // 
-      // imgJiraActive
+      // lblDPLY_Status
       // 
-      this.imgJiraActive.InitialImage = null;
-      this.imgJiraActive.Location = new System.Drawing.Point(399, 117);
-      this.imgJiraActive.Name = "imgJiraActive";
-      this.imgJiraActive.Padding = new System.Windows.Forms.Padding(5);
-      this.imgJiraActive.Size = new System.Drawing.Size(38, 36);
-      this.imgJiraActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-      this.imgJiraActive.TabIndex = 30;
-      this.imgJiraActive.TabStop = false;
+      this.lblDPLY_Status.AutoSize = true;
+      this.lblDPLY_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblDPLY_Status.Location = new System.Drawing.Point(185, 85);
+      this.lblDPLY_Status.Name = "lblDPLY_Status";
+      this.lblDPLY_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblDPLY_Status.TabIndex = 34;
+      this.lblDPLY_Status.Text = "Status";
+      // 
+      // lblREQ_Status
+      // 
+      this.lblREQ_Status.AutoSize = true;
+      this.lblREQ_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblREQ_Status.Location = new System.Drawing.Point(185, 49);
+      this.lblREQ_Status.Name = "lblREQ_Status";
+      this.lblREQ_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblREQ_Status.TabIndex = 33;
+      this.lblREQ_Status.Text = "Status";
+      // 
+      // btnTest
+      // 
+      this.btnTest.Location = new System.Drawing.Point(240, 159);
+      this.btnTest.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+      this.btnTest.Name = "btnTest";
+      this.btnTest.Size = new System.Drawing.Size(92, 25);
+      this.btnTest.TabIndex = 32;
+      this.btnTest.Text = "Test";
+      this.btnTest.UseVisualStyleBackColor = true;
+      this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
       // 
       // lblMergeRequestLink
       // 
       this.lblMergeRequestLink.AutoSize = true;
-      this.lblMergeRequestLink.Location = new System.Drawing.Point(489, 50);
+      this.lblMergeRequestLink.Location = new System.Drawing.Point(549, 50);
       this.lblMergeRequestLink.Name = "lblMergeRequestLink";
       this.lblMergeRequestLink.Size = new System.Drawing.Size(181, 17);
       this.lblMergeRequestLink.TabIndex = 29;
@@ -134,7 +150,7 @@
       // checkBox3
       // 
       this.checkBox3.AutoSize = true;
-      this.checkBox3.Location = new System.Drawing.Point(224, 122);
+      this.checkBox3.Location = new System.Drawing.Point(12, 119);
       this.checkBox3.Name = "checkBox3";
       this.checkBox3.Size = new System.Drawing.Size(15, 14);
       this.checkBox3.TabIndex = 28;
@@ -143,7 +159,7 @@
       // checkBox2
       // 
       this.checkBox2.AutoSize = true;
-      this.checkBox2.Location = new System.Drawing.Point(224, 87);
+      this.checkBox2.Location = new System.Drawing.Point(12, 83);
       this.checkBox2.Name = "checkBox2";
       this.checkBox2.Size = new System.Drawing.Size(15, 14);
       this.checkBox2.TabIndex = 27;
@@ -171,8 +187,9 @@
       // 
       // lblDPLY_IssueKey
       // 
+      this.lblDPLY_IssueKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblDPLY_IssueKey.AutoSize = true;
-      this.lblDPLY_IssueKey.Location = new System.Drawing.Point(62, 85);
+      this.lblDPLY_IssueKey.Location = new System.Drawing.Point(33, 81);
       this.lblDPLY_IssueKey.Name = "lblDPLY_IssueKey";
       this.lblDPLY_IssueKey.Size = new System.Drawing.Size(36, 17);
       this.lblDPLY_IssueKey.TabIndex = 24;
@@ -180,7 +197,7 @@
       // 
       // txtDPLY
       // 
-      this.txtDPLY.Location = new System.Drawing.Point(121, 81);
+      this.txtDPLY.Location = new System.Drawing.Point(81, 78);
       this.txtDPLY.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtDPLY.Name = "txtDPLY";
       this.txtDPLY.ReadOnly = true;
@@ -190,7 +207,7 @@
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(266, 85);
+      this.label6.Location = new System.Drawing.Point(326, 85);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(66, 17);
       this.label6.TabIndex = 22;
@@ -200,7 +217,7 @@
       // 
       this.rdbTest.AutoSize = true;
       this.rdbTest.Checked = true;
-      this.rdbTest.Location = new System.Drawing.Point(494, 83);
+      this.rdbTest.Location = new System.Drawing.Point(554, 83);
       this.rdbTest.Name = "rdbTest";
       this.rdbTest.Size = new System.Drawing.Size(49, 21);
       this.rdbTest.TabIndex = 7;
@@ -211,7 +228,7 @@
       // rdbProduction
       // 
       this.rdbProduction.AutoSize = true;
-      this.rdbProduction.Location = new System.Drawing.Point(399, 83);
+      this.rdbProduction.Location = new System.Drawing.Point(459, 83);
       this.rdbProduction.Name = "rdbProduction";
       this.rdbProduction.Size = new System.Drawing.Size(89, 21);
       this.rdbProduction.TabIndex = 6;
@@ -232,7 +249,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(266, 16);
+      this.label5.Location = new System.Drawing.Point(326, 16);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(107, 17);
       this.label5.TabIndex = 19;
@@ -242,7 +259,7 @@
       // 
       this.cmbGitProjectName.DisplayMember = "Text";
       this.cmbGitProjectName.FormattingEnabled = true;
-      this.cmbGitProjectName.Location = new System.Drawing.Point(399, 12);
+      this.cmbGitProjectName.Location = new System.Drawing.Point(459, 12);
       this.cmbGitProjectName.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.cmbGitProjectName.Name = "cmbGitProjectName";
       this.cmbGitProjectName.Size = new System.Drawing.Size(271, 25);
@@ -252,7 +269,7 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(266, 50);
+      this.label4.Location = new System.Drawing.Point(326, 50);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(130, 17);
       this.label4.TabIndex = 17;
@@ -261,7 +278,7 @@
       // txtGitMergeRequestNo
       // 
       this.txtGitMergeRequestNo.Enabled = false;
-      this.txtGitMergeRequestNo.Location = new System.Drawing.Point(399, 46);
+      this.txtGitMergeRequestNo.Location = new System.Drawing.Point(459, 46);
       this.txtGitMergeRequestNo.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtGitMergeRequestNo.Name = "txtGitMergeRequestNo";
       this.txtGitMergeRequestNo.ReadOnly = true;
@@ -270,8 +287,9 @@
       // 
       // lblUAT_IssueKey
       // 
+      this.lblUAT_IssueKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblUAT_IssueKey.AutoSize = true;
-      this.lblUAT_IssueKey.Location = new System.Drawing.Point(62, 120);
+      this.lblUAT_IssueKey.Location = new System.Drawing.Point(33, 116);
       this.lblUAT_IssueKey.Name = "lblUAT_IssueKey";
       this.lblUAT_IssueKey.Size = new System.Drawing.Size(31, 17);
       this.lblUAT_IssueKey.TabIndex = 15;
@@ -279,7 +297,7 @@
       // 
       // txtUAT
       // 
-      this.txtUAT.Location = new System.Drawing.Point(121, 116);
+      this.txtUAT.Location = new System.Drawing.Point(81, 113);
       this.txtUAT.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtUAT.Name = "txtUAT";
       this.txtUAT.ReadOnly = true;
@@ -289,7 +307,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(6, 16);
+      this.label2.Location = new System.Drawing.Point(9, 15);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(109, 17);
       this.label2.TabIndex = 13;
@@ -297,8 +315,9 @@
       // 
       // lblREQ_IssueKey
       // 
+      this.lblREQ_IssueKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblREQ_IssueKey.AutoSize = true;
-      this.lblREQ_IssueKey.Location = new System.Drawing.Point(62, 50);
+      this.lblREQ_IssueKey.Location = new System.Drawing.Point(33, 45);
       this.lblREQ_IssueKey.Name = "lblREQ_IssueKey";
       this.lblREQ_IssueKey.Size = new System.Drawing.Size(33, 17);
       this.lblREQ_IssueKey.TabIndex = 12;
@@ -306,15 +325,15 @@
       // 
       // txtInternal
       // 
-      this.txtInternal.Location = new System.Drawing.Point(121, 12);
+      this.txtInternal.Location = new System.Drawing.Point(124, 12);
       this.txtInternal.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtInternal.Name = "txtInternal";
-      this.txtInternal.Size = new System.Drawing.Size(97, 25);
+      this.txtInternal.Size = new System.Drawing.Size(133, 25);
       this.txtInternal.TabIndex = 0;
       // 
       // txtREQ
       // 
-      this.txtREQ.Location = new System.Drawing.Point(121, 46);
+      this.txtREQ.Location = new System.Drawing.Point(80, 42);
       this.txtREQ.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.txtREQ.Name = "txtREQ";
       this.txtREQ.ReadOnly = true;
@@ -335,46 +354,11 @@
       this.txtDump.Size = new System.Drawing.Size(753, 299);
       this.txtDump.TabIndex = 1;
       // 
-      // btnTest
+      // ımageList1
       // 
-      this.btnTest.Location = new System.Drawing.Point(240, 159);
-      this.btnTest.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-      this.btnTest.Name = "btnTest";
-      this.btnTest.Size = new System.Drawing.Size(92, 25);
-      this.btnTest.TabIndex = 32;
-      this.btnTest.Text = "Test";
-      this.btnTest.UseVisualStyleBackColor = true;
-      this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-      // 
-      // lblREQ_Status
-      // 
-      this.lblREQ_Status.AutoSize = true;
-      this.lblREQ_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-      this.lblREQ_Status.Location = new System.Drawing.Point(8, 54);
-      this.lblREQ_Status.Name = "lblREQ_Status";
-      this.lblREQ_Status.Size = new System.Drawing.Size(31, 12);
-      this.lblREQ_Status.TabIndex = 33;
-      this.lblREQ_Status.Text = "Status";
-      // 
-      // lblDPLY_Status
-      // 
-      this.lblDPLY_Status.AutoSize = true;
-      this.lblDPLY_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-      this.lblDPLY_Status.Location = new System.Drawing.Point(9, 88);
-      this.lblDPLY_Status.Name = "lblDPLY_Status";
-      this.lblDPLY_Status.Size = new System.Drawing.Size(31, 12);
-      this.lblDPLY_Status.TabIndex = 34;
-      this.lblDPLY_Status.Text = "Status";
-      // 
-      // lblUAT_Status
-      // 
-      this.lblUAT_Status.AutoSize = true;
-      this.lblUAT_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-      this.lblUAT_Status.Location = new System.Drawing.Point(9, 123);
-      this.lblUAT_Status.Name = "lblUAT_Status";
-      this.lblUAT_Status.Size = new System.Drawing.Size(31, 12);
-      this.lblUAT_Status.TabIndex = 35;
-      this.lblUAT_Status.Text = "Status";
+      this.ımageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+      this.ımageList1.ImageSize = new System.Drawing.Size(16, 16);
+      this.ımageList1.TransparentColor = System.Drawing.Color.Transparent;
       // 
       // frmDeployment
       // 
@@ -393,8 +377,6 @@
       this.Text = "Deployment Helper";
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.imgGitLabActive)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.imgJiraActive)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -425,12 +407,11 @@
     private System.Windows.Forms.CheckBox checkBox3;
     private System.Windows.Forms.CheckBox checkBox2;
     private System.Windows.Forms.LinkLabel lblMergeRequestLink;
-    private System.Windows.Forms.PictureBox imgGitLabActive;
-    private System.Windows.Forms.PictureBox imgJiraActive;
     private System.Windows.Forms.Button btnTest;
     private System.Windows.Forms.Label lblUAT_Status;
     private System.Windows.Forms.Label lblDPLY_Status;
     private System.Windows.Forms.Label lblREQ_Status;
+    private System.Windows.Forms.ImageList ımageList1;
     //private System.Windows.Forms.TextBox txtDump;
   }
 }

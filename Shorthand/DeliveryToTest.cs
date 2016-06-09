@@ -92,8 +92,8 @@ namespace Shorthand
                                 .AppendLine("# *ibu_test* veritabanına login olunur")
                                 .AppendLine("# ...")
                                 .AppendLine("# Ekran görüntüsü bu işe eklenir")
-                                .AppendFormattedLine("# {0} Done ile kapatılır", ctx.UatIssueKey)
-                                .AppendFormattedLine("# {0} Passed ile kapatılır", ctx.RequestIssueKey)
+                                .AppendLine("# Bu iş, *Done* ile kapatılır")
+                                .AppendFormattedLine("# {0} *Passed* ile kapatılır", ctx.RequestIssueKey)
                                 .AppendLine("")
                                 .ToString();
     }
