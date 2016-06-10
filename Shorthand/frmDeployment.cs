@@ -255,6 +255,9 @@ namespace Shorthand
       var sb = new StringBuilder();
       sb.AppendLine("Deployment done.")
         .AppendLine("")
+        .AppendLine("GITLAB ÜZERİNDE İLGİLİ REQUEST İ MERGE ETMEYİ UNUTMAMAK GEREKLİ")
+        .AppendLine("")
+        .AppendLine("")
         .AppendLine("Jira Details")
         .AppendLine("------------")
         .AppendLine($"Internal Issue Key : {ctx.InternalIssueKey}")
@@ -279,7 +282,12 @@ namespace Shorthand
 
     private void btnTest_Click(object sender, EventArgs e)
     {
-
+      var projectId = (cmbGitProjectName.SelectedItem as Tuple<string, int>).Item2;
+      var ctx = this.BuildDeliveryContext(txtInternal.Text, projectId);
+      var delivery = new DeliveryToTest();
+      var qualifiedTargetName = string.IsNullOrEmpty(ctx.TestExecutableTargetName) ? delivery.BuildTargetName(ctx) : ctx.TestExecutableTargetName;
+      this.Dump(qualifiedTargetName);
     }
+
   }
 }

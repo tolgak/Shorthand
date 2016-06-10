@@ -94,9 +94,10 @@ namespace Shorthand
       
       request.Headers.Add("PRIVATE-TOKEN", _options.PrivateToken);
 
+      HttpWebResponse response = null;
       try
       {
-        var response = request.GetResponse() as HttpWebResponse;
+        response = request.GetResponse() as HttpWebResponse;
         using (var reader = new StreamReader(response.GetResponseStream()))
         {
           return new JsonResponse { Success = true, Result = reader.ReadToEnd(), StatusCode = response.StatusCode, Description = response.StatusDescription };
@@ -104,9 +105,34 @@ namespace Shorthand
       }
       catch (WebException ex)
       {
-        var r = ex.Response as HttpWebResponse;
-        return new JsonResponse { Success = false, Result = string.Empty, StatusCode = r.StatusCode, Description = r.StatusDescription };
+        var jsonRespone = new JsonResponse { Success = false, Result = string.Empty };
+        if (ex.Response != null)
+        {
+          using (var errorResponse = (HttpWebResponse)ex.Response)
+          {
+            var reader = new StreamReader(errorResponse.GetResponseStream());
+            jsonRespone.StatusCode = errorResponse.StatusCode;
+            jsonRespone.Description = reader.ReadToEnd();
+          }
+        }
+        else
+        {
+          jsonRespone.StatusCode = HttpStatusCode.InternalServerError;
+          jsonRespone.Description = "No response received";
+        }
+
+        if (request != null)
+          request.Abort();
+
+        _logger?.Invoke(jsonRespone.Description);
+        return jsonRespone;
       }
+      finally
+      {
+        if (response != null)
+          response.Close();
+      }
+
     }
 
   }

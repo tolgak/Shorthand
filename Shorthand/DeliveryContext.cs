@@ -19,6 +19,9 @@ namespace Shorthand
     public int GitMergeRequestNo { get; set; }
     public string GitMergeRequestState { get; set; }
 
+    public string TestExecutableTargetName { get; set; }
+
+
   }
 
 

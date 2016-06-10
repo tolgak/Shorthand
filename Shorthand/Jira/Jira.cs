@@ -173,22 +173,45 @@ namespace Shorthand
         
       var base64Credentials = this.EncodeCredentials(_options.Username, _options.Password);
       request.Headers.Add("Authorization", "Basic " + base64Credentials);
-      
+
+      HttpWebResponse response = null;
       try
       {
-        var response = request.GetResponse() as HttpWebResponse;
-        using ( var reader = new StreamReader(response.GetResponseStream()) )
-        {          
-          return new JsonResponse {Success = true, Result = reader.ReadToEnd(), StatusCode = response.StatusCode, Description = response.StatusDescription};
+        response = request.GetResponse() as HttpWebResponse;
+        using (var reader = new StreamReader(response.GetResponseStream()))
+        {
+          return new JsonResponse { Success = true, Result = reader.ReadToEnd(), StatusCode = response.StatusCode, Description = response.StatusDescription };
         }
       }
       catch (WebException ex)
       {
-        var r = ex.Response as HttpWebResponse;         
-        _logger?.Invoke(r.StatusDescription);                    
-        return new JsonResponse { Success = false, Result = string.Empty, StatusCode = r.StatusCode, Description = r.StatusDescription };
-      }
+        var jsonRespone = new JsonResponse {Success = false, Result = string.Empty};
+        if (ex.Response != null)
+        {
+          using (var errorResponse = (HttpWebResponse) ex.Response)
+          {
+            var reader = new StreamReader(errorResponse.GetResponseStream());
+            jsonRespone.StatusCode = errorResponse.StatusCode;
+            jsonRespone.Description = reader.ReadToEnd();
+          }
+        }
+        else
+        {
+          jsonRespone.StatusCode = HttpStatusCode.InternalServerError;
+          jsonRespone.Description = "No response received";
+        }
 
+        if (request != null)
+          request.Abort();
+
+        _logger?.Invoke(jsonRespone.Description);
+        return jsonRespone;
+      }
+      finally
+      {
+        if (response != null)
+          response.Close();
+      }
         
     }
 

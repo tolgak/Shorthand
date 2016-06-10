@@ -88,7 +88,6 @@ namespace Shorthand
     {
       this.Log("Deploying executables");
 
-      //var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var tempFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
       var destinationFolder = Path.Combine(tempFolder, nf.Name);

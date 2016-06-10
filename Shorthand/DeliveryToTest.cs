@@ -62,6 +62,8 @@ namespace Shorthand
         // link uat issue to request issue
         jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey, "UAT oluşturuldu.");
       }
+      else
+        jira.SetDescription(ctx.UatIssueKey, this.BuildUATDescription(ctx));
 
     }
 
@@ -69,17 +71,16 @@ namespace Shorthand
     {
       _logger?.Invoke("Deploying executables");
 
-      // copy executable to remote executable folder
-      var newFileName = string.Format("IBU-{0}.exe", ctx.RequestIssueKey.Replace("-", " "));
-      var qualifiedNewName = Path.Combine(_deploymentOptions.TestDeliveryFolder, newFileName);
-      var qualifiedOldName = Path.Combine(_deploymentOptions.LocalBinPath + @"\exe\", "IBU.exe");
-      File.Copy(qualifiedOldName, qualifiedNewName, true);
+      // copy executable to remote executable folder      
+      var qualifiedTargetName = string.IsNullOrEmpty(ctx.TestExecutableTargetName) ? this.BuildTargetName(ctx) : ctx.TestExecutableTargetName;
+      var qualifiedSourceName = Path.Combine(_deploymentOptions.LocalBinPath + @"\exe\", "IBU.exe");
+      File.Copy(qualifiedSourceName, qualifiedTargetName, true);
     }
 
     private string BuilRequestComment(DeliveryContext ctx)
     {      
-      var fileName = $"IBU-{ctx.RequestIssueKey.Replace("-", " ")}.exe";
-      return new StringBuilder().AppendFormattedLine("İşlev *{0}* adresindeki *{1}* uygulaması ile  *ibu_test* veritabanında test edilebilir.", _deploymentOptions.TestDeliveryFolder, fileName)
+      ctx.TestExecutableTargetName = this.BuildTargetName(ctx);
+      return new StringBuilder().AppendFormattedLine("İşlev *{0}* adresindeki *{1}* uygulaması ile  *ibu_test* veritabanında test edilebilir.", _deploymentOptions.TestDeliveryFolder, ctx.TestExecutableTargetName)
                                 .AppendLine("")
                                 .ToString();
     }
@@ -96,6 +97,16 @@ namespace Shorthand
                                 .AppendFormattedLine("# {0} *Passed* ile kapatılır", ctx.RequestIssueKey)
                                 .AppendLine("")
                                 .ToString();
+    }
+
+    public string BuildTargetName(DeliveryContext ctx, int version = 1)
+    {
+      var newFileName = string.Format("IBU-{0}.v{1}.exe", ctx.RequestIssueKey.Replace("-", " "), version);
+      var qualifiedNewName = Path.Combine(_deploymentOptions.TestDeliveryFolder, newFileName);
+      if (File.Exists(qualifiedNewName))
+        qualifiedNewName = this.BuildTargetName(ctx, ++version);
+
+      return qualifiedNewName;
     }
 
 
