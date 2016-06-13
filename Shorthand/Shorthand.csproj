@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>star_trek.ico</ApplicationIcon>
+    <ApplicationIcon>build10532.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Shorthand.Program</StartupObject>
@@ -233,6 +233,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="1461255423_settings.ico" />
+    <Content Include="build10532.ico" />
+    <Content Include="build10565.ico" />
     <Content Include="star_trek.ico" />
     <None Include="Resources\greenOrb.png" />
     <None Include="Resources\redOrb.png" />

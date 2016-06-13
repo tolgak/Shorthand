@@ -101,10 +101,13 @@ namespace Shorthand
 
     public string BuildTargetName(DeliveryContext ctx, int version = 1)
     {
-      var newFileName = string.Format("IBU-{0}.v{1}.exe", ctx.RequestIssueKey.Replace("-", " "), version);
+      var header = string.Format("IBU-{0}", ctx.RequestIssueKey.Replace("-", " "));
+      var versionNumber = Directory.GetFiles(_deploymentOptions.TestDeliveryFolder)
+                                   .Where(x => x.Contains(header))
+                                   .Count();
+
+      var newFileName = string.Format("{0}.v{1}.exe", header, 1 + version);
       var qualifiedNewName = Path.Combine(_deploymentOptions.TestDeliveryFolder, newFileName);
-      if (File.Exists(qualifiedNewName))
-        qualifiedNewName = this.BuildTargetName(ctx, ++version);
 
       return qualifiedNewName;
     }
