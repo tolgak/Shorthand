@@ -40,6 +40,7 @@ namespace Shorthand
         lblDPLY_IssueKey.Text = _jiraOptions.DPLY_ProjectKey;
         lblUAT_IssueKey.Text = _jiraOptions.UAT_ProjectKey;
 
+        lblInternal_Status.Text = string.Empty;
         lblREQ_Status.Text = string.Empty;
         lblDPLY_Status.Text = string.Empty;
         lblUAT_Status.Text = string.Empty;
@@ -230,9 +231,10 @@ namespace Shorthand
       txtUAT.Text = ctx.UatIssueKey;
       txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
 
-      lblREQ_Status.Text  = string.IsNullOrEmpty(ctx.InternalIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.InternalIssueKey);
-      lblDPLY_Status.Text = string.IsNullOrEmpty(ctx.DeploymentIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.DeploymentIssueKey);
-      lblUAT_Status.Text  = string.IsNullOrEmpty(ctx.UatIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.UatIssueKey);
+      lblInternal_Status.Text = string.IsNullOrEmpty(ctx.InternalIssueKey)   ? "N/A" : _jira.GetStatusOfIssue(ctx.InternalIssueKey);
+      lblREQ_Status.Text      = string.IsNullOrEmpty(ctx.RequestIssueKey)    ? "N/A" : _jira.GetStatusOfIssue(ctx.RequestIssueKey);
+      lblDPLY_Status.Text     = string.IsNullOrEmpty(ctx.DeploymentIssueKey) ? "N/A" : _jira.GetStatusOfIssue(ctx.DeploymentIssueKey);
+      lblUAT_Status.Text      = string.IsNullOrEmpty(ctx.UatIssueKey)        ? "N/A" : _jira.GetStatusOfIssue(ctx.UatIssueKey);
 
       lblMergeRequestLink.Links.Clear();
       lblMergeRequestLink.Text = $"merge request state {ctx.GitMergeRequestState}";
