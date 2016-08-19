@@ -37,10 +37,11 @@
       this.mnuXsltSandbox = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuDataDump = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-      this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.mnuSettings = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
+      this.mnuFlywayHelper = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuMain.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -78,10 +79,11 @@
       // 
       this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDeploymentHelper,
+            this.mnuFlywayHelper,
             this.mnuXsltSandbox,
             this.mnuDataDump,
             this.toolStripMenuItem1,
-            this.settingsToolStripMenuItem});
+            this.mnuSettings});
       this.mnuTools.Name = "mnuTools";
       this.mnuTools.Size = new System.Drawing.Size(51, 21);
       this.mnuTools.Text = "Tools";
@@ -112,12 +114,12 @@
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
       this.toolStripMenuItem1.Size = new System.Drawing.Size(187, 6);
       // 
-      // settingsToolStripMenuItem
+      // mnuSettings
       // 
-      this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-      this.settingsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-      this.settingsToolStripMenuItem.Text = "Settings";
-      this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+      this.mnuSettings.Name = "mnuSettings";
+      this.mnuSettings.Size = new System.Drawing.Size(190, 22);
+      this.mnuSettings.Text = "Settings";
+      this.mnuSettings.Click += new System.EventHandler(this.mnuSettings_Click);
       // 
       // mnuWindow
       // 
@@ -138,6 +140,13 @@
       this.appStat.Size = new System.Drawing.Size(780, 22);
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
+      // 
+      // mnuFlywayHelper
+      // 
+      this.mnuFlywayHelper.Name = "mnuFlywayHelper";
+      this.mnuFlywayHelper.Size = new System.Drawing.Size(190, 22);
+      this.mnuFlywayHelper.Text = "Flyway helper";
+      this.mnuFlywayHelper.Click += new System.EventHandler(this.mnuFlywayHelper_Click);
       // 
       // frmMain
       // 
@@ -169,7 +178,7 @@
     private System.Windows.Forms.ToolStripMenuItem mnuFile;
     private System.Windows.Forms.ToolStripMenuItem mnuItemExit;
     private System.Windows.Forms.ToolStripMenuItem mnuTools;
-    private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem mnuSettings;
     private System.Windows.Forms.ToolStripMenuItem mnuHelp;
     private System.Windows.Forms.ToolStripMenuItem mnuDeploymentHelper;
     private System.Windows.Forms.ToolStripMenuItem mnuWindow;
@@ -177,7 +186,7 @@
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem mnuXsltSandbox;
     private System.Windows.Forms.ToolStripMenuItem mnuDataDump;
-
+    private System.Windows.Forms.ToolStripMenuItem mnuFlywayHelper;
   }
 }
 

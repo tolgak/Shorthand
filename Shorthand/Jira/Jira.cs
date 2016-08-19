@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
+
 namespace Shorthand
 {
 
@@ -23,6 +24,7 @@ namespace Shorthand
     
     private Action<string> _logger;
     private JiraOptions _options;
+
 
     public Jira()
     {
@@ -128,6 +130,37 @@ namespace Shorthand
 
       return this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
     }
+
+
+    public object GetIssuesOfAssignee(string assignee)
+    {
+      //var url = $"{ _options.JiraBaseUrl}/rest/api/2/search";
+      //var data = new { jql = $"assignee = {assignee} and status = \"open\" order by duedate desc" , startAt = 0, maxResults = 10, fields = new string[5] { "id", "key", "assignee", "dueDate", "reporter" } };
+
+      //var response = this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
+
+      //JObject searchText = JObject.Parse(response.Result);
+      //var results = searchText["issues"];
+
+
+      //results.ForEach(x => JsonConvert.DeserializeObject<IssueOverview>( x.ToString()) );
+
+
+      return null;
+
+    }
+
+
+
+
+    public List<JiraProject> GetProjects()
+    {
+      var url = $"{_options.JiraBaseUrl}/rest/api/2/project";      
+      var response = this.SendApiRequest(url, null, ApiMethod.GET);
+
+      return JsonConvert.DeserializeObject<List<JiraProject>>(response.Result);
+    }
+
 
 
     public string GetStatusOfIssue(string issueKey)

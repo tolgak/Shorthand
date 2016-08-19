@@ -15,7 +15,6 @@ namespace Shorthand
   {
     private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
     private DeploymentOptions _dplyOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-
     private Action<string> _logger;
 
     public DeliveryToProduction()
@@ -39,6 +38,8 @@ namespace Shorthand
     private void CreateMR(DeliveryContext ctx)
     {
       this.Log("Creating merge request");
+
+
       var git = new GitLab();
             
       int projectId = ctx.GitProjectId;
@@ -54,6 +55,13 @@ namespace Shorthand
     private void PrepareJira(DeliveryContext ctx)
     {
       this.Log("Preparing Jira");
+
+      if (string.IsNullOrEmpty(ctx.RequestIssueKey))
+        throw new ArgumentNullException("RequestIssueKey", "Context does not contain a request issue key.");
+
+      if (string.IsNullOrEmpty(ctx.InternalIssueKey))
+        throw new ArgumentNullException("InternalIssueKey", "Context does not contain an internal issue key.");
+
       var jira = new Jira();
       
       // create deployment issue if it does not exist
@@ -66,7 +74,7 @@ namespace Shorthand
         jira.SetDescription(ctx.DeploymentIssueKey, description);
 
         // link internal issue to deployment issue
-        jira.CreateLink("Production", ctx.InternalIssueKey, ctx.DeploymentIssueKey, "Deployment oluşturuldu");
+        jira.CreateLink("Production", ctx.DeploymentIssueKey, ctx.InternalIssueKey, "Deployment oluşturuldu");
 
         this.Log($"Deployment created : {ctx.DeploymentIssueKey}");
       }

@@ -284,7 +284,7 @@ namespace Shorthand
 
     private void btnTest_Click(object sender, EventArgs e)
     {
-
+      var t = _jira.GetIssuesOfAssignee("tolgak");
     }
 
   }

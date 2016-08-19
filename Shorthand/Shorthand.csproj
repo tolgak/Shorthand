@@ -134,6 +134,12 @@
     <Compile Include="frmDataDump.Designer.cs">
       <DependentUpon>frmDataDump.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmFlywayHelper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmFlywayHelper.Designer.cs">
+      <DependentUpon>frmFlywayHelper.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +166,7 @@
     <Compile Include="Jira\IssueLink.cs" />
     <Compile Include="Jira\IssueTransition.cs" />
     <Compile Include="Jira\Jira.cs" />
+    <Compile Include="Jira\JiraProject.cs" />
     <Compile Include="JsonResponse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -189,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmDataDump.resx">
       <DependentUpon>frmDataDump.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmFlywayHelper.resx">
+      <DependentUpon>frmFlywayHelper.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
