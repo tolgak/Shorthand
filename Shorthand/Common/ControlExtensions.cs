@@ -78,6 +78,12 @@ namespace Shorthand
       control.DataBindings.Add(binding);    
     }
 
+    public static int GetSelectedValue(this ComboBox control)
+    {
+      var item = control.Items[control.SelectedIndex];
+      return (int) item.GetType().GetProperty(control.ValueMember).GetValue(item, null) ;
+    }
+
   }
 
 

@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>build10532.ico</ApplicationIcon>
+    <ApplicationIcon>Content\img\build10532.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Shorthand.Program</StartupObject>
@@ -68,6 +68,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
@@ -81,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\LookupItem.cs" />
     <Compile Include="Configuration\DeploymentOptions.cs" />
     <Compile Include="Configuration\frmConfigurationDlg.cs">
       <SubType>Form</SubType>
@@ -121,13 +123,13 @@
       <DependentUpon>ucOptionEditorBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\JiraOptions.cs" />
-    <Compile Include="ControlExtensions.cs" />
-    <Compile Include="CSVDataDump.cs" />
-    <Compile Include="DeliveryContext.cs" />
-    <Compile Include="DeliveryToProduction.cs" />
-    <Compile Include="DeliveryToTest.cs" />
-    <Compile Include="ExcelDataDump.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Common\ControlExtensions.cs" />
+    <Compile Include="DataDump\CSVDataDump.cs" />
+    <Compile Include="DeploymentHelper\DeliveryContext.cs" />
+    <Compile Include="DeploymentHelper\DeliveryToProduction.cs" />
+    <Compile Include="DeploymentHelper\DeliveryToTest.cs" />
+    <Compile Include="DataDump\ExcelDataDump.cs" />
+    <Compile Include="Common\Extensions.cs" />
     <Compile Include="frmDataDump.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -161,13 +163,13 @@
     </Compile>
     <Compile Include="GitLab\GitLab.cs" />
     <Compile Include="GitLab\MergeRequestResponse.cs" />
-    <Compile Include="IDataDumper.cs" />
-    <Compile Include="IDelivery.cs" />
+    <Compile Include="DataDump\IDataDumper.cs" />
+    <Compile Include="DeploymentHelper\IDelivery.cs" />
     <Compile Include="Jira\IssueLink.cs" />
     <Compile Include="Jira\IssueTransition.cs" />
     <Compile Include="Jira\Jira.cs" />
     <Compile Include="Jira\JiraProject.cs" />
-    <Compile Include="JsonResponse.cs" />
+    <Compile Include="Common\JsonResponse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -175,7 +177,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SortableList.cs" />
+    <Compile Include="Common\SortableList.cs" />
     <EmbeddedResource Include="Configuration\frmConfigurationDlg.resx">
       <DependentUpon>frmConfigurationDlg.cs</DependentUpon>
     </EmbeddedResource>
@@ -242,14 +244,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="1461255423_settings.ico" />
-    <Content Include="build10532.ico" />
-    <Content Include="build10565.ico" />
-    <Content Include="star_trek.ico" />
+    <Content Include="Content\img\1461255423_settings.ico" />
+    <Content Include="Content\img\build10532.ico" />
+    <Content Include="Content\img\build10565.ico" />
+    <Content Include="Content\img\star_trek.ico" />
     <None Include="Resources\greenOrb.png" />
     <None Include="Resources\redOrb.png" />
     <None Include="Resources\yellowOrb.png" />
-    <Content Include="settings.ico" />
+    <Content Include="Content\img\settings.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

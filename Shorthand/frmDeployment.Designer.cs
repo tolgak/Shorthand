@@ -31,21 +31,21 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
       this.panel1 = new System.Windows.Forms.Panel();
+      this.lblInternal_Status = new System.Windows.Forms.Label();
       this.lblUAT_Status = new System.Windows.Forms.Label();
       this.lblDPLY_Status = new System.Windows.Forms.Label();
       this.lblREQ_Status = new System.Windows.Forms.Label();
       this.btnTest = new System.Windows.Forms.Button();
       this.lblMergeRequestLink = new System.Windows.Forms.LinkLabel();
-      this.checkBox3 = new System.Windows.Forms.CheckBox();
-      this.checkBox2 = new System.Windows.Forms.CheckBox();
+      this.chkCreateUAT = new System.Windows.Forms.CheckBox();
+      this.chkCreateDPLY = new System.Windows.Forms.CheckBox();
       this.btnClearLog = new System.Windows.Forms.Button();
       this.btnRefresh = new System.Windows.Forms.Button();
       this.lblDPLY_IssueKey = new System.Windows.Forms.Label();
       this.txtDPLY = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
       this.rdbTest = new System.Windows.Forms.RadioButton();
       this.rdbProduction = new System.Windows.Forms.RadioButton();
-      this.btnBuild = new System.Windows.Forms.Button();
+      this.btnDeploy = new System.Windows.Forms.Button();
       this.label5 = new System.Windows.Forms.Label();
       this.cmbGitProjectName = new System.Windows.Forms.ComboBox();
       this.label4 = new System.Windows.Forms.Label();
@@ -58,7 +58,6 @@
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
       this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
-      this.lblInternal_Status = new System.Windows.Forms.Label();
       this.panel1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -70,16 +69,15 @@
       this.panel1.Controls.Add(this.lblREQ_Status);
       this.panel1.Controls.Add(this.btnTest);
       this.panel1.Controls.Add(this.lblMergeRequestLink);
-      this.panel1.Controls.Add(this.checkBox3);
-      this.panel1.Controls.Add(this.checkBox2);
+      this.panel1.Controls.Add(this.chkCreateUAT);
+      this.panel1.Controls.Add(this.chkCreateDPLY);
       this.panel1.Controls.Add(this.btnClearLog);
       this.panel1.Controls.Add(this.btnRefresh);
       this.panel1.Controls.Add(this.lblDPLY_IssueKey);
       this.panel1.Controls.Add(this.txtDPLY);
-      this.panel1.Controls.Add(this.label6);
       this.panel1.Controls.Add(this.rdbTest);
       this.panel1.Controls.Add(this.rdbProduction);
-      this.panel1.Controls.Add(this.btnBuild);
+      this.panel1.Controls.Add(this.btnDeploy);
       this.panel1.Controls.Add(this.label5);
       this.panel1.Controls.Add(this.cmbGitProjectName);
       this.panel1.Controls.Add(this.label4);
@@ -97,6 +95,16 @@
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(753, 210);
       this.panel1.TabIndex = 0;
+      // 
+      // lblInternal_Status
+      // 
+      this.lblInternal_Status.AutoSize = true;
+      this.lblInternal_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblInternal_Status.Location = new System.Drawing.Point(185, 22);
+      this.lblInternal_Status.Name = "lblInternal_Status";
+      this.lblInternal_Status.Size = new System.Drawing.Size(31, 12);
+      this.lblInternal_Status.TabIndex = 36;
+      this.lblInternal_Status.Text = "Status";
       // 
       // lblUAT_Status
       // 
@@ -149,23 +157,27 @@
       this.lblMergeRequestLink.TabStop = true;
       this.lblMergeRequestLink.Text = "merge request state unknown";
       // 
-      // checkBox3
+      // chkCreateUAT
       // 
-      this.checkBox3.AutoSize = true;
-      this.checkBox3.Location = new System.Drawing.Point(12, 134);
-      this.checkBox3.Name = "checkBox3";
-      this.checkBox3.Size = new System.Drawing.Size(15, 14);
-      this.checkBox3.TabIndex = 28;
-      this.checkBox3.UseVisualStyleBackColor = true;
+      this.chkCreateUAT.AutoSize = true;
+      this.chkCreateUAT.Checked = true;
+      this.chkCreateUAT.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.chkCreateUAT.Location = new System.Drawing.Point(16, 135);
+      this.chkCreateUAT.Name = "chkCreateUAT";
+      this.chkCreateUAT.Size = new System.Drawing.Size(15, 14);
+      this.chkCreateUAT.TabIndex = 28;
+      this.chkCreateUAT.UseVisualStyleBackColor = true;
       // 
-      // checkBox2
+      // chkCreateDPLY
       // 
-      this.checkBox2.AutoSize = true;
-      this.checkBox2.Location = new System.Drawing.Point(12, 99);
-      this.checkBox2.Name = "checkBox2";
-      this.checkBox2.Size = new System.Drawing.Size(15, 14);
-      this.checkBox2.TabIndex = 27;
-      this.checkBox2.UseVisualStyleBackColor = true;
+      this.chkCreateDPLY.AutoSize = true;
+      this.chkCreateDPLY.Checked = true;
+      this.chkCreateDPLY.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.chkCreateDPLY.Location = new System.Drawing.Point(16, 100);
+      this.chkCreateDPLY.Name = "chkCreateDPLY";
+      this.chkCreateDPLY.Size = new System.Drawing.Size(15, 14);
+      this.chkCreateDPLY.TabIndex = 27;
+      this.chkCreateDPLY.UseVisualStyleBackColor = true;
       // 
       // btnClearLog
       // 
@@ -205,47 +217,38 @@
       this.txtDPLY.Size = new System.Drawing.Size(97, 25);
       this.txtDPLY.TabIndex = 2;
       // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(326, 85);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(66, 17);
-      this.label6.TabIndex = 22;
-      this.label6.Text = "Deliver To";
-      // 
       // rdbTest
       // 
       this.rdbTest.AutoSize = true;
       this.rdbTest.Checked = true;
-      this.rdbTest.Location = new System.Drawing.Point(554, 83);
+      this.rdbTest.Location = new System.Drawing.Point(664, 177);
       this.rdbTest.Name = "rdbTest";
-      this.rdbTest.Size = new System.Drawing.Size(49, 21);
+      this.rdbTest.Size = new System.Drawing.Size(67, 21);
       this.rdbTest.TabIndex = 7;
       this.rdbTest.TabStop = true;
-      this.rdbTest.Text = "Test";
+      this.rdbTest.Text = "To Test";
       this.rdbTest.UseVisualStyleBackColor = true;
       // 
       // rdbProduction
       // 
       this.rdbProduction.AutoSize = true;
-      this.rdbProduction.Location = new System.Drawing.Point(459, 83);
+      this.rdbProduction.Location = new System.Drawing.Point(556, 177);
       this.rdbProduction.Name = "rdbProduction";
-      this.rdbProduction.Size = new System.Drawing.Size(89, 21);
+      this.rdbProduction.Size = new System.Drawing.Size(107, 21);
       this.rdbProduction.TabIndex = 6;
-      this.rdbProduction.Text = "Production";
+      this.rdbProduction.Text = "To Production";
       this.rdbProduction.UseVisualStyleBackColor = true;
       // 
-      // btnBuild
+      // btnDeploy
       // 
-      this.btnBuild.Location = new System.Drawing.Point(578, 159);
-      this.btnBuild.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-      this.btnBuild.Name = "btnBuild";
-      this.btnBuild.Size = new System.Drawing.Size(92, 25);
-      this.btnBuild.TabIndex = 8;
-      this.btnBuild.Text = "Deploy";
-      this.btnBuild.UseVisualStyleBackColor = true;
-      this.btnBuild.Click += new System.EventHandler(this.btnBuild_Click);
+      this.btnDeploy.Location = new System.Drawing.Point(459, 174);
+      this.btnDeploy.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+      this.btnDeploy.Name = "btnDeploy";
+      this.btnDeploy.Size = new System.Drawing.Size(92, 26);
+      this.btnDeploy.TabIndex = 8;
+      this.btnDeploy.Text = "Deploy";
+      this.btnDeploy.UseVisualStyleBackColor = true;
+      this.btnDeploy.Click += new System.EventHandler(this.btnDeploy_Click);
       // 
       // label5
       // 
@@ -360,16 +363,6 @@
       this.ımageList1.ImageSize = new System.Drawing.Size(16, 16);
       this.ımageList1.TransparentColor = System.Drawing.Color.Transparent;
       // 
-      // lblInternal_Status
-      // 
-      this.lblInternal_Status.AutoSize = true;
-      this.lblInternal_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-      this.lblInternal_Status.Location = new System.Drawing.Point(185, 22);
-      this.lblInternal_Status.Name = "lblInternal_Status";
-      this.lblInternal_Status.Size = new System.Drawing.Size(31, 12);
-      this.lblInternal_Status.TabIndex = 36;
-      this.lblInternal_Status.Text = "Status";
-      // 
       // frmDeployment
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -379,11 +372,13 @@
       this.Controls.Add(this.panel1);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+      this.KeyPreview = true;
       this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.Name = "frmDeployment";
       this.Padding = new System.Windows.Forms.Padding(5);
       this.ShowInTaskbar = false;
       this.Text = "Deployment Helper";
+      this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmDeployment_KeyUp);
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();
       this.ResumeLayout(false);
@@ -394,7 +389,7 @@
     #endregion
 
     private System.Windows.Forms.Panel panel1;
-    private System.Windows.Forms.Button btnBuild;
+    private System.Windows.Forms.Button btnDeploy;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ComboBox cmbGitProjectName;
     private System.Windows.Forms.Label label4;
@@ -406,15 +401,14 @@
     private System.Windows.Forms.TextBox txtInternal;
     private System.Windows.Forms.TextBox txtREQ;
     private System.Windows.Forms.TextBox txtDump;
-    private System.Windows.Forms.Label label6;
     private System.Windows.Forms.RadioButton rdbTest;
     private System.Windows.Forms.RadioButton rdbProduction;
     private System.Windows.Forms.Label lblDPLY_IssueKey;
     private System.Windows.Forms.TextBox txtDPLY;
     private System.Windows.Forms.Button btnRefresh;
     private System.Windows.Forms.Button btnClearLog;
-    private System.Windows.Forms.CheckBox checkBox3;
-    private System.Windows.Forms.CheckBox checkBox2;
+    private System.Windows.Forms.CheckBox chkCreateUAT;
+    private System.Windows.Forms.CheckBox chkCreateDPLY;
     private System.Windows.Forms.LinkLabel lblMergeRequestLink;
     private System.Windows.Forms.Button btnTest;
     private System.Windows.Forms.Label lblUAT_Status;

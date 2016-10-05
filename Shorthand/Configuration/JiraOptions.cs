@@ -17,6 +17,13 @@ namespace Shorthand
     public string DPLY_ProjectKey { get; set; }
     public string UAT_ProjectKey{ get; set; }
 
-    public bool IsActive { get { return !string.IsNullOrEmpty(this.JiraBaseUrl) && !string.IsNullOrEmpty(this.Username) && !string.IsNullOrEmpty(this.Password); } }
+    public bool IsValid {
+      get {
+        return !string.IsNullOrEmpty(this.JiraBaseUrl) 
+            && !string.IsNullOrEmpty(this.Username) 
+            && !string.IsNullOrEmpty(this.Password);
+      }
+    }
+
   }
 }

@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Shorthand
 {
+
   public class DeliveryContext
   {
+    public const string ToTest = "Test";
+    public const string ToProduction = "Production";
+
     public string InternalIssueKey { get; set; }
     public string RequestIssueKey { get; set; }
     public string DeploymentIssueKey { get; set; }
@@ -21,6 +25,9 @@ namespace Shorthand
 
     public string TestExecutableTargetName { get; set; }
 
+    public string DeliveryTo { get; set; }
+    public bool CreateDeploymentIssue { get; set; }
+    public bool CreateUatIssue { get; set; }
 
   }
 

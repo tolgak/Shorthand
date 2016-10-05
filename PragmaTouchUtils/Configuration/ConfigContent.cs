@@ -58,10 +58,8 @@ namespace PragmaTouchUtils
     public object GetConfigContentItem(string className)
     {
       object item = null;
-      if ( _preferences.TryGetValue(className, out item) )
-        return item;
-      else 
-        return null;    
+      _preferences.TryGetValue(className, out item);
+      return item;
     }
 
     public void LoadConfiguration()

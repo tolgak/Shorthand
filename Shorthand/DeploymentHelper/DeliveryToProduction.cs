@@ -129,11 +129,11 @@ namespace Shorthand
     }
 
     private string BuilDeploymentDescription(DeliveryContext ctx)
-    {
+    {      
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var deploymentIssueKey = ctx.DeploymentIssueKey;
       return new StringBuilder().AppendLine(ctx.InternalIssueKey)
-                                .AppendFormattedLine("merge request http://sisgit.bilgi.networks/sofdev/{0}/merge_requests", ctx.GitProjectName)
+                                .AppendFormattedLine("merge request {0}/sofdev/{1}/merge_requests/{2}", ctx.GitProjectWebUrl, ctx.GitProjectName, ctx.GitMergeRequestNo)
                                 .AppendLine("{noformat}")
                                 .AppendFormattedLine("{0}\\{1}.rar", options.ProductionDeliveryFolder, deploymentIssueKey)                                                                
                                 .AppendLine("Bu arşivdeki exe dosyalar uygulama dizinine kopyalanacak.")

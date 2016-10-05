@@ -26,11 +26,13 @@ namespace Shorthand
     }
 
 
-    public List<Project> GetProjects()
+    public List<Project> GetProjects(bool onlyStarred = false)
     {
       var url = $"{_options.Url}/api/v3/projects";
-      var jsonResponse = this.SendApiRequest(url, null, ApiMethod.GET);
+      if (onlyStarred)
+        url += "/starred";
 
+      var jsonResponse = this.SendApiRequest(url, null, ApiMethod.GET);
       return JsonConvert.DeserializeObject<List<Project>>(jsonResponse.Result);
     }
 
