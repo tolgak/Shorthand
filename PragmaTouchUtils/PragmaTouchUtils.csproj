@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PragmaTouchUtils</RootNamespace>
     <AssemblyName>PragmaTouchUtils</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -72,6 +72,12 @@
       <DependentUpon>frmConfigurationDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\IConfigContentEditor.cs" />
+    <Compile Include="Configuration\ucOptionEditorBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ucOptionEditorBase.Designer.cs">
+      <DependentUpon>ucOptionEditorBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="MsExcelBulkExport.cs" />
     <Compile Include="MsExcelExport.cs" />
     <Compile Include="frmAbout.cs">
@@ -105,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\frmConfigurationDlg.resx">
       <DependentUpon>frmConfigurationDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ucOptionEditorBase.resx">
+      <DependentUpon>ucOptionEditorBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>

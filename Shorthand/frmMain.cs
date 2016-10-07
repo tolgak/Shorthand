@@ -1,20 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+//using System.Collections.Generic;
+//using System.ComponentModel;
+//using System.Data;
+//using System.Drawing;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
+using System.ComponentModel.Composition.Hosting;
+using System.Windows.Forms;
 using PragmaTouchUtils;
 using System.Reflection;
+using System.ComponentModel.Composition;
+using System.IO;
+using System.Collections;
+using Shorthand.Common;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Shorthand
 {
+  
+  
   public partial class frmMain : Form
   {
+
+    private CompositionContainer _container;
+
+    [ImportMany(typeof(IPlugin))]
+    private  List<IPlugin> _plugins;
+
     public frmMain()
     {
       try
@@ -22,19 +37,10 @@ namespace Shorthand
         this.Cursor = Cursors.AppStarting;
 
         this.InitializeComponent();
-        //this.InitializeDockPanel();
 
-        //FormFactory.Instance.MdiContainer = this;
-        //FormFactory.Instance.ShowDockContent = this.ShowDockContent;
-
-        ConfigContent.ApplicationName = "Dev Shorthand";
-        ConfigContent.Current.LoadConfiguration();
-
-        var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
-        this.Width = options.Width;
-        this.Height = options.Height;
-
-        //_clpHook = new ClipboardHook();
+        this.SetVersionInfo();
+        this.InitializeConfiguration();
+        this.InitializePluginContainer();
       }
       finally
       {
@@ -43,19 +49,44 @@ namespace Shorthand
 
     }
 
+    private void InitializePluginContainer()
+    {
+      var pluginFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)  + @"\plugins\";
+      if (!Directory.Exists(pluginFilePath))
+        return;
 
- 
+      var catalog = new AggregateCatalog();
+      catalog.Catalogs.Add(new DirectoryCatalog(pluginFilePath));
+      _container = new CompositionContainer(catalog);
+
+      var context = new PluginContext { Host = this, Configuration = ConfigContent.Current };
+      try
+      {
+        _container.ComposeParts(this);
+        _plugins.ForEach(x => x.PerformAction(context));
+      }
+      catch (Exception compositionException)
+      {
+        MessageBox.Show(compositionException.Message);        
+      }
+    }
+
+    private void InitializeConfiguration()
+    {
+      ConfigContent.ApplicationName = "Dev Shorthand";
+      ConfigContent.Current.LoadConfiguration();
+
+      var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
+      this.Width = options.Width;
+      this.Height = options.Height;
+    }
+
+
     private void mnuItemExit_Click(object sender, EventArgs e)
     {
       this.Close();
     }
 
-    private void mnuDeploymentHelper_Click(object sender, EventArgs e)
-    {
-      var frm = new frmDeployment();
-      frm.MdiParent = this;
-      frm.Show();
-    }
 
     private void mnuFlywayHelper_Click(object sender, EventArgs e)
     {
@@ -94,17 +125,16 @@ namespace Shorthand
 
     private void SetVersionInfo()
     {
-      Version versionInfo = Assembly.GetExecutingAssembly().GetName().Version;
-      DateTime startDate = new DateTime(2000, 1, 1);
-      int diffDays = versionInfo.Build;
-      DateTime computedDate = startDate.AddDays(diffDays);
-      string lastBuilt = computedDate.ToShortDateString();
-      this.Text = string.Format("{0} - Version {1} ({2})", this.Text, versionInfo.ToString(), lastBuilt);
+      var versionInfo = Assembly.GetExecutingAssembly().GetName().Version;
+      var startDate = new DateTime(2000, 1, 1);      
+      var lastBuilt = startDate.AddDays(versionInfo.Build).ToShortDateString();
+
+      this.Text = $"{this.Text} - Version {versionInfo.ToString()} ({lastBuilt})";
     }
 
     private void frmMain_Load(object sender, EventArgs e)
     {
-      this.SetVersionInfo();
+
     }
 
 

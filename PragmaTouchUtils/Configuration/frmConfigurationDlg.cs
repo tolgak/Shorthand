@@ -85,12 +85,13 @@ namespace PragmaTouchUtils
 
       foreach ( var editorType in editorTypes )
       {
-        ObjectHandle hnd = Activator.CreateInstance(editorType.Assembly.GetName().Name, editorType.FullName);
-        IConfigContentEditor editor = hnd.Unwrap() as IConfigContentEditor;
-        
+        //ObjectHandle hnd = Activator.CreateInstance(editorType.Assembly.GetName().Name, editorType.FullName);
+        //IConfigContentEditor editor = hnd.Unwrap() as IConfigContentEditor;
+        var editor = Activator.CreateInstance(editorType) as IConfigContentEditor;
+
         if ( editor != null )
         {
-          IConfigContentEditor matchedEditor = _configItems.FirstOrDefault(x => x.GetType() == editor.GetType());
+          var matchedEditor = _configItems.FirstOrDefault(x => x.GetType() == editor.GetType());
           if ( matchedEditor != null )
           {
             _configItems.Remove(matchedEditor);
@@ -99,7 +100,7 @@ namespace PragmaTouchUtils
           }
         }
 
-        UserControl editorAsControl = editor as UserControl;
+        var editorAsControl = editor as UserControl;
         editorAsControl.Hide();
         editorAsControl.Parent = pnlContent;
         editorAsControl.Dock = DockStyle.Fill;
@@ -115,7 +116,7 @@ namespace PragmaTouchUtils
         throw new ArgumentNullException("Configuration content is null!");
       
       _configContent = configContent;
-      this.Text = string.Format("{0} options", ConfigContent.ApplicationName);
+      this.Text = $"{ConfigContent.ApplicationName} options";
 
       BuildConfigurationItems();
     }
@@ -124,21 +125,15 @@ namespace PragmaTouchUtils
     {
       tv.Nodes.Clear();
       string key = string.Empty;
-      TreeNode parentNode = AddNode( string.Format("{0} Options", ConfigContent.ApplicationName) );
-      //int i = 0;
+      TreeNode parentNode = AddNode( $"{ConfigContent.ApplicationName} Options");
+
       foreach ( var editor in _configItems )
       {
-        //key = string.Format("Node{0}", i++);
         TreeNode node = AddNode(parentNode, editor.Caption, editor.Caption);
         node.Tag = editor;
       }
 
       parentNode.Expand();
-      //tv.SelectedNode = tv.Nodes.Find("Node0", true).First();
-
-//      _moduleOptionsRoot = tv.Nodes.Add("Modules");
-//      _moduleOptionsRoot.ImageIndex = 1;
-//      _moduleOptionsRoot.SelectedImageIndex = 1;
     }
 
 

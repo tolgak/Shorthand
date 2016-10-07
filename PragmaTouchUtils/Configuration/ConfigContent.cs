@@ -52,7 +52,7 @@ namespace PragmaTouchUtils
       if ( !Directory.Exists(this.UserDataDirectory) )
         Directory.CreateDirectory(this.UserDataDirectory);
 
-      this.DefaultFileName = string.Format("{0}\\{1}.options", this.UserDataDirectory, ConfigContent.ApplicationName);                 
+      this.DefaultFileName = $"{this.UserDataDirectory}\\{ConfigContent.ApplicationName}.options";
     }
 
     public object GetConfigContentItem(string className)
@@ -73,7 +73,7 @@ namespace PragmaTouchUtils
         if ( e != null && !_preferences.ContainsKey(e.Name))
         {
           object value = null;
-          string prefPath = string.Format("{0}\\{1}.options", this.UserDataDirectory, e.Name );
+          string prefPath = $"{this.UserDataDirectory}\\{e.Name}.options";
           if ( File.Exists(prefPath) )
             value = this.LoadFromDocumentFormat(e, prefPath);
           else
@@ -84,6 +84,9 @@ namespace PragmaTouchUtils
       }
 
     }
+
+
+
 
     public void SaveConfiguration()
     {

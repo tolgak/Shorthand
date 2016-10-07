@@ -33,7 +33,7 @@
       this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-      this.mnuDeploymentHelper = new System.Windows.Forms.ToolStripMenuItem();
+      this.mnuFlywayHelper = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuXsltSandbox = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuDataDump = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -41,7 +41,6 @@
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
-      this.mnuFlywayHelper = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuMain.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -78,7 +77,6 @@
       // mnuTools
       // 
       this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuDeploymentHelper,
             this.mnuFlywayHelper,
             this.mnuXsltSandbox,
             this.mnuDataDump,
@@ -88,12 +86,12 @@
       this.mnuTools.Size = new System.Drawing.Size(51, 21);
       this.mnuTools.Text = "Tools";
       // 
-      // mnuDeploymentHelper
+      // mnuFlywayHelper
       // 
-      this.mnuDeploymentHelper.Name = "mnuDeploymentHelper";
-      this.mnuDeploymentHelper.Size = new System.Drawing.Size(190, 22);
-      this.mnuDeploymentHelper.Text = "Deployment helper";
-      this.mnuDeploymentHelper.Click += new System.EventHandler(this.mnuDeploymentHelper_Click);
+      this.mnuFlywayHelper.Name = "mnuFlywayHelper";
+      this.mnuFlywayHelper.Size = new System.Drawing.Size(190, 22);
+      this.mnuFlywayHelper.Text = "Flyway helper";
+      this.mnuFlywayHelper.Click += new System.EventHandler(this.mnuFlywayHelper_Click);
       // 
       // mnuXsltSandbox
       // 
@@ -141,13 +139,6 @@
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
       // 
-      // mnuFlywayHelper
-      // 
-      this.mnuFlywayHelper.Name = "mnuFlywayHelper";
-      this.mnuFlywayHelper.Size = new System.Drawing.Size(190, 22);
-      this.mnuFlywayHelper.Text = "Flyway helper";
-      this.mnuFlywayHelper.Click += new System.EventHandler(this.mnuFlywayHelper_Click);
-      // 
       // frmMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -180,7 +171,6 @@
     private System.Windows.Forms.ToolStripMenuItem mnuTools;
     private System.Windows.Forms.ToolStripMenuItem mnuSettings;
     private System.Windows.Forms.ToolStripMenuItem mnuHelp;
-    private System.Windows.Forms.ToolStripMenuItem mnuDeploymentHelper;
     private System.Windows.Forms.ToolStripMenuItem mnuWindow;
     private System.Windows.Forms.StatusStrip appStat;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;

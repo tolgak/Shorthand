@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0E574682-A5DB-4DAE-9003-09C8D0CA9F1F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Shorthand.DeploymentHelper</RootNamespace>
+    <AssemblyName>Shorthand.DeploymentHelper</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\DeploymentOptions.cs" />
+    <Compile Include="Configuration\GitLabOptions.cs" />
+    <Compile Include="Configuration\JiraOptions.cs" />
+    <Compile Include="Configuration\ucDeploymentOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ucDeploymentOptions.Designer.cs">
+      <DependentUpon>ucDeploymentOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ucGitLabOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ucGitLabOptions.Designer.cs">
+      <DependentUpon>ucGitLabOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ucJiraOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ucJiraOptions.Designer.cs">
+      <DependentUpon>ucJiraOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeliveryContext.cs" />
+    <Compile Include="DeliveryToProduction.cs" />
+    <Compile Include="DeliveryToTest.cs" />
+    <Compile Include="frmDeployment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDeployment.Designer.cs">
+      <DependentUpon>frmDeployment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GitLab\GitLab.cs" />
+    <Compile Include="GitLab\MergeRequestResponse.cs" />
+    <Compile Include="IDelivery.cs" />
+    <Compile Include="Jira\IssueLink.cs" />
+    <Compile Include="Jira\IssueTransition.cs" />
+    <Compile Include="Jira\Jira.cs" />
+    <Compile Include="Jira\JiraProject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\ucDeploymentOptions.resx">
+      <DependentUpon>ucDeploymentOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ucGitLabOptions.resx">
+      <DependentUpon>ucGitLabOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ucJiraOptions.resx">
+      <DependentUpon>ucJiraOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDeployment.resx">
+      <DependentUpon>frmDeployment.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PragmaTouchUtils\PragmaTouchUtils.csproj">
+      <Project>{0b5243d8-8b48-496e-a709-7f56e6c21db3}</Project>
+      <Name>PragmaTouchUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shorthand.Common\Shorthand.Common.csproj">
+      <Project>{ace55c38-8663-4bb1-bf22-6690a422a30b}</Project>
+      <Name>Shorthand.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)Shorthand\$(OutDir)plugins\*.* /y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
