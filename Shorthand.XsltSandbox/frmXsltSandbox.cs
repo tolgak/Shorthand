@@ -1,29 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Xsl;
+
+using System.ComponentModel.Composition;
+using PragmaTouchUtils;
+using Shorthand.Common;
+
 
 namespace Shorthand
 {
-  public partial class frmXsltSandbox : Form
+  [Export(typeof(IPlugin))]
+  public partial class frmXsltSandbox : Form, IPlugin
   {
+    private IPluginContext _context;
 
     public frmXsltSandbox()
     {
       InitializeComponent();
+    }
+
+
+    public void Initialize(IPluginContext context)
+    {
+      _context = context;
+      this.MdiParent = _context.Host;      
+
+      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
+      if (strips.Length == 0)
+        return;
+
+      var subItem = new ToolStripMenuItem(this.Text);
+      if (this.Icon != null)
+        subItem.Image = this.Icon.ToBitmap();
+      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
+      subItem.Click += (object sender, EventArgs e) => { this.Show(); };
+
+      this.FormClosing += (object sender, FormClosingEventArgs e) =>
+      {
+        e.Cancel = true;
+        this.Hide();
+      };
+
+      this.InitializePlugin();
+      this.InitializeUI();
+    }
+
+
+
+    private void InitializeUI()
+    {
       tabSource.SelectedTab = tabXSL;
     }
+
+    private void InitializePlugin()
+    {
+
+    }
+    
 
     private void btnRun_Click(object sender, EventArgs e)
     {
@@ -77,10 +113,6 @@ namespace Shorthand
       css = string.Format("<style>{0}</style>", css);
       return html.Replace("<style />", css);
     }
-
-
-
-
 
 
   }

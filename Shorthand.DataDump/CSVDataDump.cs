@@ -31,8 +31,8 @@ namespace Shorthand
           File.WriteAllText(fileName, content, Encoding.UTF8);          
           Process.Start(fileName);
 
-          if (this.OnRecordsetProgress != null)
-            this.OnRecordsetProgress(this, new RecordsetProgressEventArgs { NumberOfRecordsets = cntRecordset, Current = i });
+          //if (this.OnRecordsetProgress != null)
+            this.OnRecordsetProgress?.Invoke(this, new RecordsetProgressEventArgs { NumberOfRecordsets = cntRecordset, Current = i });
         }
       }
       finally
@@ -91,8 +91,8 @@ namespace Shorthand
           if (table.Rows[row].ItemArray[col] != null)
             data[row + 1, col] = table.Rows[row].ItemArray[col].ToString();
 
-        if (this.OnRecordProgress != null)
-          this.OnRecordProgress(this, new RecordProgressEventArgs { NumberOfRecords = table.Rows.Count, Current = row });
+        //if (this.OnRecordProgress != null)
+          this.OnRecordProgress?.Invoke(this, new RecordProgressEventArgs { NumberOfRecords = table.Rows.Count, Current = row });
       }
 
 

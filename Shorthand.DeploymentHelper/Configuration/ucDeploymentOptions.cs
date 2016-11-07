@@ -14,6 +14,10 @@ namespace Shorthand
 {
   public partial class ucDeploymentOptions : ucOptionEditorBase, IConfigContentEditor
   {
+
+    private DeploymentOptions _options;
+    private string _cleanHash;
+
     public ucDeploymentOptions()
     {
       InitializeComponent();
@@ -22,24 +26,23 @@ namespace Shorthand
       this.Caption = "Deployment";
     }
 
+    public override bool Modified { get { return string.IsNullOrEmpty(_cleanHash) ? false : _cleanHash != _options.GetMd5Hash();} }
+
     protected override void LoadInitial()
     {
-      var options = _currentConfig.GetConfigContentItem(this.ItemClassName) as DeploymentOptions;
-      if ( options == null )
+      _options = _currentConfig.GetConfigContentItem(this.ItemClassName) as DeploymentOptions;
+      if ( _options == null )
         throw new Exception(string.Format("Configuration content does not contain {0} item!", this.ItemClassName));
 
-      txtLocalBinPath.DataBindTo(options, "LocalBinPath", this.ControlValueChanged);      
-      txtArchiveToolPath.DataBindTo(options, "ArchiveToolPath", this.ControlValueChanged);
-      txtArchiveToolSwitches.DataBindTo(options, "ArchiveToolSwitches", this.ControlValueChanged);
-      txtTestDeliveryFolder.DataBindTo(options, "TestDeliveryFolder", this.ControlValueChanged);
-      txtProductionDeliveryFolder.DataBindTo(options, "ProductionDeliveryFolder", this.ControlValueChanged);
-      
+      _cleanHash = _options.GetMd5Hash();
+
+      txtLocalBinPath.DataBindTo(_options, "LocalBinPath");      
+      txtArchiveToolPath.DataBindTo(_options, "ArchiveToolPath");
+      txtArchiveToolSwitches.DataBindTo(_options, "ArchiveToolSwitches");
+      txtTestDeliveryFolder.DataBindTo(_options, "TestDeliveryFolder");
+      txtProductionDeliveryFolder.DataBindTo(_options, "ProductionDeliveryFolder");
     }
 
-    private void ControlValueChanged(object sender, EventArgs e)
-    {
-      this.Modified = true;
-    }
 
 
   }

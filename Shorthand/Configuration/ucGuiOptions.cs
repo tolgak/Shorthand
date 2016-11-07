@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 using PragmaTouchUtils;
 
 namespace Shorthand
 {
 
   public partial class ucGuiOptions : ucOptionEditorBase, IConfigContentEditor
-  {
+  {    
+    private GuiOptions _options;
+    private string _cleanHash;
+
     public ucGuiOptions()
     {
       InitializeComponent();
@@ -25,24 +19,18 @@ namespace Shorthand
 
     protected override void LoadInitial()
     {
-      var options = _currentConfig.GetConfigContentItem(this.ItemClassName) as GuiOptions;
-      if (options == null)
+      _options = _currentConfig.GetConfigContentItem(this.ItemClassName) as GuiOptions;
+      if (_options == null)
         throw new Exception(string.Format("Configuration content does not contain {0} item!", this.ItemClassName));
 
-      txtWidth.DataBindTo(options, "Width", this.ControlValueChanged);
-      txtHeight.DataBindTo(options, "Height", this.ControlValueChanged);
-      //txtPassword.DataBindTo(options, "Password", this.ControlValueChanged);
+      _cleanHash = _options.GetMd5Hash();
 
-      //txtREQ_ProjectKey.DataBindTo(options, "REQ_ProjectKey", this.ControlValueChanged);
-      //txtDPLY_ProjectKey.DataBindTo(options, "DPLY_ProjectKey", this.ControlValueChanged);
-      //txtUAT_ProjectKey.DataBindTo(options, "UAT_ProjectKey", this.ControlValueChanged);
-
+      txtWidth.DataBindTo(_options, "Width");
+      txtHeight.DataBindTo(_options, "Height");
     }
 
-    private void ControlValueChanged(object sender, EventArgs e)
-    {
-      this.Modified = true;
-    }
+    public override bool Modified { get { return string.IsNullOrEmpty(_cleanHash) ? false : _cleanHash != _options.GetMd5Hash(); } }
+
 
   }
 

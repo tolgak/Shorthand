@@ -1,9 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Shorthand
 {
+
   public enum DeliverTo { None, Production, Test }
 
   public class ApiMethod
@@ -36,7 +41,41 @@ namespace Shorthand
       return JsonConvert.SerializeObject(data);
     }
 
-  }
 
+    public static string GetMd5Hash(this object o)
+    {
+      if (o == null)
+        return string.Empty;
+
+      try
+      {
+        using (var ms = new MemoryStream())
+        {
+          var b = new BinaryFormatter();
+          b.Serialize(ms, o);
+          return GetMd5Sum(ms.ToArray());
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Cannot calculate hash of the object.", ex);
+      }
+    }
+
+    private static string GetMd5Sum(byte[] buffer)
+    {
+      if (buffer == null)
+        return string.Empty;
+
+      byte[] result = MD5CryptoServiceProvider.Create().ComputeHash(buffer);
+
+      var sb = new StringBuilder();
+      for (int i = 0; i < result.Length; i++)
+        sb.Append(result[i].ToString("X2"));
+
+      return sb.ToString();
+    }
+
+  }
 
 }

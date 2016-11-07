@@ -23,140 +23,117 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
-
+using System.Reflection;
 
 namespace PragmaTouchUtils
 {
   public partial class frmAbout : Form
   {
-    public frmAbout( )
+    public static void ShowAbout()
     {
-      InitializeComponent();
-    }
-
-    public void PopulateSystemInfo( )
-    {
-      lv.Items.Clear();
-
-      #region OS Information
-
-      ListViewItem item = lv.Items.Add("Computer Name");
-      item.SubItems.Add(SystemInformation.ComputerName);
-
-      item = lv.Items.Add("Username");
-      item.SubItems.Add(SystemInformation.UserName);
-
-      item = lv.Items.Add("Domain");
-      item.SubItems.Add(SystemInformation.UserDomainName);
-
-      item = lv.Items.Add("Connected to network");
-      item.SubItems.Add(SystemInformation.Network ? "Yes" : "No");
-
-      item = lv.Items.Add("Current Directory");
-      item.SubItems.Add(System.Environment.CurrentDirectory);
-
-      item = lv.Items.Add("OS Name");
-      item.SubItems.Add(System.Environment.OSVersion.VersionString);
-
-      item = lv.Items.Add("OS Platform");
-      item.SubItems.Add(System.Environment.OSVersion.Platform.ToString());
-
-      item = lv.Items.Add("OS Version");
-      item.SubItems.Add(System.Environment.OSVersion.Version.ToString());
-
-      item = lv.Items.Add("OS Service Pack");
-      item.SubItems.Add(System.Environment.OSVersion.ServicePack);
-
-      #endregion
-
-      #region Data Directories
-
-      item = lv.Items.Add("");
-      item = lv.Items.Add("Special Directories");
-      item.SubItems.Add("Directory Path");
-
-      item = lv.Items.Add("App Data");
-      //item.SubItems.Add(SessionConsts.AppDataDir);
-
-      item = lv.Items.Add("Common App Data");
-      //item.SubItems.Add(SessionConsts.CommonAppDataDir);
-
-      item = lv.Items.Add("Assembly Packages");
-      //item.SubItems.Add(SessionConsts.AssemblyPackageDir);
-
-      item = lv.Items.Add("Dashboard Dir");
-      //item.SubItems.Add(SessionConsts.DashboardDir);
-
-      item = lv.Items.Add("Widget Settings Dir");
-      //item.SubItems.Add(SessionConsts.WidgetSettingsDir);
-
-      item = lv.Items.Add("Temp Dir");
-      //item.SubItems.Add(SessionConsts.TempDir);
-
-      item = lv.Items.Add("SlideShowSettingsFile");
-      //item.SubItems.Add(SessionConsts.SlideShowSettingsFile);
-
-      #endregion
-
-      #region Loaded Assembly Information
-
-
-      item = lv.Items.Add("");
-      item = lv.Items.Add("Loaded Assemblies");
-      item.SubItems.Add("Assembly Path");
-
-      System.Reflection.Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToArray();
-
-      foreach (System.Reflection.Assembly ass in loadedAssemblies)
-      {
-        if (ass.IsDynamic)
-          continue;
-        if (String.IsNullOrEmpty(ass.Location))
-        {
-          continue;
-        }
-
-        item = lv.Items.Add(ass.GetName().Name + " ( " + ass.GetName().Version.ToString() + " )");
-        item.SubItems.Add(ass.Location);
-      }
-
-      #endregion
-
-      lv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-      System.Reflection.Assembly app = System.Reflection.Assembly.GetExecutingAssembly();
-      Version v = app.GetName().Version;
-      lblVersion.Text = String.Format("Version: {0}.{1}.{2} r{3}", v.Major, v.Minor,v.Build,v.Revision);
-
-    }
-    
-   
-    
-    public static void ShowAbout( )
-    {
-      using ( frmAbout frm = new frmAbout() )
+      using (frmAbout frm = new frmAbout())
       {
         frm.PopulateSystemInfo();
         frm.ShowDialog();
       }
     }
 
-    //private void linkLabel1_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
-    //{
-    //  System.Diagnostics.Process.Start("mailto:tolga.kurkcuoglu@gmail.com?Subject=OMBLOffice");
-    //}
+    public frmAbout( )
+    {
+      InitializeComponent();
+    }
 
+    private void AddListItem(string name, string value, ListViewGroup ownerGroup = null)
+    {
+      var item = lv.Items.Add(name);
+      item.SubItems.Add(value);
 
+      if (ownerGroup != null)
+        item.Group = ownerGroup;
+    }
+
+    public void PopulateSystemInfo( )
+    {
+      lv.Items.Clear();
+      lv.Groups.Clear();
+      lv.ShowGroups = true;
+
+      #region OS Information
+
+      var g1 = new ListViewGroup("grpSystem", "System");
+      lv.Groups.Add(g1);
+      this.AddListItem("Computer", SystemInformation.ComputerName, g1);
+      this.AddListItem("Username", SystemInformation.UserName, g1);
+      this.AddListItem("Domain", SystemInformation.UserDomainName, g1);
+      this.AddListItem("Connected to network", SystemInformation.Network ? "Yes" : "No", g1);
+
+      var g2 = new ListViewGroup("grpEnvironment", "Environment");
+      lv.Groups.Add(g2);
+      this.AddListItem("Current Directory", Environment.CurrentDirectory, g2);
+      this.AddListItem("OS Name", Environment.OSVersion.VersionString, g2);
+      this.AddListItem("OS Platform", Environment.OSVersion.Platform.ToString(), g2);
+      this.AddListItem("OS Version", Environment.OSVersion.Version.ToString(), g2);
+      //this.AddListItem("OS Service Pack", Environment.OSVersion.ServicePack, g2);
+      this.AddListItem("OS 64 Bit", Environment.Is64BitOperatingSystem ? "Yes" : "No", g2);
+      this.AddListItem("App 64 Bit", Environment.Is64BitProcess? "Yes" : "No", g2);
+
+      #endregion
+
+      #region Data Directories
+
+      //item = lv.Items.Add("");
+      //item = lv.Items.Add("Special Directories");
+      //item.SubItems.Add("Directory Path");
+
+      //item = lv.Items.Add("App Data");
+      //item.SubItems.Add(SessionConsts.AppDataDir);
+
+      //item = lv.Items.Add("Common App Data");
+      //item.SubItems.Add(SessionConsts.CommonAppDataDir);
+
+      //item = lv.Items.Add("Assembly Packages");
+      //item.SubItems.Add(SessionConsts.AssemblyPackageDir);
+
+      //item = lv.Items.Add("Dashboard Dir");
+      //item.SubItems.Add(SessionConsts.DashboardDir);
+
+      //item = lv.Items.Add("Widget Settings Dir");
+      //item.SubItems.Add(SessionConsts.WidgetSettingsDir);
+
+      //item = lv.Items.Add("Temp Dir");
+      //item.SubItems.Add(SessionConsts.TempDir);
+
+      //item = lv.Items.Add("SlideShowSettingsFile");
+      //item.SubItems.Add(SessionConsts.SlideShowSettingsFile);
+
+      #endregion
+
+      #region Loaded Assembly Information
+
+      var g4 = new ListViewGroup("grpAssemblies", "Loaded Assemblies");
+      lv.Groups.Add(g4);
+
+      var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToArray();
+      foreach (System.Reflection.Assembly ass in loadedAssemblies)
+      {
+        if (ass.IsDynamic || string.IsNullOrEmpty(ass.Location))        
+          continue;
+
+        this.AddListItem($"{ass.GetName().Name} ({ass.GetName().Version.ToString() })", ass.Location, g4);
+      }
+
+      #endregion
+
+      lv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+      var app = Assembly.GetCallingAssembly();
+      var v = app.GetName().Version;
+      lblVersion.Text = string.Format("Version: {0}.{1}.{2} r{3}", v.Major, v.Minor, v.Build, v.Revision);
+    }
 
     private void lblThrowException_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
     {
       throw new Exception("This error is intentionally thrown for testing purpose.");
-    }
-
-
-    private void tabPage2_Click(object sender, EventArgs e)
-    {
-
     }
 
     private void frmAbout_Load(object sender, EventArgs e)
@@ -164,10 +141,7 @@ namespace PragmaTouchUtils
       lblCopyright.Text = String.Format("All rights reserved. ©2011-{0}", DateTime.Now.Year);
     }
 
-    private void lblCopyright_DoubleClick(object sender, EventArgs e)
-    {
-      //MessageBoxHelper.ShowInfo(Petrotek.eXpressOto.WinForms.Properties.Resources.DeveloperInfo);
-    }
+
 
   }
 }

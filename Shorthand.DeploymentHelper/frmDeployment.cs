@@ -5,11 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using PragmaTouchUtils;
 using System.Net.Mail;
 
-using Shorthand.Common;
 using System.ComponentModel.Composition;
+using PragmaTouchUtils;
+using Shorthand.Common;
+using System.Drawing;
 
 namespace Shorthand
 {
@@ -30,6 +31,48 @@ namespace Shorthand
     public frmDeployment()
     {
       InitializeComponent();
+    }
+
+
+    public void Initialize(IPluginContext context)
+    {
+      _context = context;
+      this.MdiParent = _context.Host;
+      _context.Configuration.LoadConfiguration();
+
+      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
+      if (strips.Length == 0)
+        return;
+
+      var subItem = new ToolStripMenuItem(this.Text);
+      if (this.Icon != null)
+        subItem.Image = this.Icon.ToBitmap();
+      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
+      subItem.Click += (object sender, EventArgs e) => { this.Show(); };
+
+      var host = _context.Host as IPluginHost;
+      if (host != null)
+        host.onSettingsChanged += this.OnSettingsChangedEventHandler;
+
+      this.FormClosing += (object sender, FormClosingEventArgs e) =>
+      {
+        e.Cancel = true;
+        this.Hide();
+      };
+
+      this.InitializePlugin();
+      this.InitializeUI();
+    }
+
+
+    public void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
+    {
+      var shouldRefresh = e.ChangedOptions.Contains("DeploymentOptions") || e.ChangedOptions.Contains("JiraOptions") || e.ChangedOptions.Contains("GitLabOptions");
+      if ( !shouldRefresh )
+        return;
+
+      this.InitializePlugin();
+      this.InitializeUI();
     }
 
     private void InitializePlugin()
@@ -75,36 +118,6 @@ namespace Shorthand
 
         lblMergeRequestLink.LinkClicked += (x, y) => { Process.Start(y.Link.LinkData as string); };
       }
-    }
-
-    public void PerformAction(IPluginContext context)
-    {
-      _context = context;
-      this.MdiParent = _context.Host;
-      _context.Configuration.LoadConfiguration();
-
-      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
-      if (strips.Length == 0)
-        return;
-      
-      var subItem = new ToolStripMenuItem("Deployment Helper");
-      subItem.Click += HandleClickEvent; 
-
-      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
-
-      this.InitializePlugin();
-      this.InitializeUI();
-    }
-
-    private void HandleClickEvent(object sender, EventArgs e)
-    {
-      this.Show();
-    }
-
-    private void frmDeployment_FormClosing(object sender, FormClosingEventArgs e)
-    {
-      e.Cancel = true;
-      this.Hide();
     }
 
 

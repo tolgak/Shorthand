@@ -32,8 +32,8 @@ namespace Shorthand
         {
           this.ExportToExcel(dataSet.Tables[i], excel);
 
-          if (this.OnRecordsetProgress != null)
-            this.OnRecordsetProgress(this, new RecordsetProgressEventArgs {  NumberOfRecordsets = cntRecordset, Current = i});
+          //if (this.OnRecordsetProgress != null)
+            this.OnRecordsetProgress?.Invoke(this, new RecordsetProgressEventArgs {  NumberOfRecordsets = cntRecordset, Current = i});
 
           System.Windows.Forms.Application.DoEvents();
         }
@@ -59,8 +59,8 @@ namespace Shorthand
         {
           this.ExportToExcel(dataSet.Tables[i], null);
 
-          if (this.OnRecordsetProgress != null)
-            this.OnRecordsetProgress(this, new RecordsetProgressEventArgs { NumberOfRecordsets = cntRecordset, Current = i });
+          //if (this.OnRecordsetProgress != null)
+            this.OnRecordsetProgress?.Invoke(this, new RecordsetProgressEventArgs { NumberOfRecordsets = cntRecordset, Current = i });
 
           System.Windows.Forms.Application.DoEvents();
         }
@@ -146,8 +146,8 @@ namespace Shorthand
           if (table.Rows[row].ItemArray[col] != null)
             data[row + 1, col] = table.Rows[row].ItemArray[col].ToString();
 
-        if (this.OnRecordProgress != null)
-          this.OnRecordProgress(this, new RecordProgressEventArgs { NumberOfRecords = table.Rows.Count, Current = row });
+        //if (this.OnRecordProgress != null)
+          this.OnRecordProgress?.Invoke(this, new RecordProgressEventArgs { NumberOfRecords = table.Rows.Count, Current = row });
       }
 
       return data;

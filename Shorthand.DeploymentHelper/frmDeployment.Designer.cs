@@ -378,7 +378,6 @@
       this.Padding = new System.Windows.Forms.Padding(5);
       this.ShowInTaskbar = false;
       this.Text = "Deployment Helper";
-      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDeployment_FormClosing);
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmDeployment_KeyUp);
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();

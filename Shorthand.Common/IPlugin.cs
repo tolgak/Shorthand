@@ -10,7 +10,8 @@ namespace Shorthand.Common
   {
 
     //string PluginName { get; set; }
-    void PerformAction(IPluginContext context);
+    void Initialize(IPluginContext context);
+
 
   }
 }

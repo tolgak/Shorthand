@@ -63,29 +63,29 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(0, 0);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(593, 361);
+      this.panel1.Size = new System.Drawing.Size(584, 361);
       this.panel1.TabIndex = 1;
       // 
       // pictureBox3
       // 
       this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-      this.pictureBox3.Location = new System.Drawing.Point(487, 11);
+      this.pictureBox3.Location = new System.Drawing.Point(11, 11);
       this.pictureBox3.Name = "pictureBox3";
       this.pictureBox3.Size = new System.Drawing.Size(93, 103);
-      this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+      this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
       this.pictureBox3.TabIndex = 43;
       this.pictureBox3.TabStop = false;
       // 
       // panel2
       // 
-      this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel2.BackColor = System.Drawing.SystemColors.Control;
       this.panel2.Controls.Add(this.lv);
       this.panel2.Location = new System.Drawing.Point(7, 123);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(574, 196);
+      this.panel2.Size = new System.Drawing.Size(565, 196);
       this.panel2.TabIndex = 32;
       // 
       // lv
@@ -97,11 +97,13 @@
       this.lv.Dock = System.Windows.Forms.DockStyle.Fill;
       this.lv.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.lv.ForeColor = System.Drawing.Color.Black;
+      this.lv.FullRowSelect = true;
       this.lv.GridLines = true;
       this.lv.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
       this.lv.Location = new System.Drawing.Point(0, 0);
+      this.lv.MultiSelect = false;
       this.lv.Name = "lv";
-      this.lv.Size = new System.Drawing.Size(574, 196);
+      this.lv.Size = new System.Drawing.Size(565, 196);
       this.lv.TabIndex = 21;
       this.lv.UseCompatibleStateImageBehavior = false;
       this.lv.View = System.Windows.Forms.View.Details;
@@ -122,11 +124,11 @@
       this.label2.BackColor = System.Drawing.Color.Transparent;
       this.label2.Font = new System.Drawing.Font("Tahoma", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.label2.ForeColor = System.Drawing.Color.Black;
-      this.label2.Location = new System.Drawing.Point(5, 3);
+      this.label2.Location = new System.Drawing.Point(110, 11);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(395, 35);
+      this.label2.Size = new System.Drawing.Size(233, 35);
       this.label2.TabIndex = 30;
-      this.label2.Text = "OMBL Backoffice Manager";
+      this.label2.Text = "Dev Shorthand";
       // 
       // lblCopyright
       // 
@@ -134,12 +136,11 @@
       this.lblCopyright.BackColor = System.Drawing.Color.Transparent;
       this.lblCopyright.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.lblCopyright.ForeColor = System.Drawing.Color.Black;
-      this.lblCopyright.Location = new System.Drawing.Point(11, 88);
+      this.lblCopyright.Location = new System.Drawing.Point(113, 96);
       this.lblCopyright.Name = "lblCopyright";
-      this.lblCopyright.Size = new System.Drawing.Size(138, 13);
+      this.lblCopyright.Size = new System.Drawing.Size(172, 13);
       this.lblCopyright.TabIndex = 28;
-      this.lblCopyright.Text = "All rights reserved. © 2012";
-      this.lblCopyright.DoubleClick += new System.EventHandler(this.lblCopyright_DoubleClick);
+      this.lblCopyright.Text = "All rights reserved. © 2012 - 2016";
       // 
       // lblEdition
       // 
@@ -147,11 +148,11 @@
       this.lblEdition.BackColor = System.Drawing.Color.Transparent;
       this.lblEdition.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.lblEdition.ForeColor = System.Drawing.Color.Black;
-      this.lblEdition.Location = new System.Drawing.Point(11, 42);
+      this.lblEdition.Location = new System.Drawing.Point(113, 50);
       this.lblEdition.Name = "lblEdition";
-      this.lblEdition.Size = new System.Drawing.Size(243, 18);
+      this.lblEdition.Size = new System.Drawing.Size(194, 18);
       this.lblEdition.TabIndex = 27;
-      this.lblEdition.Text = "Office manager for lodge operations";
+      this.lblEdition.Text = "Quick utilities and playground";
       // 
       // lblVersion
       // 
@@ -159,11 +160,11 @@
       this.lblVersion.BackColor = System.Drawing.Color.Transparent;
       this.lblVersion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
       this.lblVersion.ForeColor = System.Drawing.Color.Black;
-      this.lblVersion.Location = new System.Drawing.Point(11, 68);
+      this.lblVersion.Location = new System.Drawing.Point(113, 76);
       this.lblVersion.Name = "lblVersion";
       this.lblVersion.Size = new System.Drawing.Size(52, 13);
       this.lblVersion.TabIndex = 27;
-      this.lblVersion.Text = "v 1.0.0.0";
+      this.lblVersion.Text = "v 2.1.0.0";
       // 
       // panel5
       // 
@@ -173,7 +174,7 @@
       this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.panel5.Location = new System.Drawing.Point(0, 325);
       this.panel5.Name = "panel5";
-      this.panel5.Size = new System.Drawing.Size(591, 34);
+      this.panel5.Size = new System.Drawing.Size(582, 34);
       this.panel5.TabIndex = 14;
       // 
       // lblThrowException
@@ -191,7 +192,7 @@
       // 
       this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnClose.Location = new System.Drawing.Point(508, 5);
+      this.btnClose.Location = new System.Drawing.Point(499, 5);
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(75, 24);
       this.btnClose.TabIndex = 14;
@@ -203,7 +204,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnClose;
-      this.ClientSize = new System.Drawing.Size(593, 361);
+      this.ClientSize = new System.Drawing.Size(584, 361);
       this.Controls.Add(this.panel1);
       this.DoubleBuffered = true;
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

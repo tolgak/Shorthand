@@ -1,31 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using System.Configuration;
-using System.Collections.Specialized;
 using System.IO;
-using System.Diagnostics;
+
+using System.ComponentModel.Composition;
+using Shorthand.Common;
+using System.Drawing;
 
 namespace Shorthand
 {
-  public partial class frmDataDump : Form
+
+  [Export(typeof(IPlugin))]
+  public partial class frmDataDump : Form, IPlugin
   {
+
+    private IPluginContext _context;
 
     public frmDataDump()
     {
-      InitializeComponent();
+      InitializeComponent();      
+    }
 
+    public void Initialize(IPluginContext context)
+    {
+      _context = context;
+      this.MdiParent = _context.Host;
+
+      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
+      if (strips.Length == 0)
+        return;
+
+      var subItem = new ToolStripMenuItem(this.Text);
+      if (this.Icon != null)
+        subItem.Image = this.Icon.ToBitmap();
+      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
+      subItem.Click += (object sender, EventArgs e) => { this.Show(); };
+
+      this.FormClosing += (object sender, FormClosingEventArgs e) =>
+      {
+        e.Cancel = true;
+        this.Hide();
+      };
+
+      this.InitializePlugin();
+      this.InitializeUI();
+    }
+
+    private void InitializePlugin()
+    {
+
+    }
+
+    private void InitializeUI()
+    {
       txtConnection.Text = this.GetDefaultConnectionString();
       dlgLoad.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
     }
+
+
 
     private void btnDump_Click(object sender, EventArgs e)
     {
@@ -154,6 +188,7 @@ namespace Shorthand
     }
 
 
-
   }
+
+
 }

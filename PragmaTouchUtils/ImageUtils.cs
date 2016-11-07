@@ -93,11 +93,8 @@ namespace PragmaTouchUtils
 
       nPercentW = ((float)size.Width / (float)sourceWidth);
       nPercentH = ((float)size.Height / (float)sourceHeight);
-
-      if (nPercentH < nPercentW)
-        nPercent = nPercentH;
-      else
-        nPercent = nPercentW;
+      
+      nPercent = nPercentH < nPercentW ? nPercentH : nPercentW;
 
       int destWidth = (int)(sourceWidth * nPercent);
       int destHeight = (int)(sourceHeight * nPercent);
@@ -109,7 +106,7 @@ namespace PragmaTouchUtils
         g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
         g.Dispose();
 
-        return ( Image ) b;
+        return ( Image ) b.Clone();
       }
     }
 

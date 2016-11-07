@@ -37,7 +37,6 @@
       this.panel2 = new System.Windows.Forms.Panel();
       this.pnlContent = new System.Windows.Forms.Panel();
       this.lblHeader = new System.Windows.Forms.Label();
-      this.lblIntro = new System.Windows.Forms.Label();
       this.splitter1 = new System.Windows.Forms.Splitter();
       this.tv = new System.Windows.Forms.TreeView();
       this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -106,7 +105,6 @@
       // pnlContent
       // 
       this.pnlContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.pnlContent.Controls.Add(this.lblIntro);
       this.pnlContent.Controls.Add(this.lblHeader);
       this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pnlContent.Location = new System.Drawing.Point(206, 0);
@@ -125,17 +123,8 @@
       this.lblHeader.Name = "lblHeader";
       this.lblHeader.Size = new System.Drawing.Size(433, 25);
       this.lblHeader.TabIndex = 1;
-      this.lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // lblIntro
-      // 
-      this.lblIntro.AutoSize = true;
-      this.lblIntro.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-      this.lblIntro.Location = new System.Drawing.Point(51, 182);
-      this.lblIntro.Name = "lblIntro";
-      this.lblIntro.Size = new System.Drawing.Size(359, 19);
-      this.lblIntro.TabIndex = 0;
-      this.lblIntro.Text = "Please select an option item in order to view and edit.";
+      this.lblHeader.Text = "Please select an option item";
+      this.lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // splitter1
       // 
@@ -194,7 +183,6 @@
       this.panel1.ResumeLayout(false);
       this.panel2.ResumeLayout(false);
       this.pnlContent.ResumeLayout(false);
-      this.pnlContent.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -209,7 +197,6 @@
     private System.Windows.Forms.Panel pnlContent;
     private System.Windows.Forms.Splitter splitter1;
     private System.Windows.Forms.TreeView tv;
-    private System.Windows.Forms.Label lblIntro;
     private System.Windows.Forms.ImageList imageList1;
     private System.Windows.Forms.Label lblHeader;
   }

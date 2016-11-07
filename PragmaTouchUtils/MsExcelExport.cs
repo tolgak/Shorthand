@@ -146,8 +146,9 @@ namespace PragmaTouchUtils
 
 
 				AddDataTableToExcel(excel, dtb, style, ref rowIndex, ref colIndex);
-				if (ExportRowProgress != null)
-					ExportRowProgress(eventRow++, dsData.Tables.Count);
+				//if (ExportRowProgress != null)
+					ExportRowProgress?.Invoke(eventRow++, dsData.Tables.Count);
+
 				switch (style)
 				{
 					case ExportStyle.RowWise:

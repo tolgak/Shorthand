@@ -28,10 +28,6 @@ namespace PragmaTouchUtils
   public partial class frmConfigurationDlg : Form
 	{
 		private static frmConfigurationDlg _instance = null;
-		public static frmConfigurationDlg Instance
-		{
-			get { return _instance; }
-		}
 
     private IConfigContentEditor _currentItem = null;
     private IList<IConfigContentEditor> _configItems = new List<IConfigContentEditor>();
@@ -39,11 +35,10 @@ namespace PragmaTouchUtils
     private ConfigAction _action = ConfigAction.Cancel;
     private ConfigContent _configContent = null;
 
-    //private IList<string> _changedOptions = new List<string>();
-    //public IList<string> ChangedOptions
-    //{
-    //  get { return _configItems.Where( x => x.Modified).Select( x => x.ItemClassName).ToList(); }
-    //}
+    public IList<string> ChangedOptions
+    {
+      get { return _configItems.Where(x => x.Modified).Select(x => x.ItemClassName).ToList(); }
+    }
 
     private ConfigFinalSelectionEventHandler _onFinalSelection;
     public event ConfigFinalSelectionEventHandler FinalSelection
@@ -58,12 +53,7 @@ namespace PragmaTouchUtils
       }
     }
 		
-    private TreeNode _moduleOptionsRoot = null;
-		public TreeNode ModuleOptionsRoot
-		{
-			get { return _moduleOptionsRoot; }
-			set { _moduleOptionsRoot = value; }
-		}
+		public TreeNode ModuleOptionsRoot { get; set; }
 		
 		public frmConfigurationDlg( )
     {
@@ -166,14 +156,11 @@ namespace PragmaTouchUtils
     
     private void RaiseFinalSelectionEvent( ConfigAction action )
     {
-      if (_onFinalSelection != null)
-      {
-        ConfigEventArgs args = new ConfigEventArgs();
-        args.action = action;
-        args.content = _configContent;
-        //args.ChangedOptions = _changedOptions;
-        _onFinalSelection(this, args);				
-			}
+      //if (_onFinalSelection == null)
+      //  return;
+
+      var args = new ConfigEventArgs { action = action, content = _configContent, ChangedOptions = this.ChangedOptions };
+      _onFinalSelection?.Invoke(this, args); ;							
     }
 
     private void ShowSelectedContent( TreeNode node )
@@ -184,7 +171,7 @@ namespace PragmaTouchUtils
       if ( node.Tag == null || !(node.Tag is IConfigContentEditor))     
         return;      
 
-      IConfigContentEditor configItem = node.Tag as IConfigContentEditor;
+      var configItem = node.Tag as IConfigContentEditor;
       if (_currentItem == configItem)      
         return;
       
@@ -195,8 +182,6 @@ namespace PragmaTouchUtils
       if (!_currentItem.ContentLoaded)      
         _currentItem.LoadContent();
       
-
-      lblIntro.SendToBack();
       lblHeader.Text = node.Text;
       configItem.ShowContent();
       lblHeader.SendToBack();
@@ -250,7 +235,6 @@ namespace PragmaTouchUtils
 			  _instance.FinalSelection += onFinalSelectionHandler;
 
 			_instance.InitializeConfiguration(configContent);
-      //ConficSvc.FireDialogOpenedEvent();
       _instance.StartPosition = FormStartPosition.Manual;
       _instance.Location = new Point(owner.Location.X + 100, owner.Location.Y + 100);      
       _instance.Show(owner);
@@ -260,17 +244,11 @@ namespace PragmaTouchUtils
         _instance.ShowOptionsEditor(initialEditor);
 		}
 
-    //public static void ShowConfigurationDlg(ConfigContent configContent, ConfigFinalSelectionEventHandler onFinalSelectionHandler )
-    //{
-    //  ShowConfigurationDlg(configContent, String.Empty, onFinalSelectionHandler);
-    //}
-
-
-		#region IConfigSvc Support Methods
+ 		#region IConfigSvc Support Methods
 
 		public TreeNode AddFolder(string text)
 		{
-			TreeNode node = _moduleOptionsRoot.Nodes.Add(text);
+			TreeNode node = this.ModuleOptionsRoot.Nodes.Add(text);
 			node.Text = text;
 			node.ImageIndex = 4;
 			node.SelectedImageIndex = 4;
@@ -291,7 +269,7 @@ namespace PragmaTouchUtils
 
 			TreeNode node = null;
 			if (parent == null)
-				node = _moduleOptionsRoot.Nodes.Add(text,text);
+				node = this.ModuleOptionsRoot.Nodes.Add(text,text);
 			else
 				node = parent.Nodes.Add(text,text);
 
@@ -308,9 +286,7 @@ namespace PragmaTouchUtils
 			return node;
 		}
 
-		#endregion //IConfigSvc Support Methods
-
-
+		#endregion 
 
 
     private void frmConfigurationDlg_FormClosed( object sender, FormClosedEventArgs e )
@@ -318,7 +294,6 @@ namespace PragmaTouchUtils
       _instance.Hide();
       Application.DoEvents();
       this.RaiseFinalSelectionEvent(_action);
-      //frmConfigurationDlg.ConficSvc.FireDialogClosedEvent();
 			_instance = null;
 		}
 

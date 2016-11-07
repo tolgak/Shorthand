@@ -215,8 +215,8 @@ namespace PragmaTouchUtils
 			}
 			j++;
 			//Raise progress event
-			if(BulkExportProgress!=null)
-				BulkExportProgress(j,_totalItems);
+			//if(BulkExportProgress!=null)
+				BulkExportProgress?.Invoke(j,_totalItems);
 		}
 
 
@@ -279,8 +279,8 @@ namespace PragmaTouchUtils
 					excel.Cells[rowIndex,colstart]=row[col.ColumnName].ToString(); 
 				} 
 				colstart = colbak;
-				if(BulkExportRowProgress!=null)
-					BulkExportRowProgress(eventRow++,table.Rows.Count);
+				//if(BulkExportRowProgress!=null)
+					BulkExportRowProgress?.Invoke(eventRow++, table.Rows.Count);
 			}
 			if(!_listrow.ContainsKey(rowIndex))
 			{

@@ -14,7 +14,7 @@ namespace Shorthand
 
     protected ConfigContent _currentConfig;
 
-    public bool Modified { get; set; }
+    public virtual bool Modified { get; set; }
 
     public bool ContentLoaded { get; set; }
 
@@ -28,7 +28,7 @@ namespace Shorthand
       if ( _currentConfig == null )
         throw new Exception("Configuration content param is null!");
 
-      LoadInitial();
+      LoadInitial();     
 
       this.ContentLoaded = true;
       return true;
@@ -36,12 +36,12 @@ namespace Shorthand
 
     protected virtual void LoadInitial()
     {
-
+      
     }
 
     public virtual bool SaveContent()
-    {
-      _currentConfig.SaveConfiguration();
+    {      
+      _currentConfig?.SaveConfiguration();
       return true;
     }
 
@@ -54,6 +54,14 @@ namespace Shorthand
     {
       this.Hide();
     }
+
+
+
+
+
+
+
+
 
 
   }

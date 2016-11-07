@@ -11,7 +11,6 @@ namespace Shorthand.Common
 {
   public interface IPluginContext
   {
-    //MenuStrip MainMenu{ get; set; }
     Form Host { get; set; }
     ConfigContent Configuration { get; set; }
   }

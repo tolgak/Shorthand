@@ -85,18 +85,14 @@ namespace PragmaTouchUtils
 
     }
 
-
-
-
     public void SaveConfiguration()
     {
       foreach ( var item in _preferences )
       {
-        string prefPath = string.Format("{0}\\{1}.options", this.UserDataDirectory, item.Key);
+        string prefPath = $"{this.UserDataDirectory}\\{item.Key}.options";
         this.SaveToDocumentFormat(item.Value, prefPath);                
       }
     }
-
 
     private void SaveToDocumentFormat(object serializableObject, string path)
     {
@@ -116,7 +112,7 @@ namespace PragmaTouchUtils
       }
     }
 
-
-
   }
+
+
 }

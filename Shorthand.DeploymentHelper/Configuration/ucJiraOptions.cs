@@ -14,6 +14,8 @@ namespace Shorthand
 {
   public partial class ucJiraOptions : ucOptionEditorBase, IConfigContentEditor
   {
+    private JiraOptions _options;
+    private string _cleanHash;
 
     public ucJiraOptions()
     {
@@ -23,20 +25,23 @@ namespace Shorthand
       this.Caption = "JIRA";
     }
 
+    public override bool Modified { get { return string.IsNullOrEmpty(_cleanHash) ? false : _cleanHash != _options.GetMd5Hash(); } }
+
     protected override void LoadInitial()
     {
-      var options = _currentConfig.GetConfigContentItem(this.ItemClassName) as JiraOptions;
-      if ( options == null )
+      _options = _currentConfig.GetConfigContentItem(this.ItemClassName) as JiraOptions;
+      if ( _options == null )
         throw new Exception(string.Format("Configuration content does not contain {0} item!", this.ItemClassName));
 
-      txtJiraBaseUrl.DataBindTo(options, "JiraBaseUrl", this.ControlValueChanged);
-      txtUsername.DataBindTo(options, "Username", this.ControlValueChanged);
-      txtPassword.DataBindTo(options, "Password", this.ControlValueChanged);
+      _cleanHash = _options.GetMd5Hash();
 
-      txtREQ_ProjectKey.DataBindTo(options, "REQ_ProjectKey", this.ControlValueChanged);
-      txtDPLY_ProjectKey.DataBindTo(options, "DPLY_ProjectKey", this.ControlValueChanged);
-      txtUAT_ProjectKey.DataBindTo(options, "UAT_ProjectKey", this.ControlValueChanged);
+      txtJiraBaseUrl.DataBindTo(_options, "JiraBaseUrl");
+      txtUsername.DataBindTo(_options, "Username");
+      txtPassword.DataBindTo(_options, "Password");
 
+      txtREQ_ProjectKey.DataBindTo(_options, "REQ_ProjectKey");
+      txtDPLY_ProjectKey.DataBindTo(_options, "DPLY_ProjectKey");
+      txtUAT_ProjectKey.DataBindTo(_options, "UAT_ProjectKey");
     }
 
     private void RequireAuthentication(bool enabled)
@@ -45,10 +50,6 @@ namespace Shorthand
       txtPassword.Enabled = enabled;
     }
 
-    private void ControlValueChanged(object sender, EventArgs e)
-    {
-      this.Modified = true;
-    }
 
 
 
