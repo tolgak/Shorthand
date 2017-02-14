@@ -58,11 +58,13 @@
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
       this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
+      this.btnMakeExecutable = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
       this.SuspendLayout();
       // 
       // panel1
       // 
+      this.panel1.Controls.Add(this.btnMakeExecutable);
       this.panel1.Controls.Add(this.lblInternal_Status);
       this.panel1.Controls.Add(this.lblUAT_Status);
       this.panel1.Controls.Add(this.lblDPLY_Status);
@@ -363,6 +365,16 @@
       this.ımageList1.ImageSize = new System.Drawing.Size(16, 16);
       this.ımageList1.TransparentColor = System.Drawing.Color.Transparent;
       // 
+      // btnMakeExecutable
+      // 
+      this.btnMakeExecutable.Location = new System.Drawing.Point(464, 112);
+      this.btnMakeExecutable.Name = "btnMakeExecutable";
+      this.btnMakeExecutable.Size = new System.Drawing.Size(152, 23);
+      this.btnMakeExecutable.TabIndex = 37;
+      this.btnMakeExecutable.Text = "Make Executable";
+      this.btnMakeExecutable.UseVisualStyleBackColor = true;
+      this.btnMakeExecutable.Click += new System.EventHandler(this.btnMakeExecutable_Click);
+      // 
       // frmDeployment
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -416,6 +428,7 @@
     private System.Windows.Forms.Label lblREQ_Status;
     private System.Windows.Forms.ImageList ımageList1;
     private System.Windows.Forms.Label lblInternal_Status;
+    private System.Windows.Forms.Button btnMakeExecutable;
     //private System.Windows.Forms.TextBox txtDump;
   }
 }

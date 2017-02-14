@@ -11,6 +11,7 @@ using System.ComponentModel.Composition;
 using PragmaTouchUtils;
 using Shorthand.Common;
 using System.Drawing;
+using System.IO;
 
 namespace Shorthand
 {
@@ -290,7 +291,7 @@ namespace Shorthand
         .AppendLine("------------")
         .AppendLine($"Internal Issue Key : {ctx.InternalIssueKey}")
         .AppendLine($"Request Issue Key : {ctx.RequestIssueKey}")
-        .AppendLine($"Deyloyment Issue Key : {ctx.DeploymentIssueKey}")
+        .AppendLine($"Deployment Issue Key : {ctx.DeploymentIssueKey}")
         .AppendLine($"UAT Issue Key : {ctx.UatIssueKey}")
         .AppendLine("")
         .AppendLine("Git Details")
@@ -303,7 +304,7 @@ namespace Shorthand
       var client = new SmtpClient("smtp.gmail.com", 587);
       client.DeliveryMethod = SmtpDeliveryMethod.Network;
       client.UseDefaultCredentials = false;
-      client.Credentials = new NetworkCredential("tolga.kurkcuoglu@gmail.com", "31415926tk");
+      client.Credentials = new NetworkCredential("tolga.kurkcuoglu@gmail.com", "!tk1123581321tk!");
       client.EnableSsl = true;
       client.Send(mail);
     }
@@ -370,10 +371,32 @@ namespace Shorthand
         Process.Start(ctx.GitProjectWebUrl);
     }
 
+    private void btnMakeExecutable_Click(object sender, EventArgs e)
+    {
+      var buildScriptFile = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\vmScript.bat";
+      var workingDirectory = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice";
 
 
 
 
 
+      var pi = new ProcessStartInfo();      
+      pi.WorkingDirectory = workingDirectory;
+      pi.FileName = buildScriptFile;
+      pi.UseShellExecute = false;
+      pi.RedirectStandardOutput = true;
+
+      Process p = new Process();
+      p.StartInfo = pi;
+      p.Start();
+
+      // To avoid deadlocks, always read the output stream first and then wait.
+      string output = p.StandardOutput.ReadToEnd();
+      p.WaitForExit();
+
+
+
+
+    }
   }
 }
