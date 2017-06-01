@@ -39,8 +39,9 @@ $RECYCLE.BIN/
 *.lib
 *.sbr
 *.orig
-\obj
-\bin
+**/bin/Debug/
+**/bin/Release/
+packages/
 
 # =========================
 # Operating System Files

@@ -28,7 +28,8 @@ namespace Shorthand
     public string DeliveryTo { get; set; }
     public bool CreateDeploymentIssue { get; set; }
     public bool CreateUatIssue { get; set; }
-
+    public bool CreateMergeRequest{ get; set; }
+    public bool CopyExecutables { get; set; }
   }
 
 

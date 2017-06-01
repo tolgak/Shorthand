@@ -9,6 +9,17 @@ namespace Shorthand
 {
   public static class ControlExtensions
   {
+
+    public static void Dump(this TextBox box, string line)
+    {      
+      box.InvokeIfRequired( (x) => { x.AppendText($"{line}\r\n"); });
+    }
+
+    public static void Log(this TextBox box, string line)
+    {
+      box.InvokeIfRequired( (x) => { x.AppendText($"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}\r\n"); } );
+    }
+
     public static void DataBindTo(this TextBox control, object instance, string propertyName)
     {
       DataBindTo(control, instance, propertyName, null);

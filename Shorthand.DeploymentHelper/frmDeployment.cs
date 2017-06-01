@@ -10,8 +10,6 @@ using System.Net.Mail;
 using System.ComponentModel.Composition;
 using PragmaTouchUtils;
 using Shorthand.Common;
-using System.Drawing;
-using System.IO;
 
 namespace Shorthand
 {
@@ -119,11 +117,18 @@ namespace Shorthand
 
         lblMergeRequestLink.LinkClicked += (x, y) => { Process.Start(y.Link.LinkData as string); };
       }
+
+      rdbProduction.CheckedChanged += Rdb_CheckedChanged;
+      rdbTest.CheckedChanged += Rdb_CheckedChanged;    
     }
 
-
-
-
+    private void Rdb_CheckedChanged(object sender, EventArgs e)
+    {
+      chkCreateDPLY.Checked = rdbProduction.Checked;
+      chkCreateUAT.Checked = rdbTest.Checked;
+      chkCreateMergeRequest.Checked = rdbProduction.Checked;
+      chkCopyExecutables.Checked = rdbProduction.Checked;
+    }
 
     private bool SanityCheck()
     {
@@ -170,7 +175,7 @@ namespace Shorthand
           return;
         }
 
-        var deployment = BuildDelivery();
+        var deployment = this.BuildDelivery();
         deployment.Deliver(ctx);
         this.SendMail(ctx);
         
@@ -248,6 +253,8 @@ namespace Shorthand
 
       ctx.CreateDeploymentIssue = chkCreateDPLY.Checked;
       ctx.CreateUatIssue = chkCreateUAT.Checked;
+      ctx.CreateMergeRequest = chkCreateMergeRequest.Checked;
+      ctx.CopyExecutables = chkCopyExecutables.Checked;
 
       // Jira
       var linksOfInternalIssue = this.GetLinksOfIssue(issueKey);
@@ -311,7 +318,7 @@ namespace Shorthand
 
     private void Dump(string line)
     {
-      txtDump.InvokeIfRequired((x) => { x.Text = x.Text + $"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}" + "\r\n"; });
+      txtDump.Log(line);
     }
 
     private string[] GetLinksOfIssue(string issueKey)
@@ -376,10 +383,6 @@ namespace Shorthand
       var buildScriptFile = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\vmScript.bat";
       var workingDirectory = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice";
 
-
-
-
-
       var pi = new ProcessStartInfo();      
       pi.WorkingDirectory = workingDirectory;
       pi.FileName = buildScriptFile;
@@ -394,9 +397,9 @@ namespace Shorthand
       string output = p.StandardOutput.ReadToEnd();
       p.WaitForExit();
 
-
-
-
     }
+
+
+
   }
 }

@@ -33,7 +33,7 @@
       this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-      this.mnuFlywayHelper = new System.Windows.Forms.ToolStripMenuItem();
+      this.mnuIISAdminHelper = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,23 +75,23 @@
       // mnuTools
       // 
       this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFlywayHelper,
+            this.mnuIISAdminHelper,
             this.toolStripMenuItem1});
       this.mnuTools.Name = "mnuTools";
       this.mnuTools.Size = new System.Drawing.Size(51, 21);
       this.mnuTools.Text = "Tools";
       // 
-      // mnuFlywayHelper
+      // mnuIISAdminHelper
       // 
-      this.mnuFlywayHelper.Name = "mnuFlywayHelper";
-      this.mnuFlywayHelper.Size = new System.Drawing.Size(154, 22);
-      this.mnuFlywayHelper.Text = "Flyway helper";
-      this.mnuFlywayHelper.Click += new System.EventHandler(this.mnuFlywayHelper_Click);
+      this.mnuIISAdminHelper.Name = "mnuIISAdminHelper";
+      this.mnuIISAdminHelper.Size = new System.Drawing.Size(152, 22);
+      this.mnuIISAdminHelper.Text = "IIS Admin";
+      this.mnuIISAdminHelper.Click += new System.EventHandler(this.mnuIISAdminHelper_Click);
       // 
       // toolStripMenuItem1
       // 
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(151, 6);
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
       // 
       // mnuWindow
       // 
@@ -156,7 +156,7 @@
     private System.Windows.Forms.ToolStripMenuItem mnuWindow;
     private System.Windows.Forms.StatusStrip appStat;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-    private System.Windows.Forms.ToolStripMenuItem mnuFlywayHelper;
+    private System.Windows.Forms.ToolStripMenuItem mnuIISAdminHelper;
     private System.Windows.Forms.ToolStripMenuItem mnuAbout;
   }
 }

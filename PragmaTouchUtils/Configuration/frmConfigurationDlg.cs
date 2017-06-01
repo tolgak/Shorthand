@@ -7,13 +7,10 @@
 *********************************************************************/
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
-using System.Runtime.Remoting;
 
 namespace PragmaTouchUtils
 {
@@ -102,10 +99,7 @@ namespace PragmaTouchUtils
 
     public void InitializeConfiguration(ConfigContent configContent)
     {
-      if(configContent == null)
-        throw new ArgumentNullException("Configuration content is null!");
-      
-      _configContent = configContent;
+      _configContent = configContent ?? throw new ArgumentNullException("Configuration content is null!");
       this.Text = $"{ConfigContent.ApplicationName} options";
 
       BuildConfigurationItems();

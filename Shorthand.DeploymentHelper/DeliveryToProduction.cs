@@ -4,11 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using PragmaTouchUtils;
 using System.Reflection;
-using Shorthand.Common;
-using System.Net.Mail;
 
 namespace Shorthand
 {
@@ -28,7 +25,6 @@ namespace Shorthand
       _logger = logger;
     }
 
-
     public void Deliver(DeliveryContext ctx)
     {
       this.PrepareJira(ctx);
@@ -39,8 +35,12 @@ namespace Shorthand
     private void CreateMR(DeliveryContext ctx)
     {
       this.Log("Creating merge request");
-
-
+      if (!ctx.CreateMergeRequest)
+      {
+        this.Log("skipped...");
+        return;
+      }
+        
       var git = new GitLab();
             
       int projectId = ctx.GitProjectId;
@@ -56,6 +56,11 @@ namespace Shorthand
     private void PrepareJira(DeliveryContext ctx)
     {
       this.Log("Preparing Jira");
+      if (!ctx.CreateDeploymentIssue)
+      {
+        this.Log("skipped...");
+        return;
+      }
 
       if (string.IsNullOrEmpty(ctx.RequestIssueKey))
         throw new ArgumentNullException("RequestIssueKey", "Context does not contain a request issue key.");
@@ -80,11 +85,9 @@ namespace Shorthand
         this.Log($"Deployment created : {ctx.DeploymentIssueKey}");
       }
 
-
       // attach sql script file to deployment issue
       var sqlFilePath = Directory.GetFiles(_dplyOptions.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql").FirstOrDefault();
       jira.AddAttachment(ctx.DeploymentIssueKey, sqlFilePath);
-
 
       // advance workflow for internal issue
       var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
@@ -95,7 +98,7 @@ namespace Shorthand
 
     private void DeployExecutables(DeliveryContext ctx)
     {
-      this.Log("Deploying executables");
+      this.Log("Deploying");
 
       var tempFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
@@ -104,8 +107,15 @@ namespace Shorthand
       try
       {
         var files = new List<string>();
-        files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\exe", "*.exe"));
         files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql"));
+        if (ctx.CopyExecutables)
+          files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\exe", "*.exe"));
+        else
+          this.Log("will not include executables");
+
+        if (files.Count() == 0)
+          return;
+
         foreach (string file in files)
         {
           var destinationfile = destinationFolder + "\\" + Path.GetFileName(file);
@@ -154,7 +164,6 @@ namespace Shorthand
                                 .AppendFormattedLine("* **Uat Issue :** {0}", ctx.UatIssueKey)
                                 .ToString();
     }
-
 
     private void Log(string line)
     {

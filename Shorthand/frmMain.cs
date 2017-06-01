@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 using PragmaTouchUtils;
 using Shorthand.Common;
+using System.Security.Principal;
 
 namespace Shorthand
 {
@@ -83,10 +84,7 @@ namespace Shorthand
           {
             MessageBox.Show(compositionException.Message);
           }
-        }
-        
-
-
+        }       
       }
       catch (Exception compositionException)
       {
@@ -115,15 +113,8 @@ namespace Shorthand
 
 
     private void mnuItemExit_Click(object sender, EventArgs e)
-    {
+    {     
       this.Close();
-    }
-
-    private void mnuFlywayHelper_Click(object sender, EventArgs e)
-    {
-      var frm = new frmFlywayHelper();
-      frm.MdiParent = this;
-      frm.Show();
     }
 
     private void mnuAbout_Click(object sender, EventArgs e)
@@ -156,6 +147,12 @@ namespace Shorthand
     private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
     {
       _container?.Dispose();
+    }
+
+    private void mnuIISAdminHelper_Click(object sender, EventArgs e)
+    {
+      var frm = new frmIISAdminHelper() { MdiParent = this };
+      frm.Show();
     }
   }
 }

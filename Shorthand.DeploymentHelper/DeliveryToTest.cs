@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using PragmaTouchUtils;
 
 namespace Shorthand
@@ -55,6 +53,12 @@ namespace Shorthand
       if ( q != null )
         jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);
 
+      if (!ctx.CreateUatIssue)
+      {
+        this.Log("skipped...");
+        return;
+      }
+
       // create uat issue if it does not exist
       if (string.IsNullOrEmpty(ctx.UatIssueKey))
       {
@@ -72,6 +76,12 @@ namespace Shorthand
 
     private void DeployExecutables(DeliveryContext ctx)
     {
+      if (!ctx.CopyExecutables)
+      {
+        this.Log("Ignored Deploying executables ");
+        return;
+      }
+
       this.Log("Deploying executables");
 
       // copy executable to remote executable folder      
@@ -111,6 +121,9 @@ namespace Shorthand
 
     public string BuildTargetName(DeliveryContext ctx)
     {
+      if (!ctx.CopyExecutables)
+        return "IBU.exe";
+
       var header = string.Format("IBU-{0}", ctx.RequestIssueKey.Replace("-", " "));
       var versionNumber = Directory.GetFiles(_deploymentOptions.TestDeliveryFolder)
                                    .Where(x => x.Contains(header))
