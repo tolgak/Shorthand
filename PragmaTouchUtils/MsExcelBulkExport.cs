@@ -12,17 +12,17 @@ namespace PragmaTouchUtils
 	/// </summary>
 	public class MsExcelBulkExport : IDisposable
 	{
-		public delegate void BulkExportProgressDelegete(int iCurrentItem,int iTotalItems);
+		public delegate void BulkExportProgressDelegate(object sender, int iCurrentItem,int iTotalItems);
 
 		/// <summary>
 		/// Export progress indicator event for each DataSet.
 		/// </summary>
-		public event BulkExportProgressDelegete BulkExportProgress;
+		public event BulkExportProgressDelegate BulkExportProgress;
 
 		/// <summary>
 		/// Export progress indicator event for each record/row.
 		/// </summary>
-		public event BulkExportProgressDelegete BulkExportRowProgress;
+		public event BulkExportProgressDelegate BulkExportRowProgress;
 
 		SortedList _listrow = null;
 		int j = 0;
@@ -216,7 +216,7 @@ namespace PragmaTouchUtils
 			j++;
 			//Raise progress event
 			//if(BulkExportProgress!=null)
-				BulkExportProgress?.Invoke(j,_totalItems);
+				BulkExportProgress?.Invoke(this, j,_totalItems);
 		}
 
 
@@ -280,7 +280,7 @@ namespace PragmaTouchUtils
 				} 
 				colstart = colbak;
 				//if(BulkExportRowProgress!=null)
-					BulkExportRowProgress?.Invoke(eventRow++, table.Rows.Count);
+					BulkExportRowProgress?.Invoke(this, eventRow++, table.Rows.Count);
 			}
 			if(!_listrow.ContainsKey(rowIndex))
 			{

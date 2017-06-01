@@ -1,12 +1,7 @@
 ﻿using Microsoft.Web.Administration;
 using System;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Management;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Principal;
 using System.Windows.Forms;
 
 namespace Shorthand

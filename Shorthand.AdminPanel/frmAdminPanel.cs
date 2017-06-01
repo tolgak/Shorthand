@@ -1,23 +1,12 @@
-﻿using Microsoft.Management.Infrastructure;
-using Microsoft.Management.Infrastructure.Options;
-using PragmaTouchUtils;
+﻿using PragmaTouchUtils;
 using Shorthand.Common;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Management;
-using System.Net;
 using System.Net.NetworkInformation;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Shorthand.AdminPanel

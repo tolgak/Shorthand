@@ -96,7 +96,7 @@ namespace Shorthand
       orgDoc.LoadXml(xml);
 
       // read xsl
-      using ( var stringReader = new StringReader(xsl) )
+      var stringReader = new StringReader(xsl);
       using ( var reader = XmlReader.Create(stringReader) )
       {
         var trans = new XslCompiledTransform();

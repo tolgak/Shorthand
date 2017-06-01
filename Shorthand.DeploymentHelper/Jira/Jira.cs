@@ -342,11 +342,6 @@ namespace Shorthand
         return false;
       }
 
-      finally
-      {
-        if (response != null)        
-          response.Close();        
-      }
     }
 
 
