@@ -31,6 +31,15 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
       this.panel1 = new System.Windows.Forms.Panel();
+      this.chkCopyExecutables = new System.Windows.Forms.CheckBox();
+      this.grpTask = new System.Windows.Forms.GroupBox();
+      this.lblCustomize = new System.Windows.Forms.Label();
+      this.chkCreateMergeRequest = new System.Windows.Forms.CheckBox();
+      this.chkCreateUAT = new System.Windows.Forms.CheckBox();
+      this.chkCreateDPLY = new System.Windows.Forms.CheckBox();
+      this.rdbTest = new System.Windows.Forms.RadioButton();
+      this.rdbProduction = new System.Windows.Forms.RadioButton();
+      this.btnDeploy = new System.Windows.Forms.Button();
       this.btnMakeExecutable = new System.Windows.Forms.Button();
       this.lblInternal_Status = new System.Windows.Forms.Label();
       this.lblUAT_Status = new System.Windows.Forms.Label();
@@ -54,15 +63,6 @@
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
       this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
-      this.grpTask = new System.Windows.Forms.GroupBox();
-      this.rdbTest = new System.Windows.Forms.RadioButton();
-      this.rdbProduction = new System.Windows.Forms.RadioButton();
-      this.btnDeploy = new System.Windows.Forms.Button();
-      this.chkCreateUAT = new System.Windows.Forms.CheckBox();
-      this.chkCreateDPLY = new System.Windows.Forms.CheckBox();
-      this.chkCreateMergeRequest = new System.Windows.Forms.CheckBox();
-      this.lblCustomize = new System.Windows.Forms.Label();
-      this.chkCopyExecutables = new System.Windows.Forms.CheckBox();
       this.panel1.SuspendLayout();
       this.grpTask.SuspendLayout();
       this.SuspendLayout();
@@ -99,6 +99,109 @@
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(745, 301);
       this.panel1.TabIndex = 0;
+      // 
+      // chkCopyExecutables
+      // 
+      this.chkCopyExecutables.AutoSize = true;
+      this.chkCopyExecutables.Checked = true;
+      this.chkCopyExecutables.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.chkCopyExecutables.Location = new System.Drawing.Point(398, 250);
+      this.chkCopyExecutables.Name = "chkCopyExecutables";
+      this.chkCopyExecutables.Size = new System.Drawing.Size(129, 21);
+      this.chkCopyExecutables.TabIndex = 33;
+      this.chkCopyExecutables.Text = "Copy executables";
+      this.chkCopyExecutables.UseVisualStyleBackColor = true;
+      // 
+      // grpTask
+      // 
+      this.grpTask.Controls.Add(this.lblCustomize);
+      this.grpTask.Controls.Add(this.chkCreateMergeRequest);
+      this.grpTask.Controls.Add(this.chkCreateUAT);
+      this.grpTask.Controls.Add(this.chkCreateDPLY);
+      this.grpTask.Controls.Add(this.rdbTest);
+      this.grpTask.Controls.Add(this.rdbProduction);
+      this.grpTask.Controls.Add(this.btnDeploy);
+      this.grpTask.Location = new System.Drawing.Point(380, 94);
+      this.grpTask.Name = "grpTask";
+      this.grpTask.Size = new System.Drawing.Size(350, 200);
+      this.grpTask.TabIndex = 38;
+      this.grpTask.TabStop = false;
+      this.grpTask.Text = "Deployment options";
+      // 
+      // lblCustomize
+      // 
+      this.lblCustomize.AutoSize = true;
+      this.lblCustomize.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+      this.lblCustomize.Location = new System.Drawing.Point(15, 55);
+      this.lblCustomize.Name = "lblCustomize";
+      this.lblCustomize.Size = new System.Drawing.Size(72, 17);
+      this.lblCustomize.TabIndex = 32;
+      this.lblCustomize.Text = "Customize";
+      // 
+      // chkCreateMergeRequest
+      // 
+      this.chkCreateMergeRequest.AutoSize = true;
+      this.chkCreateMergeRequest.Location = new System.Drawing.Point(18, 129);
+      this.chkCreateMergeRequest.Name = "chkCreateMergeRequest";
+      this.chkCreateMergeRequest.Size = new System.Drawing.Size(155, 21);
+      this.chkCreateMergeRequest.TabIndex = 31;
+      this.chkCreateMergeRequest.Text = "Create merge request";
+      this.chkCreateMergeRequest.UseVisualStyleBackColor = true;
+      // 
+      // chkCreateUAT
+      // 
+      this.chkCreateUAT.AutoSize = true;
+      this.chkCreateUAT.Checked = true;
+      this.chkCreateUAT.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.chkCreateUAT.Location = new System.Drawing.Point(18, 102);
+      this.chkCreateUAT.Name = "chkCreateUAT";
+      this.chkCreateUAT.Size = new System.Drawing.Size(152, 21);
+      this.chkCreateUAT.TabIndex = 30;
+      this.chkCreateUAT.Text = "Create user test issue";
+      this.chkCreateUAT.UseVisualStyleBackColor = true;
+      // 
+      // chkCreateDPLY
+      // 
+      this.chkCreateDPLY.AutoSize = true;
+      this.chkCreateDPLY.Location = new System.Drawing.Point(18, 75);
+      this.chkCreateDPLY.Name = "chkCreateDPLY";
+      this.chkCreateDPLY.Size = new System.Drawing.Size(171, 21);
+      this.chkCreateDPLY.TabIndex = 29;
+      this.chkCreateDPLY.Text = "Create deployment issue";
+      this.chkCreateDPLY.UseVisualStyleBackColor = true;
+      // 
+      // rdbTest
+      // 
+      this.rdbTest.AutoSize = true;
+      this.rdbTest.Checked = true;
+      this.rdbTest.Location = new System.Drawing.Point(131, 27);
+      this.rdbTest.Name = "rdbTest";
+      this.rdbTest.Size = new System.Drawing.Size(67, 21);
+      this.rdbTest.TabIndex = 10;
+      this.rdbTest.TabStop = true;
+      this.rdbTest.Text = "To Test";
+      this.rdbTest.UseVisualStyleBackColor = true;
+      // 
+      // rdbProduction
+      // 
+      this.rdbProduction.AutoSize = true;
+      this.rdbProduction.Location = new System.Drawing.Point(18, 27);
+      this.rdbProduction.Name = "rdbProduction";
+      this.rdbProduction.Size = new System.Drawing.Size(107, 21);
+      this.rdbProduction.TabIndex = 9;
+      this.rdbProduction.Text = "To Production";
+      this.rdbProduction.UseVisualStyleBackColor = true;
+      // 
+      // btnDeploy
+      // 
+      this.btnDeploy.Location = new System.Drawing.Point(252, 162);
+      this.btnDeploy.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+      this.btnDeploy.Name = "btnDeploy";
+      this.btnDeploy.Size = new System.Drawing.Size(92, 26);
+      this.btnDeploy.TabIndex = 11;
+      this.btnDeploy.Text = "Deploy";
+      this.btnDeploy.UseVisualStyleBackColor = true;
+      this.btnDeploy.Click += new System.EventHandler(this.btnDeploy_Click);
       // 
       // btnMakeExecutable
       // 
@@ -321,107 +424,6 @@
       this.ımageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
       this.ımageList1.ImageSize = new System.Drawing.Size(16, 16);
       this.ımageList1.TransparentColor = System.Drawing.Color.Transparent;
-      // 
-      // grpTask
-      // 
-      this.grpTask.Controls.Add(this.lblCustomize);
-      this.grpTask.Controls.Add(this.chkCreateMergeRequest);
-      this.grpTask.Controls.Add(this.chkCreateUAT);
-      this.grpTask.Controls.Add(this.chkCreateDPLY);
-      this.grpTask.Controls.Add(this.rdbTest);
-      this.grpTask.Controls.Add(this.rdbProduction);
-      this.grpTask.Controls.Add(this.btnDeploy);
-      this.grpTask.Location = new System.Drawing.Point(380, 94);
-      this.grpTask.Name = "grpTask";
-      this.grpTask.Size = new System.Drawing.Size(350, 200);
-      this.grpTask.TabIndex = 38;
-      this.grpTask.TabStop = false;
-      this.grpTask.Text = "Deployment options";
-      // 
-      // rdbTest
-      // 
-      this.rdbTest.AutoSize = true;
-      this.rdbTest.Checked = true;
-      this.rdbTest.Location = new System.Drawing.Point(131, 27);
-      this.rdbTest.Name = "rdbTest";
-      this.rdbTest.Size = new System.Drawing.Size(67, 21);
-      this.rdbTest.TabIndex = 10;
-      this.rdbTest.TabStop = true;
-      this.rdbTest.Text = "To Test";
-      this.rdbTest.UseVisualStyleBackColor = true;
-      // 
-      // rdbProduction
-      // 
-      this.rdbProduction.AutoSize = true;
-      this.rdbProduction.Location = new System.Drawing.Point(18, 27);
-      this.rdbProduction.Name = "rdbProduction";
-      this.rdbProduction.Size = new System.Drawing.Size(107, 21);
-      this.rdbProduction.TabIndex = 9;
-      this.rdbProduction.Text = "To Production";
-      this.rdbProduction.UseVisualStyleBackColor = true;
-      // 
-      // btnDeploy
-      // 
-      this.btnDeploy.Location = new System.Drawing.Point(252, 162);
-      this.btnDeploy.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-      this.btnDeploy.Name = "btnDeploy";
-      this.btnDeploy.Size = new System.Drawing.Size(92, 26);
-      this.btnDeploy.TabIndex = 11;
-      this.btnDeploy.Text = "Deploy";
-      this.btnDeploy.UseVisualStyleBackColor = true;
-      this.btnDeploy.Click += new System.EventHandler(this.btnDeploy_Click);
-      // 
-      // chkCreateUAT
-      // 
-      this.chkCreateUAT.AutoSize = true;
-      this.chkCreateUAT.Checked = true;
-      this.chkCreateUAT.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.chkCreateUAT.Location = new System.Drawing.Point(18, 102);
-      this.chkCreateUAT.Name = "chkCreateUAT";
-      this.chkCreateUAT.Size = new System.Drawing.Size(152, 21);
-      this.chkCreateUAT.TabIndex = 30;
-      this.chkCreateUAT.Text = "Create user test issue";
-      this.chkCreateUAT.UseVisualStyleBackColor = true;
-      // 
-      // chkCreateDPLY
-      // 
-      this.chkCreateDPLY.AutoSize = true;
-      this.chkCreateDPLY.Location = new System.Drawing.Point(18, 75);
-      this.chkCreateDPLY.Name = "chkCreateDPLY";
-      this.chkCreateDPLY.Size = new System.Drawing.Size(171, 21);
-      this.chkCreateDPLY.TabIndex = 29;
-      this.chkCreateDPLY.Text = "Create deployment issue";
-      this.chkCreateDPLY.UseVisualStyleBackColor = true;
-      // 
-      // chkCreateMergeRequest
-      // 
-      this.chkCreateMergeRequest.AutoSize = true;
-      this.chkCreateMergeRequest.Location = new System.Drawing.Point(18, 129);
-      this.chkCreateMergeRequest.Name = "chkCreateMergeRequest";
-      this.chkCreateMergeRequest.Size = new System.Drawing.Size(155, 21);
-      this.chkCreateMergeRequest.TabIndex = 31;
-      this.chkCreateMergeRequest.Text = "Create merge request";
-      this.chkCreateMergeRequest.UseVisualStyleBackColor = true;
-      // 
-      // lblCustomize
-      // 
-      this.lblCustomize.AutoSize = true;
-      this.lblCustomize.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-      this.lblCustomize.Location = new System.Drawing.Point(15, 55);
-      this.lblCustomize.Name = "lblCustomize";
-      this.lblCustomize.Size = new System.Drawing.Size(72, 17);
-      this.lblCustomize.TabIndex = 32;
-      this.lblCustomize.Text = "Customize";
-      // 
-      // chkCopyExecutables
-      // 
-      this.chkCopyExecutables.AutoSize = true;
-      this.chkCopyExecutables.Location = new System.Drawing.Point(398, 250);
-      this.chkCopyExecutables.Name = "chkCopyExecutables";
-      this.chkCopyExecutables.Size = new System.Drawing.Size(129, 21);
-      this.chkCopyExecutables.TabIndex = 33;
-      this.chkCopyExecutables.Text = "Copy executables";
-      this.chkCopyExecutables.UseVisualStyleBackColor = true;
       // 
       // frmDeployment
       // 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand", "Shorthand\Shorthand.csproj", "{EEDCB63C-9D5A-4444-8166-70D317BFA38A}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.XsltSandbox", "Shorthand.XsltSandbox\Shorthand.XsltSandbox.csproj", "{E48E3861-ED64-4A34-B07D-DFB8B5E6F631}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.AdminPanel", "Shorthand.AdminPanel\Shorthand.AdminPanel.csproj", "{BBF16159-A33A-435D-8CF6-21E3EF66F70B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Mqtt", "Shorthand.Mqtt\Shorthand.Mqtt.csproj", "{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,14 @@ Global
 		{BBF16159-A33A-435D-8CF6-21E3EF66F70B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBF16159-A33A-435D-8CF6-21E3EF66F70B}.Release|x64.ActiveCfg = Release|Any CPU
 		{BBF16159-A33A-435D-8CF6-21E3EF66F70B}.Release|x64.Build.0 = Release|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Debug|x64.Build.0 = Debug|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|x64.ActiveCfg = Release|Any CPU
+		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

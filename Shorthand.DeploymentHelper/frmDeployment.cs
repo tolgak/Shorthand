@@ -22,7 +22,7 @@ namespace Shorthand
 
     private Jira _jira;
     private JiraOptions _jiraOptions;
-    private DeploymentOptions _deplyOptions;
+    private DeploymentOptions _deployOptions;
 
     private GitLab _gitLab;
     private GitLabOptions _gitLabOptions;
@@ -76,7 +76,7 @@ namespace Shorthand
 
     private void InitializePlugin()
     {
-      _deplyOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+      _deployOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
 
       _jira = new Jira(x => this.Dump(x));
       _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
@@ -127,7 +127,7 @@ namespace Shorthand
       chkCreateDPLY.Checked = rdbProduction.Checked;
       chkCreateUAT.Checked = rdbTest.Checked;
       chkCreateMergeRequest.Checked = rdbProduction.Checked;
-      chkCopyExecutables.Checked = rdbProduction.Checked;
+      chkCopyExecutables.Checked = true;      
     }
 
     private bool SanityCheck()

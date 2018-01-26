@@ -13,10 +13,15 @@
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
+
       if (disposing && (components != null))
       {
+        if (_container != null)
+          _container.Dispose();
+
         components.Dispose();
       }
+      
       base.Dispose(disposing);
     }
 
@@ -33,7 +38,6 @@
       this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-      this.mnuIISAdminHelper = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,18 +79,10 @@
       // mnuTools
       // 
       this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuIISAdminHelper,
             this.toolStripMenuItem1});
       this.mnuTools.Name = "mnuTools";
       this.mnuTools.Size = new System.Drawing.Size(51, 21);
       this.mnuTools.Text = "Tools";
-      // 
-      // mnuIISAdminHelper
-      // 
-      this.mnuIISAdminHelper.Name = "mnuIISAdminHelper";
-      this.mnuIISAdminHelper.Size = new System.Drawing.Size(152, 22);
-      this.mnuIISAdminHelper.Text = "IIS Admin";
-      this.mnuIISAdminHelper.Click += new System.EventHandler(this.mnuIISAdminHelper_Click);
       // 
       // toolStripMenuItem1
       // 
@@ -156,7 +152,6 @@
     private System.Windows.Forms.ToolStripMenuItem mnuWindow;
     private System.Windows.Forms.StatusStrip appStat;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-    private System.Windows.Forms.ToolStripMenuItem mnuIISAdminHelper;
     private System.Windows.Forms.ToolStripMenuItem mnuAbout;
   }
 }

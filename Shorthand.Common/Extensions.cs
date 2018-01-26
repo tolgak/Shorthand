@@ -26,6 +26,11 @@ namespace Shorthand
       return sb.AppendFormat(format + "\r\n", args);
     }
 
+    public static StringBuilder AppendConditionally(this StringBuilder sb, bool predicate, string text)
+    {
+      return predicate ? sb.Append(text) : sb;
+    }
+
     public delegate void InvokeIfRequiredDelegate<T>(T obj) where T : ISynchronizeInvoke;
 
     public static void InvokeIfRequired<T>(this T obj, InvokeIfRequiredDelegate<T> action) where T : ISynchronizeInvoke

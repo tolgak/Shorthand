@@ -41,11 +41,11 @@ namespace Shorthand
 
         this.InitializeComponent();
 
-        this.SetVersionInfo();
-        this.InitializeConfiguration();
-        this.InitializePluginContainer();
+        this.setVersionInfo();
+        this.initializeConfiguration();
+        this.initializePluginContainer();
 
-        this.InitializUI();
+        this.initializUI();
       }
       finally
       {
@@ -54,13 +54,13 @@ namespace Shorthand
 
     }
 
-    private void InitializeConfiguration()
+    private void initializeConfiguration()
     {
       ConfigContent.ApplicationName = "Dev Shorthand";
       ConfigContent.Current.LoadConfiguration();
     }
 
-    private void InitializePluginContainer()
+    private void initializePluginContainer()
     {
       var pluginFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)  + @"\plugins\";
       if (!Directory.Exists(pluginFilePath))
@@ -71,28 +71,22 @@ namespace Shorthand
       _container = new CompositionContainer(catalog);
 
       var context = new PluginContext { Host = this, Configuration = ConfigContent.Current };
-      try
+      _container.ComposeParts(this);
+      foreach (var x in _plugins)
       {
-        _container.ComposeParts(this);
-        foreach (var x in _plugins)
+        try
         {
-          try
-          {
-            x.Initialize(context);
-          }
-          catch (Exception compositionException)
-          {
-            MessageBox.Show(compositionException.Message);
-          }
-        }       
-      }
-      catch (Exception compositionException)
-      {
-        MessageBox.Show(compositionException.Message);        
-      }
+          x.Initialize(context);
+        }
+        catch (Exception compositionException)
+        {
+          MessageBox.Show(compositionException.Message);
+        }
+      }       
+
     }
 
-    private void InitializUI()
+    private void initializUI()
     {
       var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
       this.Width = options.Width;
@@ -105,7 +99,7 @@ namespace Shorthand
         var subItem = new ToolStripMenuItem("Settings");
         (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
         subItem.Click += (object sender, EventArgs e) => {
-          frmConfigurationDlg.ShowConfigurationDlg(ConfigContent.Current, this, this.OnFinalSelection);
+          frmConfigurationDlg.ShowConfigurationDlg(ConfigContent.Current, this, this.onFinalSelection);
         };
       }
     }
@@ -124,7 +118,7 @@ namespace Shorthand
 
 
 
-    public void OnFinalSelection(object sender, ConfigEventArgs e)
+    public void onFinalSelection(object sender, ConfigEventArgs e)
     {
       if ( e.ChangedOptions.Contains("GuiOptions") )
       {
@@ -135,7 +129,7 @@ namespace Shorthand
       _onSettingsChanged?.Invoke(this, e);
     }
 
-    private void SetVersionInfo()
+    private void setVersionInfo()
     {
       var versionInfo = Assembly.GetExecutingAssembly().GetName().Version;
       var startDate = new DateTime(2000, 1, 1);      
@@ -146,13 +140,10 @@ namespace Shorthand
 
     private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
     {
-      _container?.Dispose();
+
     }
 
-    private void mnuIISAdminHelper_Click(object sender, EventArgs e)
-    {
-      var frm = new frmIISAdminHelper() { MdiParent = this };
-      frm.Show();
-    }
+
+
   }
 }

@@ -11,9 +11,9 @@ namespace Shorthand
 {
   public class DeliveryToProduction : IDelivery
   {
-    private JiraOptions _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+    private JiraOptions       _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
     private DeploymentOptions _dplyOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-    private Action<string> _logger;
+    private Action<string>    _logger;
 
     public DeliveryToProduction()
     {
@@ -29,18 +29,18 @@ namespace Shorthand
     {
       this.PrepareJira(ctx);
       this.DeployExecutables(ctx);
-      this.CreateMR(ctx);
+      this.CreateMergeRequest(ctx);
     }
 
-    private void CreateMR(DeliveryContext ctx)
+    private void CreateMergeRequest(DeliveryContext ctx)
     {
-      this.Log("Creating merge request");
       if (!ctx.CreateMergeRequest)
       {
-        this.Log("skipped...");
+        this.Log("Skipped creating merge request");
         return;
       }
-        
+
+      this.Log("Creating merge request");
       var git = new GitLab();
             
       int projectId = ctx.GitProjectId;
@@ -49,19 +49,18 @@ namespace Shorthand
       var description = this.BuildGitDescription(ctx);
       var assigneeId = "";
 
-      var mr_id = git.CreateMergeRequest(projectId, sourceBranch, "master", title, description, assigneeId);
-      ctx.GitMergeRequestNo = mr_id;
+      ctx.GitMergeRequestNo = git.CreateMergeRequest(projectId, sourceBranch, "master", title, description, assigneeId);
     }
 
     private void PrepareJira(DeliveryContext ctx)
     {
-      this.Log("Preparing Jira");
       if (!ctx.CreateDeploymentIssue)
       {
-        this.Log("skipped...");
+        this.Log("Skipped creating deployment issue");
         return;
       }
 
+      this.Log("Creating deployment issue");
       if (string.IsNullOrEmpty(ctx.RequestIssueKey))
         throw new ArgumentNullException("RequestIssueKey", "Context does not contain a request issue key.");
 
@@ -87,18 +86,29 @@ namespace Shorthand
 
       // attach sql script file to deployment issue
       var sqlFilePath = Directory.GetFiles(_dplyOptions.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql").FirstOrDefault();
-      jira.AddAttachment(ctx.DeploymentIssueKey, sqlFilePath);
+      if ( !string.IsNullOrEmpty(sqlFilePath) )
+        jira.AddAttachment(ctx.DeploymentIssueKey, sqlFilePath);
 
       // advance workflow for internal issue
-      var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
-      var q = transitions.FirstOrDefault(x => x.name == "Waiting for Production");
-      if (q != null)
-        jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);          
+      var q1 = jira.GetTransitionsForIssue(ctx.InternalIssueKey).FirstOrDefault(x => x.name == "Waiting for Production");
+      if (q1 != null)
+        jira.SetTransitionForIssue(ctx.InternalIssueKey, q1.id);
+
+      // advance workflow for deployment issue
+      var q2 = jira.GetTransitionsForIssue(ctx.DeploymentIssueKey).FirstOrDefault(x => x.name == "Waiting for Production");
+      if (q2 != null)
+        jira.SetTransitionForIssue(ctx.DeploymentIssueKey, q2.id);
     }
 
     private void DeployExecutables(DeliveryContext ctx)
     {
-      this.Log("Deploying");
+      if (!ctx.CopyExecutables)
+      {
+        this.Log("Skipped copying executables");
+        return;
+      }
+
+      this.Log("Copying executables");
 
       var tempFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       var nf = Directory.CreateDirectory(tempFolder + @"\shorthand_" + DateTime.Now.ToString("yyyyMMddHHmm"));
@@ -107,9 +117,9 @@ namespace Shorthand
       try
       {
         var files = new List<string>();
-        files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\sql", ctx.InternalIssueKey + ".sql"));
+        //files.AddRange(Directory.GetFiles($"{_dplyOptions.LocalBinPath}\\sql", ctx.InternalIssueKey + ".sql"));
         if (ctx.CopyExecutables)
-          files.AddRange(Directory.GetFiles(_dplyOptions.LocalBinPath + @"\exe", "*.exe"));
+          files.AddRange(Directory.GetFiles($"{_dplyOptions.LocalBinPath}\\exe", "*.exe"));
         else
           this.Log("will not include executables");
 
@@ -118,11 +128,11 @@ namespace Shorthand
 
         foreach (string file in files)
         {
-          var destinationfile = destinationFolder + "\\" + Path.GetFileName(file);
+          var destinationfile = $"{destinationFolder}\\{Path.GetFileName(file)}";
           File.Copy(file, destinationfile, true);
         }
 
-        var zipFileName = ctx.DeploymentIssueKey + ".zip";
+        var zipFileName = $"{ctx.DeploymentIssueKey}.zip";
         var qualifiedZipFileName = destinationFolder + zipFileName;
 
         var startInfo = new ProcessStartInfo(_dplyOptions.ArchiveToolPath);
@@ -131,7 +141,7 @@ namespace Shorthand
         var p = Process.Start(startInfo);
         p.WaitForExit();
 
-        File.Copy(qualifiedZipFileName, _dplyOptions.ProductionDeliveryFolder + "\\" + zipFileName, true);
+        File.Copy(qualifiedZipFileName, $"{_dplyOptions.ProductionDeliveryFolder}\\{zipFileName}", true);
       }
       finally
       {
@@ -144,11 +154,12 @@ namespace Shorthand
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var deploymentIssueKey = ctx.DeploymentIssueKey;
       return new StringBuilder().AppendLine(ctx.InternalIssueKey)
-                                .AppendFormattedLine("merge request {0}/sofdev/{1}/merge_requests/{2}", ctx.GitProjectWebUrl, ctx.GitProjectName, ctx.GitMergeRequestNo)
+                                .AppendConditionally (ctx.CopyExecutables, $"merge request {ctx.GitProjectWebUrl}/sofdev/{ctx.GitProjectName}/merge_requests/{ctx.GitMergeRequestNo}")
                                 .AppendLine("{noformat}")
-                                .AppendFormattedLine("{0}\\{1}.rar", options.ProductionDeliveryFolder, deploymentIssueKey)                                                                
-                                .AppendLine("Bu arşivdeki exe dosyalar uygulama dizinine kopyalanacak.")
-                                .AppendLine("Varsa sql script dosyaları pandora.ibu veritabanında çalıştırılacak.")
+                                .AppendConditionally( !ctx.CopyExecutables, "Bu iş için exe kopyalanmasına gerek yok.")
+                                .AppendConditionally( ctx.CopyExecutables, $"{options.ProductionDeliveryFolder}\\{deploymentIssueKey}.zip")
+                                .AppendConditionally( ctx.CopyExecutables, "Bu arşivdeki exe dosyalar uygulama dizinine kopyalanacak.")
+                                .AppendLine("İşe ekli sql script dosyaları varsa pandora.ibu veritabanında çalıştırılacak.")
                                 .AppendLine("{noformat}")
                                 .ToString();
     }
@@ -156,12 +167,12 @@ namespace Shorthand
     private string BuildGitDescription(DeliveryContext ctx)
     {
       _logger?.Invoke($"\n* **Internal Issue :** {ctx.InternalIssueKey}\n* **Request Issue :** {ctx.RequestIssueKey}\n* **Deployment Issue :** {ctx.DeploymentIssueKey}\n* **Uat Issue :** {ctx.UatIssueKey}"
-                       .Replace("\n", Environment.NewLine));
+              .Replace("\n", Environment.NewLine));
 
-      return new StringBuilder().AppendFormattedLine("* **Internal Issue :** {0}", ctx.InternalIssueKey)
-                                .AppendFormattedLine("* **Request Issue :** {0}", ctx.RequestIssueKey)
-                                .AppendFormattedLine("* **Deployment Issue :** {0}", ctx.DeploymentIssueKey)
-                                .AppendFormattedLine("* **Uat Issue :** {0}", ctx.UatIssueKey)
+      return new StringBuilder().AppendLine($"* **Internal Issue :** {ctx.InternalIssueKey}" )
+                                .AppendLine($"* **Request Issue :** {ctx.RequestIssueKey}" )
+                                .AppendLine($"* **Deployment Issue :** {ctx.DeploymentIssueKey}" )
+                                .AppendLine($"* **Uat Issue :** {ctx.UatIssueKey}" )
                                 .ToString();
     }
 
