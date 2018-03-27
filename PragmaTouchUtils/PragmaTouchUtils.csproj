@@ -92,9 +92,7 @@
       <DependentUpon>frmConfigurationDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\IConfigContentEditor.cs" />
-    <Compile Include="Configuration\ucOptionEditorBase.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Configuration\ucOptionEditorBase.cs" />
     <Compile Include="Configuration\ucOptionEditorBase.Designer.cs">
       <DependentUpon>ucOptionEditorBase.cs</DependentUpon>
     </Compile>

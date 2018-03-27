@@ -7,18 +7,10 @@
 *********************************************************************/
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-using System.Windows.Forms;
-using System.Reflection;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
-using System.IO.IsolatedStorage;
-using System.Runtime.Remoting;
 
 
 namespace PragmaTouchUtils
@@ -27,22 +19,24 @@ namespace PragmaTouchUtils
   public class ConfigContent
   {
     public static string ApplicationName { get; set; }
-    private Dictionary<string, object> _preferences = new Dictionary<string, object>();
-    
-    public string DefaultFileName {get; set;}
-    public string UserDataDirectory { get; set; }
 
     private static ConfigContent _current;
-    public static ConfigContent Current 
+    public static ConfigContent Current
     { 
       get 
       {
-        if ( _current == null )
-          _current = new ConfigContent();
-
+        _current = _current ?? new ConfigContent();
         return _current;
       } 
     }
+
+
+
+    private Dictionary<string, object> _preferences = new Dictionary<string, object>();
+    
+    public string DefaultFileName {get; set;}
+
+    public string UserDataDirectory { get; set; }
   
     public ConfigContent()
     {
@@ -55,6 +49,8 @@ namespace PragmaTouchUtils
       this.DefaultFileName = $"{this.UserDataDirectory}\\{ConfigContent.ApplicationName}.options";
     }
 
+
+
     public object GetConfigContentItem(string className)
     {
       _preferences.TryGetValue(className, out var item);
@@ -63,38 +59,26 @@ namespace PragmaTouchUtils
 
     public void LoadConfiguration()
     {
-      var items = AppDomain.CurrentDomain.GetAssemblies().ToList()
-                 .SelectMany(s => s.GetTypes())
-                 .Where(p => Attribute.IsDefined(p, typeof(ConfigContentItemAttribute)));
+      var items = AppDomain.CurrentDomain.GetAssemblies()
+                           .SelectMany(s => s.GetTypes())
+                           .Where(p => Attribute.IsDefined(p, typeof(ConfigContentItemAttribute)));
 
       foreach ( var e in items )
       {
-        if ( e != null && !_preferences.ContainsKey(e.Name))
-        {
-          object value = null;
-          string prefPath = $"{this.UserDataDirectory}\\{e.Name}.options";
-          if ( File.Exists(prefPath) )
-            value = this.LoadFromDocumentFormat(e, prefPath);
-          else
-            value = Activator.CreateInstance(e.Assembly.GetName().Name, e.FullName).Unwrap();
+        if (_preferences.ContainsKey(e?.Name))
+          continue;
+        
+        string prefPath = $"{this.UserDataDirectory}\\{e.Name}.options";
+        var value = File.Exists(prefPath) 
+                  ? this.LoadFromDocumentFormat(e, prefPath)
+                  : Activator.CreateInstance(e.Assembly.GetName().Name, e.FullName).Unwrap();
 
-          _preferences.Add(e.Name, value);
-        }
-      }
-
-    }
-
-    public void SaveConfiguration()
-    {
-      foreach ( var item in _preferences )
-      {
-        string prefPath = $"{this.UserDataDirectory}\\{item.Key}.options";
-        this.SaveToDocumentFormat(item.Value, prefPath);                
+        _preferences.Add(e.Name, value);
       }
     }
+
     public void SaveConfiguration(string key)
     {
-
       if (!_preferences.TryGetValue(key, out object item))
         return;
 
@@ -115,7 +99,7 @@ namespace PragmaTouchUtils
     {
       using ( TextReader textReader = new StreamReader(path) )
       {
-        XmlSerializer xmlSerializer = new XmlSerializer(type);
+        var xmlSerializer = new XmlSerializer(type);
         return xmlSerializer.Deserialize(textReader);
       }
     }

@@ -109,7 +109,7 @@ namespace Shorthand
         var subItem = new ToolStripMenuItem("Settings");
         (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
         subItem.Click += (object sender, EventArgs e) => {
-          frmConfigurationDlg.ShowConfigurationDlg(ConfigContent.Current, this, this.onFinalSelection);
+          frmConfigurationDlg.Show(ConfigContent.Current, this, this.onFinalSelection);
         };
       }
     }

@@ -42,8 +42,7 @@ namespace Shorthand.AdminPanel
       (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
       subItem.Click += (object sender, EventArgs e) => { this.Show(); };
 
-      var host = _context.Host as IPluginHost;
-      if (host != null)
+      if (_context.Host is IPluginHost host)
         host.onSettingsChanged += this.OnSettingsChangedEventHandler;
 
       this.FormClosing += (object sender, FormClosingEventArgs e) =>
