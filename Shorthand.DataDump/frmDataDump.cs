@@ -9,6 +9,7 @@ using System.ComponentModel.Composition;
 using Shorthand.Common;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Shorthand
 {
@@ -29,29 +30,20 @@ namespace Shorthand
       _context = context;
       this.MdiParent = _context.Host;
 
-      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
-      if (strips.Length == 0)
+      var mnuTools = _context.Host.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
+      if (mnuTools == null)
         return;
 
       var subItem = new ToolStripMenuItem(this.Text);
       if (this.Icon != null)
         subItem.Image = this.Icon.ToBitmap();
-      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
+      (mnuTools as ToolStripMenuItem).DropDownItems.Add(subItem);
       subItem.Click += (object sender, EventArgs e) => { this.Show(); };
 
-      this.FormClosing += (object sender, FormClosingEventArgs e) =>
-      {
-        e.Cancel = true;
-        this.Hide();
-      };
+      this.FormClosing += (object sender, FormClosingEventArgs e) => { e.Cancel = true; this.Hide(); };
 
       this.InitializePlugin();
       this.InitializeUI();
-    }
-
-    public Task InitializeAsync(IPluginContext context)
-    {
-      throw new NotImplementedException();
     }
 
     private void InitializePlugin()
@@ -65,8 +57,6 @@ namespace Shorthand
       dlgLoad.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
     }
 
-
-
     private void btnDump_Click(object sender, EventArgs e)
     {
       this.Cursor = Cursors.WaitCursor;
@@ -77,20 +67,20 @@ namespace Shorthand
       else if (rdCSV.Checked)
         dumper = new CSVDataDump();
 
+      pbRecordCounter.Value = 0;
+      pbRecordsetCounter.Value = 0;
+
       try
       {
         var connectionString = txtConnection.Text;
         var commandText = txtEditor.Text;
+        var fileNameFormat = txtFileNameFormat.Text;
 
         DataSet dataSet = this.BuildDataSet(connectionString, commandText);
 
         dumper.OnRecordsetProgress += dumper_OnRecordSetProgress;
         dumper.OnRecordProgress += dumper_OnRecordProgress;
 
-        pbRecordCounter.Value = 0;
-        pbRecordsetCounter.Value = 0;
-
-        var fileNameFormat = txtFileNameFormat.Text;
         dumper.Dump2(dataSet, fileNameFormat);
       }
       finally
@@ -127,6 +117,7 @@ namespace Shorthand
     private string GetDefaultConnectionString()
     {
       var result = string.Empty;
+      
       foreach (var item in ConfigurationManager.ConnectionStrings)
       {
         var x = (item as ConnectionStringSettings).ElementInformation.Properties["name"];
@@ -143,10 +134,9 @@ namespace Shorthand
     private DataSet BuildDataSet(string connectionString, string commandText)
     {
       DataSet dataSet = new DataSet("DataDump");
-
-      using (var connection = new SqlConnection())
+      
+      using (var connection = new SqlConnection(connectionString))
       {
-        connection.ConnectionString = connectionString;
         using (var command = connection.CreateCommand())
         {
           command.CommandType = CommandType.Text;
@@ -190,7 +180,6 @@ namespace Shorthand
         return;
 
       File.WriteAllText(dlgSave.FileName, txtEditor.Text);
-
     }
 
 

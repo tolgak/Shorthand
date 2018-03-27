@@ -9,6 +9,7 @@ using System.ComponentModel.Composition;
 using PragmaTouchUtils;
 using Shorthand.Common;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Shorthand
 {
@@ -28,41 +29,32 @@ namespace Shorthand
       _context = context;
       this.MdiParent = _context.Host;      
 
-      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
-      if (strips.Length == 0)
+      var mnuTools = _context.Host.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
+      if (mnuTools == null)
         return;
 
       var subItem = new ToolStripMenuItem(this.Text);
       if (this.Icon != null)
         subItem.Image = this.Icon.ToBitmap();
-      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
+
+      (mnuTools as ToolStripMenuItem).DropDownItems.Add(subItem);
       subItem.Click += (object sender, EventArgs e) => { this.Show(); };
 
-      this.FormClosing += (object sender, FormClosingEventArgs e) =>
-      {
-        e.Cancel = true;
-        this.Hide();
-      };
+      this.FormClosing += (object sender, FormClosingEventArgs e) => { e.Cancel = true; this.Hide(); };
 
       this.InitializePlugin();
       this.InitializeUI();
-    }
-
-    public Task InitializeAsync(IPluginContext context)
-    {
-      throw new NotImplementedException();
-    }
-
-    private void InitializeUI()
-    {
-      tabSource.SelectedTab = tabXSL;
     }
 
     private void InitializePlugin()
     {
 
     }
-    
+
+    private void InitializeUI()
+    {
+      tabSource.SelectedTab = tabXSL;
+    }
 
     private void btnRun_Click(object sender, EventArgs e)
     {
@@ -113,7 +105,7 @@ namespace Shorthand
         html = sb.ToString();
       }
 
-      css = string.Format("<style>{0}</style>", css);
+      css = $"<style>{css}</style>";
       return html.Replace("<style />", css);
     }
 

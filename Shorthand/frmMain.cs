@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 using PragmaTouchUtils;
 using Shorthand.Common;
-
+using System.Linq;
 
 namespace Shorthand
 {
@@ -51,7 +51,6 @@ namespace Shorthand
       {
         this.Cursor = Cursors.Default;
       }
-
     }
 
     private void initializeConfiguration()
@@ -99,19 +98,21 @@ namespace Shorthand
     private void initializeUI()
     {
       var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
-      this.Width = options.Width;
+      this.Width  = options.Width;
       this.Height = options.Height;
 
-      var strips = this.MainMenuStrip.Items.Find("mnuTools", true);
-      if (strips.Length == 1)
-      {        
-        (strips[0] as ToolStripMenuItem).DropDownItems.Add(new ToolStripSeparator());
-        var subItem = new ToolStripMenuItem("Settings");
-        (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
-        subItem.Click += (object sender, EventArgs e) => {
-          frmConfigurationDlg.Show(ConfigContent.Current, this, this.onFinalSelection);
-        };
-      }
+      var mnuTools = this.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
+      if (mnuTools == null)
+        return;
+              
+      (mnuTools as ToolStripMenuItem).DropDownItems.Add(new ToolStripSeparator());
+
+      var mnuSettings = new ToolStripMenuItem("Settings");
+      (mnuTools as ToolStripMenuItem).DropDownItems.Add(mnuSettings);
+      mnuSettings.Click += (object sender, EventArgs e) => {
+        frmConfigurationDlg.Show(ConfigContent.Current, this, this.onFinalSelection);
+      };
+
     }
 
 
@@ -126,10 +127,11 @@ namespace Shorthand
       frmAbout.ShowAbout();
     }
 
-
-
     public void onFinalSelection(object sender, ConfigEventArgs e)
     {
+      if (e.action == ConfigAction.None || e.action == ConfigAction.Cancel)
+        return;
+
       if ( e.ChangedOptions.Contains("GuiOptions") )
       {
         this.Width  = (e.content.GetConfigContentItem("GuiOptions") as GuiOptions).Width;

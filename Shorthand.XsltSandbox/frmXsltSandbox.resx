@@ -125,8 +125,10 @@
   &lt;xsl:template match="rows"&gt;
 
     &lt;html&gt;
-      &lt;head&gt;        
-        &lt;style&gt;&lt;/style&gt;
+      &lt;head&gt;
+        &lt;link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" /&gt;
+       
+        &lt;style /&gt;
       &lt;/head&gt;
 
       &lt;body&gt;
@@ -134,7 +136,7 @@
           &lt;div id="termName"&gt;&lt;h3&gt;2015 Term 3&lt;/h3&gt;&lt;/div&gt;
 
           &lt;div&gt;
-            &lt;table&gt;
+            &lt;table class="table table table-bordered pr-calendar"&gt;
 
               &lt;xsl:for-each select="//row[generate-id(.)=generate-id(key('classes', ClassLabel)[1])]"&gt;
                 &lt;xsl:sort select="ClassLabel"/&gt;
@@ -142,7 +144,7 @@
                   &lt;xsl:sort select="SlotName"/&gt;
 
                   &lt;xsl:if test="position() = 1"&gt;
-                    
+                    &lt;thead&gt;
                       &lt;tr class="header"&gt;
                         &lt;td class="className"&gt;&lt;xsl:value-of select="ClassLabel"/&gt;&lt;/td&gt;
                         &lt;td&gt;Monday&lt;/td&gt;
@@ -151,9 +153,9 @@
                         &lt;td&gt;Thursday&lt;/td&gt;
                         &lt;td&gt;Friday&lt;/td&gt;
                       &lt;/tr&gt;
-                    
+                    &lt;/thead&gt;
                   &lt;/xsl:if&gt;
-                  
+                                    
                   &lt;tr class="row"&gt;
                     &lt;td class="slotName"&gt;&lt;xsl:value-of select="SlotName"/&gt;&lt;/td&gt;                    
                     
@@ -224,8 +226,7 @@
       &lt;/xsl:if&gt;
   &lt;/xsl:template&gt;
   
-&lt;/xsl:stylesheet&gt;
-</value>
+&lt;/xsl:stylesheet&gt;</value>
   </data>
   <data name="txtSourceXML.Text" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
