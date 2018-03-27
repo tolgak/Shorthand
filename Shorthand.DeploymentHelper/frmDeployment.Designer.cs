@@ -31,6 +31,12 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
       this.panel1 = new System.Windows.Forms.Panel();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.btnOpenLocal = new System.Windows.Forms.Button();
+      this.btnOpenDeployment = new System.Windows.Forms.Button();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.btnClearLog = new System.Windows.Forms.Button();
+      this.btnRefresh = new System.Windows.Forms.Button();
       this.chkCopyExecutables = new System.Windows.Forms.CheckBox();
       this.grpTask = new System.Windows.Forms.GroupBox();
       this.lblCustomize = new System.Windows.Forms.Label();
@@ -45,10 +51,7 @@
       this.lblUAT_Status = new System.Windows.Forms.Label();
       this.lblDPLY_Status = new System.Windows.Forms.Label();
       this.lblREQ_Status = new System.Windows.Forms.Label();
-      this.btnTest = new System.Windows.Forms.Button();
       this.lblMergeRequestLink = new System.Windows.Forms.LinkLabel();
-      this.btnClearLog = new System.Windows.Forms.Button();
-      this.btnRefresh = new System.Windows.Forms.Button();
       this.lblDPLY_IssueKey = new System.Windows.Forms.Label();
       this.txtDPLY = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -62,13 +65,17 @@
       this.txtInternal = new System.Windows.Forms.TextBox();
       this.txtREQ = new System.Windows.Forms.TextBox();
       this.txtDump = new System.Windows.Forms.TextBox();
-      this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
+      this.imageList1 = new System.Windows.Forms.ImageList(this.components);
       this.panel1.SuspendLayout();
+      this.groupBox2.SuspendLayout();
+      this.groupBox1.SuspendLayout();
       this.grpTask.SuspendLayout();
       this.SuspendLayout();
       // 
       // panel1
       // 
+      this.panel1.Controls.Add(this.groupBox2);
+      this.panel1.Controls.Add(this.groupBox1);
       this.panel1.Controls.Add(this.chkCopyExecutables);
       this.panel1.Controls.Add(this.grpTask);
       this.panel1.Controls.Add(this.btnMakeExecutable);
@@ -76,10 +83,7 @@
       this.panel1.Controls.Add(this.lblUAT_Status);
       this.panel1.Controls.Add(this.lblDPLY_Status);
       this.panel1.Controls.Add(this.lblREQ_Status);
-      this.panel1.Controls.Add(this.btnTest);
       this.panel1.Controls.Add(this.lblMergeRequestLink);
-      this.panel1.Controls.Add(this.btnClearLog);
-      this.panel1.Controls.Add(this.btnRefresh);
       this.panel1.Controls.Add(this.lblDPLY_IssueKey);
       this.panel1.Controls.Add(this.txtDPLY);
       this.panel1.Controls.Add(this.label5);
@@ -99,6 +103,70 @@
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(745, 301);
       this.panel1.TabIndex = 0;
+      // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.btnOpenLocal);
+      this.groupBox2.Controls.Add(this.btnOpenDeployment);
+      this.groupBox2.Location = new System.Drawing.Point(187, 181);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(162, 113);
+      this.groupBox2.TabIndex = 42;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = " Folders ";
+      // 
+      // btnOpenLocal
+      // 
+      this.btnOpenLocal.Location = new System.Drawing.Point(6, 66);
+      this.btnOpenLocal.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+      this.btnOpenLocal.Name = "btnOpenLocal";
+      this.btnOpenLocal.Size = new System.Drawing.Size(142, 26);
+      this.btnOpenLocal.TabIndex = 42;
+      this.btnOpenLocal.Text = "Local bin folder";
+      this.btnOpenLocal.UseVisualStyleBackColor = true;
+      this.btnOpenLocal.Click += new System.EventHandler(this.btnOpenLocal_Click);
+      // 
+      // btnOpenDeployment
+      // 
+      this.btnOpenDeployment.Location = new System.Drawing.Point(6, 30);
+      this.btnOpenDeployment.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+      this.btnOpenDeployment.Name = "btnOpenDeployment";
+      this.btnOpenDeployment.Size = new System.Drawing.Size(142, 26);
+      this.btnOpenDeployment.TabIndex = 41;
+      this.btnOpenDeployment.Text = "Deployment folder";
+      this.btnOpenDeployment.UseVisualStyleBackColor = true;
+      this.btnOpenDeployment.Click += new System.EventHandler(this.btnOpenDeployment_Click);
+      // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.btnClearLog);
+      this.groupBox1.Controls.Add(this.btnRefresh);
+      this.groupBox1.Location = new System.Drawing.Point(16, 181);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(162, 113);
+      this.groupBox1.TabIndex = 41;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = " Actions ";
+      // 
+      // btnClearLog
+      // 
+      this.btnClearLog.Location = new System.Drawing.Point(6, 64);
+      this.btnClearLog.Name = "btnClearLog";
+      this.btnClearLog.Size = new System.Drawing.Size(142, 26);
+      this.btnClearLog.TabIndex = 27;
+      this.btnClearLog.Text = "Clear Log";
+      this.btnClearLog.UseVisualStyleBackColor = true;
+      this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
+      // 
+      // btnRefresh
+      // 
+      this.btnRefresh.Location = new System.Drawing.Point(6, 32);
+      this.btnRefresh.Name = "btnRefresh";
+      this.btnRefresh.Size = new System.Drawing.Size(142, 26);
+      this.btnRefresh.TabIndex = 26;
+      this.btnRefresh.Text = "Refresh";
+      this.btnRefresh.UseVisualStyleBackColor = true;
+      this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
       // 
       // chkCopyExecutables
       // 
@@ -205,12 +273,13 @@
       // 
       // btnMakeExecutable
       // 
-      this.btnMakeExecutable.Location = new System.Drawing.Point(9, 206);
+      this.btnMakeExecutable.Location = new System.Drawing.Point(251, 127);
       this.btnMakeExecutable.Name = "btnMakeExecutable";
       this.btnMakeExecutable.Size = new System.Drawing.Size(123, 26);
       this.btnMakeExecutable.TabIndex = 37;
       this.btnMakeExecutable.Text = "Make Executable";
       this.btnMakeExecutable.UseVisualStyleBackColor = true;
+      this.btnMakeExecutable.Visible = false;
       this.btnMakeExecutable.Click += new System.EventHandler(this.btnMakeExecutable_Click);
       // 
       // lblInternal_Status
@@ -253,17 +322,6 @@
       this.lblREQ_Status.TabIndex = 33;
       this.lblREQ_Status.Text = "Status";
       // 
-      // btnTest
-      // 
-      this.btnTest.Location = new System.Drawing.Point(252, 174);
-      this.btnTest.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-      this.btnTest.Name = "btnTest";
-      this.btnTest.Size = new System.Drawing.Size(92, 26);
-      this.btnTest.TabIndex = 32;
-      this.btnTest.Text = "Test";
-      this.btnTest.UseVisualStyleBackColor = true;
-      this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-      // 
       // lblMergeRequestLink
       // 
       this.lblMergeRequestLink.AutoSize = true;
@@ -273,26 +331,6 @@
       this.lblMergeRequestLink.TabIndex = 29;
       this.lblMergeRequestLink.TabStop = true;
       this.lblMergeRequestLink.Text = "merge request state unknown";
-      // 
-      // btnClearLog
-      // 
-      this.btnClearLog.Location = new System.Drawing.Point(138, 174);
-      this.btnClearLog.Name = "btnClearLog";
-      this.btnClearLog.Size = new System.Drawing.Size(108, 26);
-      this.btnClearLog.TabIndex = 25;
-      this.btnClearLog.Text = "Clear Log";
-      this.btnClearLog.UseVisualStyleBackColor = true;
-      this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
-      // 
-      // btnRefresh
-      // 
-      this.btnRefresh.Location = new System.Drawing.Point(9, 174);
-      this.btnRefresh.Name = "btnRefresh";
-      this.btnRefresh.Size = new System.Drawing.Size(123, 26);
-      this.btnRefresh.TabIndex = 9;
-      this.btnRefresh.Text = "Refresh";
-      this.btnRefresh.UseVisualStyleBackColor = true;
-      this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
       // 
       // lblDPLY_IssueKey
       // 
@@ -415,15 +453,16 @@
       this.txtDump.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.txtDump.Multiline = true;
       this.txtDump.Name = "txtDump";
+      this.txtDump.ReadOnly = true;
       this.txtDump.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.txtDump.Size = new System.Drawing.Size(745, 331);
       this.txtDump.TabIndex = 1;
       // 
-      // ımageList1
+      // imageList1
       // 
-      this.ımageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-      this.ımageList1.ImageSize = new System.Drawing.Size(16, 16);
-      this.ımageList1.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+      this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+      this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
       // 
       // frmDeployment
       // 
@@ -443,6 +482,8 @@
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmDeployment_KeyUp);
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox1.ResumeLayout(false);
       this.grpTask.ResumeLayout(false);
       this.grpTask.PerformLayout();
       this.ResumeLayout(false);
@@ -466,14 +507,11 @@
     private System.Windows.Forms.TextBox txtDump;
     private System.Windows.Forms.Label lblDPLY_IssueKey;
     private System.Windows.Forms.TextBox txtDPLY;
-    private System.Windows.Forms.Button btnRefresh;
-    private System.Windows.Forms.Button btnClearLog;
     private System.Windows.Forms.LinkLabel lblMergeRequestLink;
-    private System.Windows.Forms.Button btnTest;
     private System.Windows.Forms.Label lblUAT_Status;
     private System.Windows.Forms.Label lblDPLY_Status;
     private System.Windows.Forms.Label lblREQ_Status;
-    private System.Windows.Forms.ImageList ımageList1;
+    private System.Windows.Forms.ImageList imageList1;
     private System.Windows.Forms.Label lblInternal_Status;
     private System.Windows.Forms.Button btnMakeExecutable;
     private System.Windows.Forms.GroupBox grpTask;
@@ -485,6 +523,12 @@
     private System.Windows.Forms.RadioButton rdbProduction;
     private System.Windows.Forms.Button btnDeploy;
     private System.Windows.Forms.CheckBox chkCopyExecutables;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.Button btnOpenLocal;
+    private System.Windows.Forms.Button btnOpenDeployment;
+    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.Button btnClearLog;
+    private System.Windows.Forms.Button btnRefresh;
     //private System.Windows.Forms.TextBox txtDump;
   }
 }

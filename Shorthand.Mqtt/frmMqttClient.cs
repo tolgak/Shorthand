@@ -7,10 +7,11 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 using System.ComponentModel.Composition;
 using PragmaTouchUtils;
 using Shorthand.Common;
+using System.Threading.Tasks;
 
 namespace Shorthand.Mqtt
 {
-  [Export(typeof(IPlugin))]
+  [Export(typeof(IPluginMarker))]
   public partial class frmMqttClient : Form, IPlugin
   {
     private MqttClient  _client;
@@ -62,6 +63,11 @@ namespace Shorthand.Mqtt
 
       this.InitializePlugin();
       this.InitializeUI();
+    }
+
+    public Task InitializeAsync(IPluginContext context)
+    {
+      throw new NotImplementedException();
     }
 
     private void InitializeUI()
@@ -129,5 +135,7 @@ namespace Shorthand.Mqtt
       _client.MqttMsgPublishReceived -= _client_MqttMsgPublishReceived;
       _client = null;
     }
+
+
   }
 }

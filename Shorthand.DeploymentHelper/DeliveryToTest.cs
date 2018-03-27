@@ -55,7 +55,7 @@ namespace Shorthand
 
       if (!ctx.CreateUatIssue)
       {
-        this.Log("skipped...");
+        this.Log("skipped creating uat issue...");
         return;
       }
 
@@ -78,7 +78,7 @@ namespace Shorthand
     {
       if (!ctx.CopyExecutables)
       {
-        this.Log("Ignored Deploying executables ");
+        this.Log("Skipped deploying executables ");
         return;
       }
 
@@ -112,6 +112,7 @@ namespace Shorthand
                                 .AppendFormattedLine("# *{0}* uygulaması çalıştırılır.", ctx.TestExecutableTargetName)
                                 .AppendLine("# *ibu_test* veritabanına login olunur")
                                 .AppendLine("# ...")
+                                .AppendLine("# Yeni eklenen işlevin, diğer işlevleri bozmadığından emin olunur.")
                                 .AppendLine("# Ekran görüntüsü bu işe eklenir")
                                 .AppendLine("# Bu iş, *Done* ile kapatılır")
                                 .AppendFormattedLine("# {0} *Passed* ile kapatılır", ctx.RequestIssueKey)

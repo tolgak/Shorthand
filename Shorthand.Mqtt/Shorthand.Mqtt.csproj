@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Shorthand.Mqtt</RootNamespace>
     <AssemblyName>Shorthand.Mqtt</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -82,6 +82,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)Shorthand\$(OutDir)plugins\*.* /y
-copy $(TargetPath) $(SolutionDir)Shorthand\$(OutDir)plugins\*.* /y</PostBuildEvent>
+copy $(TargetDir)M2Mqtt.Net.dll $(SolutionDir)Shorthand\$(OutDir)plugins\*.* /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -25,7 +25,7 @@ namespace Shorthand
       this.Caption = "JIRA";
     }
 
-    public override bool Modified { get { return string.IsNullOrEmpty(_cleanHash) ? false : _cleanHash != _options.GetMd5Hash(); } }
+    public override bool Modified => string.IsNullOrEmpty(_cleanHash) ? false : _cleanHash != _options.GetMd5Hash();
 
     protected override void LoadInitial()
     {
@@ -50,8 +50,13 @@ namespace Shorthand
       txtPassword.Enabled = enabled;
     }
 
+    public override bool SaveContent()
+    {
+      var result = base.SaveContent();
+      _cleanHash = _options.GetMd5Hash();
 
-
+      return result;
+    }
 
   }
 }

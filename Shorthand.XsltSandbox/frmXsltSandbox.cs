@@ -8,11 +8,11 @@ using System.Xml.Xsl;
 using System.ComponentModel.Composition;
 using PragmaTouchUtils;
 using Shorthand.Common;
-
+using System.Threading.Tasks;
 
 namespace Shorthand
 {
-  [Export(typeof(IPlugin))]
+  [Export(typeof(IPluginMarker))]
   public partial class frmXsltSandbox : Form, IPlugin
   {
     private IPluginContext _context;
@@ -48,7 +48,10 @@ namespace Shorthand
       this.InitializeUI();
     }
 
-
+    public Task InitializeAsync(IPluginContext context)
+    {
+      throw new NotImplementedException();
+    }
 
     private void InitializeUI()
     {

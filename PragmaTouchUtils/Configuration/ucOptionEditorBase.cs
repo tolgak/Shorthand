@@ -41,7 +41,7 @@ namespace Shorthand
 
     public virtual bool SaveContent()
     {      
-      _currentConfig?.SaveConfiguration();
+      _currentConfig?.SaveConfiguration(this.ItemClassName);      
       return true;
     }
 

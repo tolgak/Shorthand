@@ -8,11 +8,12 @@ using System.IO;
 using System.ComponentModel.Composition;
 using Shorthand.Common;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Shorthand
 {
 
-  [Export(typeof(IPlugin))]
+  [Export(typeof(IPluginMarker))]
   public partial class frmDataDump : Form, IPlugin
   {
 
@@ -46,6 +47,11 @@ namespace Shorthand
 
       this.InitializePlugin();
       this.InitializeUI();
+    }
+
+    public Task InitializeAsync(IPluginContext context)
+    {
+      throw new NotImplementedException();
     }
 
     private void InitializePlugin()

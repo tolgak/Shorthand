@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
 
 namespace Shorthand.Common
 {
-  public interface IPlugin
+  public interface IPluginMarker
   {
 
-    //string PluginName { get; set; }
-    void Initialize(IPluginContext context);
-
-
   }
+
+  public interface IPlugin : IPluginMarker
+  {
+    void Initialize(IPluginContext context);
+  }
+
+  public interface IAsyncPlugin : IPluginMarker
+  {
+    Task InitializeAsync(IPluginContext context);
+  }
+
+
+
 }

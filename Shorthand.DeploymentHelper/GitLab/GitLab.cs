@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Shorthand
 {
@@ -36,6 +37,18 @@ namespace Shorthand
       return JsonConvert.DeserializeObject<List<Project>>(jsonResponse.Result);
     }
 
+    public async Task<List<Project>> GetProjectsAsync(bool onlyStarred = false)
+    {
+      var url = $"{_options.Url}/api/v3/projects";
+      if (onlyStarred)
+        url += "/starred";
+
+      var jsonResponse = await this.SendApiRequestAsync(url, null, ApiMethod.GET);
+      return JsonConvert.DeserializeObject<List<Project>>(jsonResponse.Result);
+    }
+
+
+
     public Project GetProjectById(int projectId)
     {
       var url = $"{_options.Url}/api/v3/projects/{projectId}";
@@ -44,11 +57,28 @@ namespace Shorthand
       return JsonConvert.DeserializeObject<Project>(jsonResponse.Result);
     }
 
+    public async Task<Project> GetProjectByIdAsync(int projectId)
+    {
+      var url = $"{_options.Url}/api/v3/projects/{projectId}";
+      var jsonResponse = await this.SendApiRequestAsync(url, null, ApiMethod.GET);
+
+      return JsonConvert.DeserializeObject<Project>(jsonResponse.Result);
+    }
+
+
 
     public List<MergeRequestResponse> GetMergeRequests(int projectId)
     {
       var url = $"{_options.Url}/api/v3/projects/{projectId}/merge_requests";
       var jsonResponse = this.SendApiRequest(url, null, ApiMethod.GET);
+
+      return JsonConvert.DeserializeObject<List<MergeRequestResponse>>(jsonResponse.Result);
+    }
+
+    public async Task<List<MergeRequestResponse>> GetMergeRequestsAsync(int projectId)
+    {
+      var url = $"{_options.Url}/api/v3/projects/{projectId}/merge_requests";
+      var jsonResponse = await this.SendApiRequestAsync(url, null, ApiMethod.GET);
 
       return JsonConvert.DeserializeObject<List<MergeRequestResponse>>(jsonResponse.Result);
     }
@@ -60,6 +90,14 @@ namespace Shorthand
       var mergeRequests = this.GetMergeRequests(projectId);
       return mergeRequests.FirstOrDefault(x => x.source_branch.Contains(internalIssueKey) );
     }
+
+    public async Task<MergeRequestResponse> GetMergeRequestByInternalIssueKeyAsync(int projectId, string internalIssueKey)
+    {
+      var mergeRequests = await this.GetMergeRequestsAsync(projectId);
+      return mergeRequests.FirstOrDefault(x => x.source_branch.Contains(internalIssueKey));
+    }
+
+
 
     public int GetMergeRequestById(int projectId, int mergeReqId)
     {
@@ -136,6 +174,60 @@ namespace Shorthand
       }
 
     }
+
+    private async Task<JsonResponse> SendApiRequestAsync(string url, string data, string method)
+    {
+      var request = WebRequest.Create(url) as HttpWebRequest;
+      request.ContentType = "application/json";
+      request.Method = method;
+
+      if (data != null)
+        using (var writer = new StreamWriter(request.GetRequestStream()))
+          writer.Write(data);
+
+      request.Headers.Add("PRIVATE-TOKEN", _options.PrivateToken);
+
+      HttpWebResponse response = null;
+      try
+      {
+        response = await request.GetResponseAsync() as HttpWebResponse;
+        using (var reader = new StreamReader(response.GetResponseStream()))
+        {
+          return new JsonResponse { Success = true, Result = reader.ReadToEnd(), StatusCode = response.StatusCode, Description = response.StatusDescription };
+        }
+      }
+      catch (WebException ex)
+      {
+        var jsonRespone = new JsonResponse { Success = false, Result = string.Empty };
+        if (ex.Response != null)
+        {
+          using (var errorResponse = (HttpWebResponse)ex.Response)
+          {
+            var reader = new StreamReader(errorResponse.GetResponseStream());
+            jsonRespone.StatusCode = errorResponse.StatusCode;
+            jsonRespone.Description = reader.ReadToEnd();
+          }
+        }
+        else
+        {
+          jsonRespone.StatusCode = HttpStatusCode.InternalServerError;
+          jsonRespone.Description = "No response received";
+        }
+
+        if (request != null)
+          request.Abort();
+
+        _logger?.Invoke(jsonRespone.Description);
+        return jsonRespone;
+      }
+      finally
+      {
+        if (response != null)
+          response.Close();
+      }
+
+    }
+
 
   }
 

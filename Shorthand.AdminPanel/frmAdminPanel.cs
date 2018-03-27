@@ -7,11 +7,12 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Shorthand.AdminPanel
 {
-  [Export(typeof(IPlugin))]
+  [Export(typeof(IPluginMarker))]
   public partial class frmAdminPanel : Form, IPlugin
   {
     private string _liveIp;
@@ -54,6 +55,12 @@ namespace Shorthand.AdminPanel
       this.InitializePlugin();
       this.InitializeUI();
     }
+
+    public Task InitializeAsync(IPluginContext context)
+    {
+      throw new NotImplementedException();
+    }
+
 
     public void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
     {
@@ -179,11 +186,6 @@ namespace Shorthand.AdminPanel
     {
 
     }
-
- 
-
-
-
 
 
   }

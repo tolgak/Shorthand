@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Shorthand
 {
@@ -93,11 +94,27 @@ namespace Shorthand
       if (!m.Success)
         return new Issuelink[0]{};
 
-      var issueLinks = "[" + m.Groups["Links"].Value + "]";
+      var issueLinks = $"[{m.Groups["Links"].Value}]";
       var issueObjects = JsonConvert.DeserializeObject<Issuelink[]>(issueLinks);
 
       return issueObjects;
     }
+
+    public async Task<Issuelink[]> GetLinksOfIssueAsync(string issueKey)
+    {
+      var response = await this.json_GetIssueAsync(issueKey);
+
+      var regex = new Regex("\"issuelinks\":\\[(?<Links>.*?)\\]", RegexOptions.Multiline | RegexOptions.CultureInvariant);
+      var m = regex.Match(response.Result);
+      if (!m.Success)
+        return new Issuelink[0] { };
+
+      var issueLinks = $"[{m.Groups["Links"].Value}]";
+      var issueObjects = JsonConvert.DeserializeObject<Issuelink[]>(issueLinks);
+
+      return issueObjects;
+    }
+
 
     // https://developer.atlassian.com/jiradev/jira-platform/guides/other/guide-jira-remote-issue-links/jira-rest-api-for-remote-issue-links
     public void CreateLink(string relationship, string inwardIssue, string outwardIssue, string commentBody = "")
@@ -173,6 +190,18 @@ namespace Shorthand
       return (string)rss["fields"]["status"]["name"];
     }
 
+    public async Task<string> GetStatusOfIssueAsync(string issueKey)
+    {
+      var url = $"{_options.JiraBaseUrl}/rest/api/2/issue/{issueKey}";
+      var response = await this.SendApiRequestAsync(url, null, ApiMethod.GET);
+
+      if (string.IsNullOrEmpty(response?.Result))
+        return string.Empty;
+
+      JObject rss = JObject.Parse(response.Result);
+      return (string) rss["fields"]["status"]["name"];
+    }
+
     public string[] ListAttachmentsOfIssue(string issueKey)
     {
       var url = $"{_options.JiraBaseUrl}/rest/api/2/issue/{issueKey}";
@@ -189,6 +218,13 @@ namespace Shorthand
       var url = $"{_options.JiraBaseUrl}/rest/api/2/issue/{issueKey}";
       return this.SendApiRequest(url, null, ApiMethod.GET);
     }
+
+    private async Task<JsonResponse> json_GetIssueAsync(string issueKey)
+    {
+      var url = $"{_options.JiraBaseUrl}/rest/api/2/issue/{issueKey}";
+      return await this.SendApiRequestAsync(url, null, ApiMethod.GET);
+    }
+
 
     private JsonResponse SendApiRequest(string url, string data, string method)
     {
@@ -248,6 +284,66 @@ namespace Shorthand
       }
         
     }
+
+    private async Task<JsonResponse> SendApiRequestAsync(string url, string data, string method)
+    {
+      if (_options == null)
+        throw new ArgumentNullException("JiraOptions", "No config content for Jira Options");
+      if (string.IsNullOrEmpty(_options.JiraBaseUrl))
+        throw new ArgumentNullException("JiraBaseUrl", "Jira Base url is not configured");
+
+      var request = HttpWebRequest.CreateHttp(url);
+      request.ContentType = "application/json";
+      request.Method = method;
+
+      if (data != null)
+        using (var writer = new StreamWriter(request.GetRequestStream()))
+          writer.Write(data);
+
+      var base64Credentials = this.EncodeCredentials(_options.Username, _options.Password);
+      request.Headers.Add("Authorization", "Basic " + base64Credentials);
+
+      HttpWebResponse response = null;
+      try
+      {
+        response = await request.GetResponseAsync() as HttpWebResponse;
+        using (var reader = new StreamReader(response.GetResponseStream()))
+        {
+          return new JsonResponse { Success = true, Result = reader.ReadToEnd(), StatusCode = response.StatusCode, Description = response.StatusDescription };
+        }
+      }
+      catch (WebException ex)
+      {
+        var jsonRespone = new JsonResponse { Success = false, Result = string.Empty };
+        if (ex.Response != null)
+        {
+          using (var errorResponse = (HttpWebResponse)ex.Response)
+          {
+            var reader = new StreamReader(errorResponse.GetResponseStream());
+            jsonRespone.StatusCode = errorResponse.StatusCode;
+            jsonRespone.Description = reader.ReadToEnd();
+          }
+        }
+        else
+        {
+          jsonRespone.StatusCode = HttpStatusCode.InternalServerError;
+          jsonRespone.Description = "No response received";
+        }
+
+        if (request != null)
+          request.Abort();
+
+        _logger?.Invoke(jsonRespone.Description);
+        return jsonRespone;
+      }
+      finally
+      {
+        //if (response != null)
+        //  response.Close();
+      }
+
+    }
+
 
 
     public bool AddAttachment(string issueKey, string filePath)

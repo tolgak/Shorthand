@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 using PragmaTouchUtils;
 using Shorthand.Common;
-using System.Security.Principal;
+
 
 namespace Shorthand
 {
@@ -17,8 +17,8 @@ namespace Shorthand
 
     private CompositionContainer _container;
 
-    [ImportMany(typeof(IPlugin))]
-    private  List<IPlugin> _plugins;
+    [ImportMany(typeof(IPluginMarker))]
+    private  List<IPluginMarker> _plugins;
 
     private Action<object, ConfigEventArgs> _onSettingsChanged;
     public event Action<object, ConfigEventArgs> onSettingsChanged
@@ -45,7 +45,7 @@ namespace Shorthand
         this.initializeConfiguration();
         this.initializePluginContainer();
 
-        this.initializUI();
+        this.initializeUI();
       }
       finally
       {
@@ -76,7 +76,17 @@ namespace Shorthand
       {
         try
         {
-          x.Initialize(context);
+          switch (x)
+          {
+            case IAsyncPlugin y :
+              y.InitializeAsync(context);
+              break;
+            case IPlugin y:
+              y.Initialize(context);
+              break;
+            default:
+              break;
+          }
         }
         catch (Exception compositionException)
         {
@@ -86,7 +96,7 @@ namespace Shorthand
 
     }
 
-    private void initializUI()
+    private void initializeUI()
     {
       var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
       this.Width = options.Width;

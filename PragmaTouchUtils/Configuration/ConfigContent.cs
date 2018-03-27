@@ -57,8 +57,7 @@ namespace PragmaTouchUtils
 
     public object GetConfigContentItem(string className)
     {
-      object item = null;
-      _preferences.TryGetValue(className, out item);
+      _preferences.TryGetValue(className, out var item);
       return item;
     }
 
@@ -92,6 +91,15 @@ namespace PragmaTouchUtils
         string prefPath = $"{this.UserDataDirectory}\\{item.Key}.options";
         this.SaveToDocumentFormat(item.Value, prefPath);                
       }
+    }
+    public void SaveConfiguration(string key)
+    {
+
+      if (!_preferences.TryGetValue(key, out object item))
+        return;
+
+      string prefPath = $"{this.UserDataDirectory}\\{key}.options";
+      this.SaveToDocumentFormat(item, prefPath);
     }
 
     private void SaveToDocumentFormat(object serializableObject, string path)

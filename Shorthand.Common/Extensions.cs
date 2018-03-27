@@ -28,7 +28,7 @@ namespace Shorthand
 
     public static StringBuilder AppendConditionally(this StringBuilder sb, bool predicate, string text)
     {
-      return predicate ? sb.Append(text) : sb;
+      return predicate ? sb.Append(text + "\r\n") : sb;
     }
 
     public delegate void InvokeIfRequiredDelegate<T>(T obj) where T : ISynchronizeInvoke;

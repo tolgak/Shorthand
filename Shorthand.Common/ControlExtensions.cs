@@ -10,10 +10,10 @@ namespace Shorthand
   public static class ControlExtensions
   {
 
-    public static void Dump(this TextBox box, string line)
-    {      
-      box.InvokeIfRequired( (x) => { x.AppendText($"{line}\r\n"); });
-    }
+    //public static void Dump(this TextBox box, string line)
+    //{      
+    //  box.InvokeIfRequired( (x) => { x.AppendText($"{line}\r\n"); });
+    //}
 
     public static void Log(this TextBox box, string line)
     {

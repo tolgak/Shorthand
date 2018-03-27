@@ -27,14 +27,13 @@ namespace PragmaTouchUtils
 		private static frmConfigurationDlg _instance = null;
 
     private IConfigContentEditor _currentItem = null;
-    private IList<IConfigContentEditor> _configItems = new List<IConfigContentEditor>();
+    private List<IConfigContentEditor> _editors = new List<IConfigContentEditor>();
 
-    private ConfigAction _action = ConfigAction.Cancel;
     private ConfigContent _configContent = null;
 
-    public IList<string> ChangedOptions
+    public List<string> ChangedOptions
     {
-      get { return _configItems.Where(x => x.Modified).Select(x => x.ItemClassName).ToList(); }
+      get { return _editors.Where(x => x.Modified).Select(x => x.ItemClassName).ToList(); }
     }
 
     private ConfigFinalSelectionEventHandler _onFinalSelection;
@@ -56,8 +55,6 @@ namespace PragmaTouchUtils
     {
       InitializeComponent();
       this.CreateEditors();
-
-      //HostServicesSingleton.HostServices.SetMainFormAsOwner(this);      
 		}
 
 
@@ -72,27 +69,24 @@ namespace PragmaTouchUtils
 
       foreach ( var editorType in editorTypes )
       {
-        //ObjectHandle hnd = Activator.CreateInstance(editorType.Assembly.GetName().Name, editorType.FullName);
-        //IConfigContentEditor editor = hnd.Unwrap() as IConfigContentEditor;
         var editor = Activator.CreateInstance(editorType) as IConfigContentEditor;
-
-        if ( editor != null )
+        if (editor == null)
+          continue;
+        
+        var matchedEditor = _editors.FirstOrDefault(x => x.GetType() == editor.GetType());
+        if ( matchedEditor != null )
         {
-          var matchedEditor = _configItems.FirstOrDefault(x => x.GetType() == editor.GetType());
-          if ( matchedEditor != null )
-          {
-            _configItems.Remove(matchedEditor);
-            ( matchedEditor as UserControl ).Dispose();
-            matchedEditor = null;
-          }
+          _editors.Remove(matchedEditor);
+          ( matchedEditor as UserControl ).Dispose();
+          matchedEditor = null;
         }
-
+        
         var editorAsControl = editor as UserControl;
         editorAsControl.Hide();
         editorAsControl.Parent = pnlContent;
         editorAsControl.Dock = DockStyle.Fill;
 
-        _configItems.Add(editor);
+        _editors.Add(editor);
       }
       
     }
@@ -111,7 +105,7 @@ namespace PragmaTouchUtils
       string key = string.Empty;
       TreeNode parentNode = AddNode( $"{ConfigContent.ApplicationName} Options");
 
-      foreach ( var editor in _configItems )
+      foreach ( var editor in _editors)
       {
         TreeNode node = AddNode(parentNode, editor.Caption, editor.Caption);
         node.Tag = editor;
@@ -120,8 +114,17 @@ namespace PragmaTouchUtils
       parentNode.Expand();
     }
 
+    private TreeNode AddNode( string text )
+    {
+      return AddNode(null, text, text);
+    }
 
-		private TreeNode AddNode(TreeNode parent, string key, string text)
+    private TreeNode AddNode(TreeNode parent, string text )
+    {
+      return AddNode(parent, text, text);
+    }
+    
+		private TreeNode AddNode(TreeNode parent, string text, string key)
 		{
 			TreeNodeCollection nodes = (parent != null ? parent.Nodes : tv.Nodes);
 			TreeNode result = nodes.Add(key, text);
@@ -138,21 +141,9 @@ namespace PragmaTouchUtils
       return result;		
 		}
 
-    private TreeNode AddNode( string text )
-    {
-      return AddNode(null, text, text);
-    }
 
-    private TreeNode AddNode(TreeNode parent, string text )
-    {
-      return AddNode(parent, text, text);
-    }
-    
     private void RaiseFinalSelectionEvent( ConfigAction action )
     {
-      //if (_onFinalSelection == null)
-      //  return;
-
       var args = new ConfigEventArgs { action = action, content = _configContent, ChangedOptions = this.ChangedOptions };
       _onFinalSelection?.Invoke(this, args); ;							
     }
@@ -181,25 +172,9 @@ namespace PragmaTouchUtils
       lblHeader.SendToBack();
     }
 
-    private bool SaveAllChangedContentItems()
-    {
-      bool result = false;
-      foreach( IConfigContentEditor item in _configItems )
-      {
-        if(item.Modified)
-        {
-          item.SaveContent();
-          result = true;
-        }
-      }
-
-      return result;
-    }
-
     private void SaveChanges()
     {
-      if(SaveAllChangedContentItems())      
-        _configContent.SaveConfiguration();
+      _editors.Where(x => x.Modified).ToList().ForEach(item => item.SaveContent());
     }
 
     public void ShowOptionsEditor(string editorName)
@@ -214,10 +189,10 @@ namespace PragmaTouchUtils
 
     public static void ShowConfigurationDlg(ConfigContent configContent, Form owner, ConfigFinalSelectionEventHandler onFinalSelectionHandler)
     {
-      ShowConfigurationDlg(configContent, owner, string.Empty, onFinalSelectionHandler);
+      ShowConfigurationDlg(configContent, owner, onFinalSelectionHandler, string.Empty);
     }
     		
-		public static void ShowConfigurationDlg(ConfigContent configContent, Form owner, string initialEditor, ConfigFinalSelectionEventHandler onFinalSelectionHandler)
+		public static void ShowConfigurationDlg(ConfigContent configContent, Form owner, ConfigFinalSelectionEventHandler onFinalSelectionHandler, string initialEditor)
 		{
 			if (configContent == null)			
 				throw new ArgumentNullException("Configuration content is null!");			
@@ -271,7 +246,7 @@ namespace PragmaTouchUtils
 			node.ImageIndex = 2;
 			node.SelectedImageIndex = 0;
 			node.Tag = editor;
-			_configItems.Add(editor);
+      _editors.Add(editor);
 
 			uc.Hide();
 			uc.Parent = pnlContent;
@@ -287,27 +262,35 @@ namespace PragmaTouchUtils
     {
       _instance.Hide();
       Application.DoEvents();
-      this.RaiseFinalSelectionEvent(_action);
-			_instance = null;
+
+      _instance = null;
 		}
 
     private void btnApply_Click( object sender, EventArgs e )
     {
-      _action = ConfigAction.Cancel;
+      var changedOptions = this.ChangedOptions;
+      
       this.SaveChanges();
-      this.RaiseFinalSelectionEvent(ConfigAction.Apply);
+      var args = new ConfigEventArgs { action = ConfigAction.Apply, content = _configContent, ChangedOptions = changedOptions };
+      _onFinalSelection?.Invoke(this, args);
     }
 
     private void btnCancel_Click( object sender, EventArgs e )
     {
-      _action = ConfigAction.Cancel;
+      var args = new ConfigEventArgs { action = ConfigAction.Cancel, content = _configContent, ChangedOptions = this.ChangedOptions };
+      _onFinalSelection?.Invoke(this, args);
+
       this.Close();
     }
 
     private void btnSave_Click( object sender, EventArgs e )
     {
-      _action = ConfigAction.Save;
+      var changedOptions = this.ChangedOptions;
+      
       this.SaveChanges();
+      var args = new ConfigEventArgs { action = ConfigAction.Save, content = _configContent, ChangedOptions = changedOptions };
+      _onFinalSelection?.Invoke(this, args);
+
       this.Close();
     }
 

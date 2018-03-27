@@ -135,9 +135,11 @@ namespace Shorthand
         var zipFileName = $"{ctx.DeploymentIssueKey}.zip";
         var qualifiedZipFileName = destinationFolder + zipFileName;
 
-        var startInfo = new ProcessStartInfo(_dplyOptions.ArchiveToolPath);
-        startInfo.WorkingDirectory = destinationFolder;
-        startInfo.Arguments = $"{_dplyOptions.ArchiveToolSwitches} {qualifiedZipFileName} *.*";
+        var startInfo = new ProcessStartInfo(_dplyOptions.ArchiveToolPath)
+        {
+          WorkingDirectory = destinationFolder,
+          Arguments = $"{_dplyOptions.ArchiveToolSwitches} {qualifiedZipFileName} *.*"
+        };
         var p = Process.Start(startInfo);
         p.WaitForExit();
 
@@ -154,7 +156,7 @@ namespace Shorthand
       var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
       var deploymentIssueKey = ctx.DeploymentIssueKey;
       return new StringBuilder().AppendLine(ctx.InternalIssueKey)
-                                .AppendConditionally (ctx.CopyExecutables, $"merge request {ctx.GitProjectWebUrl}/sofdev/{ctx.GitProjectName}/merge_requests/{ctx.GitMergeRequestNo}")
+                                .AppendConditionally (ctx.CopyExecutables, $"merge request {ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}")
                                 .AppendLine("{noformat}")
                                 .AppendConditionally( !ctx.CopyExecutables, "Bu iş için exe kopyalanmasına gerek yok.")
                                 .AppendConditionally( ctx.CopyExecutables, $"{options.ProductionDeliveryFolder}\\{deploymentIssueKey}.zip")
@@ -166,14 +168,13 @@ namespace Shorthand
 
     private string BuildGitDescription(DeliveryContext ctx)
     {
-      _logger?.Invoke($"\n* **Internal Issue :** {ctx.InternalIssueKey}\n* **Request Issue :** {ctx.RequestIssueKey}\n* **Deployment Issue :** {ctx.DeploymentIssueKey}\n* **Uat Issue :** {ctx.UatIssueKey}"
-              .Replace("\n", Environment.NewLine));
-
-      return new StringBuilder().AppendLine($"* **Internal Issue :** {ctx.InternalIssueKey}" )
-                                .AppendLine($"* **Request Issue :** {ctx.RequestIssueKey}" )
-                                .AppendLine($"* **Deployment Issue :** {ctx.DeploymentIssueKey}" )
-                                .AppendLine($"* **Uat Issue :** {ctx.UatIssueKey}" )
-                                .ToString();
+      var description = new StringBuilder().AppendLine($"* **Internal Issue :** {ctx.InternalIssueKey}")
+                                           .AppendLine($"* **Request Issue :** {ctx.RequestIssueKey}")
+                                           .AppendLine($"* **Deployment Issue :** {ctx.DeploymentIssueKey}")
+                                           .AppendLine($"* **Uat Issue :** {ctx.UatIssueKey}")
+                                           .ToString();
+      _logger?.Invoke(description);
+      return description;
     }
 
     private void Log(string line)
