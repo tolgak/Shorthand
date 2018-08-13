@@ -19,16 +19,20 @@ namespace Shorthand
     public const string DELETE = "DELETE";
   }
 
-  public static class Extensions
-  {  
-    public static StringBuilder AppendFormattedLine(this StringBuilder sb, string format, params object[] args)
+    public enum RestMethod
     {
-      return sb.AppendFormat(format + "\r\n", args);
+        POST,
+        GET,
+        PUT,
+        DELETE
     }
+
+    public static class Extensions
+  {  
 
     public static StringBuilder AppendConditionally(this StringBuilder sb, bool predicate, string text)
     {
-      return predicate ? sb.Append(text + "\r\n") : sb;
+      return predicate ? sb.Append($"{text} {Environment.NewLine}") : sb;
     }
 
     public delegate void InvokeIfRequiredDelegate<T>(T obj) where T : ISynchronizeInvoke;

@@ -69,7 +69,7 @@ namespace Shorthand
         // link uat issue to request issue
         jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey, "UAT oluşturuldu.");
 
-        jira.SetDescription(ctx.UatIssueKey, this.BuildUATDescription(ctx));
+        //jira.SetDescription(ctx.UatIssueKey, this.BuildUATDescription(ctx));
       }
              
     }
@@ -98,8 +98,7 @@ namespace Shorthand
       if (string.IsNullOrEmpty (ctx.TestExecutableTargetName) )
         ctx.TestExecutableTargetName = this.BuildTargetName(ctx);
 
-      return new StringBuilder().AppendFormattedLine("İşlev *{0}* uygulaması ile *ibu_test* veritabanında test edilebilir.", ctx.TestExecutableTargetName)
-                                .AppendLine("")
+      return new StringBuilder().AppendLine($"İşlev *{ctx.TestExecutableTargetName}* uygulaması ile *ibu_test* veritabanında test edilebilir.")
                                 .ToString();
     }
 
@@ -108,15 +107,14 @@ namespace Shorthand
       if (string.IsNullOrEmpty(ctx.TestExecutableTargetName))
         ctx.TestExecutableTargetName = this.BuildTargetName(ctx);
 
-      return new StringBuilder().AppendLine("*Test Adımları*")
-                                .AppendFormattedLine("# *{0}* uygulaması çalıştırılır.", ctx.TestExecutableTargetName)
+      return new StringBuilder().AppendLine("*Masaüstü uygulamasında test adımları*")
+                                .AppendLine($"# *{ctx.TestExecutableTargetName}* uygulaması çalıştırılır.")
                                 .AppendLine("# *ibu_test* veritabanına login olunur")
                                 .AppendLine("# ...")
                                 .AppendLine("# Yeni eklenen işlevin, diğer işlevleri bozmadığından emin olunur.")
                                 .AppendLine("# Ekran görüntüsü bu işe eklenir")
                                 .AppendLine("# Bu iş, *Done* ile kapatılır")
-                                .AppendFormattedLine("# {0} *Passed* ile kapatılır", ctx.RequestIssueKey)
-                                .AppendLine("")
+                                .AppendLine($"# {ctx.RequestIssueKey} *Passed* ile kapatılır")
                                 .ToString();
     }
 
@@ -125,11 +123,11 @@ namespace Shorthand
       if (!ctx.CopyExecutables)
         return "IBU.exe";
 
-      var header = string.Format("IBU-{0}", ctx.RequestIssueKey.Replace("-", " "));
+      var header = $"IBU_{ctx.RequestIssueKey}".Replace("-", " ").Replace(" ", "_");
       var versionNumber = Directory.GetFiles(_deploymentOptions.TestDeliveryFolder)
                                    .Where(x => x.Contains(header))
                                    .Count();
-      var newFileName = versionNumber == 0 ? string.Format("{0}.exe", header) : string.Format("{0}.v{1}.exe", header, 1 + versionNumber);                                                                                                                                              
+      var newFileName = versionNumber == 0 ? $"{header}.exe" : $"{header}.v{versionNumber++}.exe";
       var qualifiedNewName = Path.Combine(_deploymentOptions.TestDeliveryFolder, newFileName);
 
       return qualifiedNewName;

@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Configuration\DeploymentOptions.cs" />
     <Compile Include="Configuration\GitLabOptions.cs" />
+    <Compile Include="Configuration\JenkinsOptions.cs" />
     <Compile Include="Configuration\JiraOptions.cs" />
     <Compile Include="Configuration\ucDeploymentOptions.cs">
       <SubType>UserControl</SubType>
@@ -102,6 +103,8 @@
     <Compile Include="GitLab\GitLab.cs" />
     <Compile Include="GitLab\MergeRequestResponse.cs" />
     <Compile Include="IDelivery.cs" />
+    <Compile Include="Jenkins\JenkinsJob.cs" />
+    <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jira\IssueLink.cs" />
     <Compile Include="Jira\IssueTransition.cs" />
     <Compile Include="Jira\Jira.cs" />

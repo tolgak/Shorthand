@@ -17,7 +17,10 @@ namespace Shorthand
 
     public static void Log(this TextBox box, string line)
     {
-      box.InvokeIfRequired( (x) => { x.AppendText($"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line}\r\n"); } );
+      box.InvokeIfRequired( (x) => {
+          x.AppendText($"{DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")} {line} {Environment.NewLine}");
+          box.Refresh();
+      } );
     }
 
     public static void DataBindTo(this TextBox control, object instance, string propertyName)
