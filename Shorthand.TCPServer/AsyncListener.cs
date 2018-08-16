@@ -11,45 +11,63 @@ using System.Threading.Tasks;
 
 namespace Shorthand.TCPServer
 {
-    public class AsyncEchoServer
+    public class AsyncListener
     {
+        private bool _listening;
+        public bool Listening => _listening;
+
         private Action<string> _logger;
 
         private int _listeningPort;
 
-        public AsyncEchoServer(int port)
+        public AsyncListener(int port)
         {
             _listeningPort = port;
         }
 
-        public AsyncEchoServer(int port, Action<string> logger) : this(port)
+        public AsyncListener(int port, Action<string> logger) : this(port)
         {
             _logger = logger;
         }
 
-        public async void Start()
-        {
-            TcpListener listener = new TcpListener(IPAddress.Loopback, _listeningPort);
-            listener.Start();
-            _logger("Server is running");
-            _logger($"Listening on port {_listeningPort}");
+ 
 
-            while (true)
+        public Task Start(CancellationToken cancellationToken)
+        {
+            _logger($"Starting on port {_listeningPort}.");
+            var listener = new TcpListener(IPAddress.Broadcast, _listeningPort);
+            listener.Start();
+
+            return Task.Run(async () =>
             {
-                _logger("Waiting for connections...");
+                var clients = new List<Task>();
                 try
                 {
-                    var tcpClient = await listener.AcceptTcpClientAsync();
-                    HandleConnectionAsync(tcpClient);
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        var tcpClient = await listener.AcceptTcpClientAsync()
+                                                      .ContinueWith(t => t.Result, cancellationToken);
+                        clients = clients.Where(task => !task.IsCompleted).ToList();
+                        clients.Add(HandleConnectionAsync(tcpClient, cancellationToken));
+                    }
                 }
-                catch (Exception e)
+                finally
                 {
-                    _logger(e.ToString());
+                    await Task.WhenAll(clients.ToArray());
                 }
-            }
+            }, cancellationToken);
         }
 
-        private async void HandleConnectionAsync(TcpClient tcpClient)
+
+
+
+
+
+
+
+
+
+        private async Task HandleConnectionAsync(TcpClient tcpClient, CancellationToken cancellationToken)
         {
             string clientInfo = tcpClient.Client.RemoteEndPoint.ToString();
             _logger($"Connection request from {clientInfo}");
@@ -61,7 +79,7 @@ namespace Shorthand.TCPServer
                 using (var writer = new StreamWriter(networkStream))
                 {
                     writer.AutoFlush = true;
-                    while (true)
+                    while (!cancellationToken.IsCancellationRequested && tcpClient.Connected)
                     {
                         var request = await reader.ReadLineAsync();
                         if (string.IsNullOrEmpty(request))                        
@@ -74,7 +92,7 @@ namespace Shorthand.TCPServer
 
                         jobs.ForEach( x => _logger($"{x.Name} - {x.Color}") );
 
-                        await writer.WriteLineAsync("FromServer - " + jobs?.AsJson() ?? "Empty Response");
+                        await writer.WriteLineAsync("Jenkins Report - " + jobs?.AsJson() ?? "Empty Response");
                     }
                 }
             }
@@ -87,7 +105,6 @@ namespace Shorthand.TCPServer
                 _logger($"Closing the client connection - {clientInfo}");
                 tcpClient.Close();
             }
-
         }
 
 

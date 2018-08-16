@@ -47,8 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsynchronousSocketListener.cs" />
-    <Compile Include="AsyncEchoServer.cs" />
+    <Compile Include="AsyncListener.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="SyncSerialPort.cs" />
     <Compile Include="Configuration\JenkinsOptions.cs" />
     <Compile Include="frmListener.cs">
       <SubType>Form</SubType>

@@ -5,6 +5,9 @@ using Shorthand.Common;
 using System.Threading.Tasks;
 using System;
 using PragmaTouchUtils;
+using DevLib.IO.Ports;
+using System.Text;
+using System.Threading;
 
 namespace Shorthand.TCPServer
 {
@@ -12,6 +15,9 @@ namespace Shorthand.TCPServer
     public partial class frmListener : Form, IAsyncPlugin
     {
         private IPluginContext _context;
+        private AsyncListener _async;
+        private SyncSerialPort _serial;
+        private CancellationToken _cancellationToken;
 
         public frmListener()
         {
@@ -50,7 +56,11 @@ namespace Shorthand.TCPServer
 
         private void InitializePlugin()
         {
-//            _deployOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+            // _deployOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
+
+            cmbPortNames.Items.Clear();
+            cmbPortNames.Items.AddRange(SyncSerialPort.PortNames);
+            
         }
 
 
@@ -68,22 +78,32 @@ namespace Shorthand.TCPServer
             //this.InitializeUIAsync().ConfigureAwait(false);
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            AsyncEchoServer async = new AsyncEchoServer(51510, x => this.Dump(x));
-            async.Start();
-        }
-
-
-
-
-
-
 
         private void Dump(string line)
         {
             txtDump.Log(line);
         }
 
+
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var selectedPort = cmbPortNames.SelectedItem.ToString();
+            _serial = new SyncSerialPort(x => this.Dump(x), selectedPort);
+
+            _serial.DataReceived += (s, arg) => { var result = _serial.ReadSync(); this.Dump(Encoding.UTF8.GetString(result)); };
+            _serial.Open();
+            _serial.Send(Encoding.UTF8.GetBytes("Hello"));
+        }
+
+        private void btnStartListener_Click(object sender, EventArgs e)
+        {
+            if (_async == null )
+              _async = new AsyncListener(5151, x => this.Dump(x));
+
+            _cancellationToken = new CancellationTokenSource().Token;
+            _async.Start(_cancellationToken);
+        }
     }
 }
