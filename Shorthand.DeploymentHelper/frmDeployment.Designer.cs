@@ -28,10 +28,10 @@
     /// </summary>
     private void InitializeComponent()
     {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeployment));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cmbUAT = new System.Windows.Forms.ComboBox();
+            this.lbxUAT = new System.Windows.Forms.ListBox();
+            this.btnJenkins = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnOpenLocal = new System.Windows.Forms.Button();
             this.btnOpenDeployment = new System.Windows.Forms.Button();
@@ -39,8 +39,8 @@
             this.btnMakeExecutable = new System.Windows.Forms.Button();
             this.btnClearLog = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
-            this.chkCopyExecutables = new System.Windows.Forms.CheckBox();
             this.grpTask = new System.Windows.Forms.GroupBox();
+            this.chkCopyExecutables = new System.Windows.Forms.CheckBox();
             this.lblCustomize = new System.Windows.Forms.Label();
             this.chkCreateMergeRequest = new System.Windows.Forms.CheckBox();
             this.chkCreateUAT = new System.Windows.Forms.CheckBox();
@@ -49,7 +49,6 @@
             this.rdbProduction = new System.Windows.Forms.RadioButton();
             this.btnDeploy = new System.Windows.Forms.Button();
             this.lblInternal_Status = new System.Windows.Forms.Label();
-            this.lblUAT_Status = new System.Windows.Forms.Label();
             this.lblDPLY_Status = new System.Windows.Forms.Label();
             this.lblREQ_Status = new System.Windows.Forms.Label();
             this.lblMergeRequestLink = new System.Windows.Forms.LinkLabel();
@@ -60,14 +59,11 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtGitMergeRequestNo = new System.Windows.Forms.TextBox();
             this.lblUAT_IssueKey = new System.Windows.Forms.Label();
-            this.txtUAT = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lblREQ_IssueKey = new System.Windows.Forms.Label();
             this.txtInternal = new System.Windows.Forms.TextBox();
             this.txtREQ = new System.Windows.Forms.TextBox();
             this.txtDump = new System.Windows.Forms.TextBox();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.btnJenkins = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -76,14 +72,12 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lbxUAT);
             this.panel1.Controls.Add(this.btnJenkins);
-            this.panel1.Controls.Add(this.cmbUAT);
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.chkCopyExecutables);
             this.panel1.Controls.Add(this.grpTask);
             this.panel1.Controls.Add(this.lblInternal_Status);
-            this.panel1.Controls.Add(this.lblUAT_Status);
             this.panel1.Controls.Add(this.lblDPLY_Status);
             this.panel1.Controls.Add(this.lblREQ_Status);
             this.panel1.Controls.Add(this.lblMergeRequestLink);
@@ -94,7 +88,6 @@
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.txtGitMergeRequestNo);
             this.panel1.Controls.Add(this.lblUAT_IssueKey);
-            this.panel1.Controls.Add(this.txtUAT);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.lblREQ_IssueKey);
             this.panel1.Controls.Add(this.txtInternal);
@@ -104,23 +97,32 @@
             this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(745, 341);
+            this.panel1.Size = new System.Drawing.Size(745, 373);
             this.panel1.TabIndex = 0;
             // 
-            // cmbUAT
+            // lbxUAT
             // 
-            this.cmbUAT.FormattingEnabled = true;
-            this.cmbUAT.Location = new System.Drawing.Point(81, 162);
-            this.cmbUAT.Name = "cmbUAT";
-            this.cmbUAT.Size = new System.Drawing.Size(97, 25);
-            this.cmbUAT.TabIndex = 43;
-            this.cmbUAT.SelectedIndexChanged += new System.EventHandler(this.cmbUAT_SelectedIndexChanged);
+            this.lbxUAT.ItemHeight = 17;
+            this.lbxUAT.Location = new System.Drawing.Point(81, 119);
+            this.lbxUAT.Name = "lbxUAT";
+            this.lbxUAT.Size = new System.Drawing.Size(135, 89);
+            this.lbxUAT.TabIndex = 45;
+            // 
+            // btnJenkins
+            // 
+            this.btnJenkins.Location = new System.Drawing.Point(459, 79);
+            this.btnJenkins.Name = "btnJenkins";
+            this.btnJenkins.Size = new System.Drawing.Size(111, 27);
+            this.btnJenkins.TabIndex = 44;
+            this.btnJenkins.Text = "Jenkins Jobs";
+            this.btnJenkins.UseVisualStyleBackColor = true;
+            this.btnJenkins.Click += new System.EventHandler(this.btnJenkins_Click);
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnOpenLocal);
             this.groupBox2.Controls.Add(this.btnOpenDeployment);
-            this.groupBox2.Location = new System.Drawing.Point(187, 196);
+            this.groupBox2.Location = new System.Drawing.Point(187, 214);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(162, 134);
             this.groupBox2.TabIndex = 42;
@@ -154,7 +156,7 @@
             this.groupBox1.Controls.Add(this.btnMakeExecutable);
             this.groupBox1.Controls.Add(this.btnClearLog);
             this.groupBox1.Controls.Add(this.btnRefresh);
-            this.groupBox1.Location = new System.Drawing.Point(16, 196);
+            this.groupBox1.Location = new System.Drawing.Point(16, 214);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(162, 134);
             this.groupBox1.TabIndex = 41;
@@ -191,20 +193,9 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // chkCopyExecutables
-            // 
-            this.chkCopyExecutables.AutoSize = true;
-            this.chkCopyExecutables.Checked = true;
-            this.chkCopyExecutables.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCopyExecutables.Location = new System.Drawing.Point(398, 250);
-            this.chkCopyExecutables.Name = "chkCopyExecutables";
-            this.chkCopyExecutables.Size = new System.Drawing.Size(129, 21);
-            this.chkCopyExecutables.TabIndex = 33;
-            this.chkCopyExecutables.Text = "Copy executables";
-            this.chkCopyExecutables.UseVisualStyleBackColor = true;
-            // 
             // grpTask
             // 
+            this.grpTask.Controls.Add(this.chkCopyExecutables);
             this.grpTask.Controls.Add(this.lblCustomize);
             this.grpTask.Controls.Add(this.chkCreateMergeRequest);
             this.grpTask.Controls.Add(this.chkCreateUAT);
@@ -212,12 +203,24 @@
             this.grpTask.Controls.Add(this.rdbTest);
             this.grpTask.Controls.Add(this.rdbProduction);
             this.grpTask.Controls.Add(this.btnDeploy);
-            this.grpTask.Location = new System.Drawing.Point(380, 121);
+            this.grpTask.Location = new System.Drawing.Point(380, 139);
             this.grpTask.Name = "grpTask";
             this.grpTask.Size = new System.Drawing.Size(350, 209);
             this.grpTask.TabIndex = 38;
             this.grpTask.TabStop = false;
             this.grpTask.Text = "Deployment options";
+            // 
+            // chkCopyExecutables
+            // 
+            this.chkCopyExecutables.AutoSize = true;
+            this.chkCopyExecutables.Checked = true;
+            this.chkCopyExecutables.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCopyExecutables.Location = new System.Drawing.Point(18, 129);
+            this.chkCopyExecutables.Name = "chkCopyExecutables";
+            this.chkCopyExecutables.Size = new System.Drawing.Size(129, 21);
+            this.chkCopyExecutables.TabIndex = 34;
+            this.chkCopyExecutables.Text = "Copy executables";
+            this.chkCopyExecutables.UseVisualStyleBackColor = true;
             // 
             // lblCustomize
             // 
@@ -304,21 +307,11 @@
             this.lblInternal_Status.TabIndex = 36;
             this.lblInternal_Status.Text = "Status";
             // 
-            // lblUAT_Status
-            // 
-            this.lblUAT_Status.AutoSize = true;
-            this.lblUAT_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblUAT_Status.Location = new System.Drawing.Point(185, 135);
-            this.lblUAT_Status.Name = "lblUAT_Status";
-            this.lblUAT_Status.Size = new System.Drawing.Size(31, 12);
-            this.lblUAT_Status.TabIndex = 35;
-            this.lblUAT_Status.Text = "Status";
-            // 
             // lblDPLY_Status
             // 
             this.lblDPLY_Status.AutoSize = true;
             this.lblDPLY_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblDPLY_Status.Location = new System.Drawing.Point(185, 100);
+            this.lblDPLY_Status.Location = new System.Drawing.Point(185, 92);
             this.lblDPLY_Status.Name = "lblDPLY_Status";
             this.lblDPLY_Status.Size = new System.Drawing.Size(31, 12);
             this.lblDPLY_Status.TabIndex = 34;
@@ -328,7 +321,7 @@
             // 
             this.lblREQ_Status.AutoSize = true;
             this.lblREQ_Status.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblREQ_Status.Location = new System.Drawing.Point(185, 64);
+            this.lblREQ_Status.Location = new System.Drawing.Point(185, 60);
             this.lblREQ_Status.Name = "lblREQ_Status";
             this.lblREQ_Status.Size = new System.Drawing.Size(31, 12);
             this.lblREQ_Status.TabIndex = 33;
@@ -347,7 +340,7 @@
             // lblDPLY_IssueKey
             // 
             this.lblDPLY_IssueKey.AutoSize = true;
-            this.lblDPLY_IssueKey.Location = new System.Drawing.Point(33, 98);
+            this.lblDPLY_IssueKey.Location = new System.Drawing.Point(33, 90);
             this.lblDPLY_IssueKey.Name = "lblDPLY_IssueKey";
             this.lblDPLY_IssueKey.Size = new System.Drawing.Size(36, 17);
             this.lblDPLY_IssueKey.TabIndex = 24;
@@ -355,7 +348,7 @@
             // 
             // txtDPLY
             // 
-            this.txtDPLY.Location = new System.Drawing.Point(81, 94);
+            this.txtDPLY.Location = new System.Drawing.Point(81, 86);
             this.txtDPLY.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtDPLY.Name = "txtDPLY";
             this.txtDPLY.ReadOnly = true;
@@ -404,20 +397,11 @@
             // lblUAT_IssueKey
             // 
             this.lblUAT_IssueKey.AutoSize = true;
-            this.lblUAT_IssueKey.Location = new System.Drawing.Point(33, 133);
+            this.lblUAT_IssueKey.Location = new System.Drawing.Point(33, 119);
             this.lblUAT_IssueKey.Name = "lblUAT_IssueKey";
             this.lblUAT_IssueKey.Size = new System.Drawing.Size(31, 17);
             this.lblUAT_IssueKey.TabIndex = 15;
             this.lblUAT_IssueKey.Text = "UAT";
-            // 
-            // txtUAT
-            // 
-            this.txtUAT.Location = new System.Drawing.Point(81, 129);
-            this.txtUAT.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.txtUAT.Name = "txtUAT";
-            this.txtUAT.ReadOnly = true;
-            this.txtUAT.Size = new System.Drawing.Size(97, 25);
-            this.txtUAT.TabIndex = 3;
             // 
             // label2
             // 
@@ -432,7 +416,7 @@
             // lblREQ_IssueKey
             // 
             this.lblREQ_IssueKey.AutoSize = true;
-            this.lblREQ_IssueKey.Location = new System.Drawing.Point(33, 62);
+            this.lblREQ_IssueKey.Location = new System.Drawing.Point(33, 55);
             this.lblREQ_IssueKey.Name = "lblREQ_IssueKey";
             this.lblREQ_IssueKey.Size = new System.Drawing.Size(33, 17);
             this.lblREQ_IssueKey.TabIndex = 12;
@@ -448,7 +432,7 @@
             // 
             // txtREQ
             // 
-            this.txtREQ.Location = new System.Drawing.Point(81, 58);
+            this.txtREQ.Location = new System.Drawing.Point(81, 51);
             this.txtREQ.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtREQ.Name = "txtREQ";
             this.txtREQ.ReadOnly = true;
@@ -461,30 +445,14 @@
             this.txtDump.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtDump.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.txtDump.ForeColor = System.Drawing.Color.Lime;
-            this.txtDump.Location = new System.Drawing.Point(5, 346);
+            this.txtDump.Location = new System.Drawing.Point(5, 378);
             this.txtDump.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtDump.Multiline = true;
             this.txtDump.Name = "txtDump";
             this.txtDump.ReadOnly = true;
             this.txtDump.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDump.Size = new System.Drawing.Size(745, 291);
+            this.txtDump.Size = new System.Drawing.Size(745, 259);
             this.txtDump.TabIndex = 1;
-            // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // btnJenkins
-            // 
-            this.btnJenkins.Location = new System.Drawing.Point(329, 85);
-            this.btnJenkins.Name = "btnJenkins";
-            this.btnJenkins.Size = new System.Drawing.Size(111, 27);
-            this.btnJenkins.TabIndex = 44;
-            this.btnJenkins.Text = "Jenkins Jobs";
-            this.btnJenkins.UseVisualStyleBackColor = true;
-            this.btnJenkins.Click += new System.EventHandler(this.btnJenkins_Click);
             // 
             // frmDeployment
             // 
@@ -521,7 +489,6 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox txtGitMergeRequestNo;
     private System.Windows.Forms.Label lblUAT_IssueKey;
-    private System.Windows.Forms.TextBox txtUAT;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label lblREQ_IssueKey;
     private System.Windows.Forms.TextBox txtInternal;
@@ -530,10 +497,8 @@
     private System.Windows.Forms.Label lblDPLY_IssueKey;
     private System.Windows.Forms.TextBox txtDPLY;
     private System.Windows.Forms.LinkLabel lblMergeRequestLink;
-    private System.Windows.Forms.Label lblUAT_Status;
     private System.Windows.Forms.Label lblDPLY_Status;
     private System.Windows.Forms.Label lblREQ_Status;
-    private System.Windows.Forms.ImageList imageList1;
     private System.Windows.Forms.Label lblInternal_Status;
     private System.Windows.Forms.GroupBox grpTask;
     private System.Windows.Forms.Label lblCustomize;
@@ -543,16 +508,16 @@
     private System.Windows.Forms.RadioButton rdbTest;
     private System.Windows.Forms.RadioButton rdbProduction;
     private System.Windows.Forms.Button btnDeploy;
-    private System.Windows.Forms.CheckBox chkCopyExecutables;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.Button btnOpenLocal;
     private System.Windows.Forms.Button btnOpenDeployment;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.Button btnClearLog;
     private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.ComboBox cmbUAT;
         private System.Windows.Forms.Button btnMakeExecutable;
         private System.Windows.Forms.Button btnJenkins;
+        private System.Windows.Forms.ListBox lbxUAT;
+        private System.Windows.Forms.CheckBox chkCopyExecutables;
         //private System.Windows.Forms.TextBox txtDump;
     }
 }

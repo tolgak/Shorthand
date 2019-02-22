@@ -58,15 +58,6 @@ namespace Shorthand.TCPServer
             }, cancellationToken);
         }
 
-
-
-
-
-
-
-
-
-
         private async Task HandleConnectionAsync(TcpClient tcpClient, CancellationToken cancellationToken)
         {
             string clientInfo = tcpClient.Client.RemoteEndPoint.ToString();

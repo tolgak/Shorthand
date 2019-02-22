@@ -13,6 +13,8 @@ using Shorthand.Common;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Shorthand.GitLabEntity;
+using Shorthand.JiraEntity;
 
 namespace Shorthand
 {
@@ -89,17 +91,12 @@ namespace Shorthand
             lblInternal_Status.Text = string.Empty;
             lblREQ_Status.Text = string.Empty;
             lblDPLY_Status.Text = string.Empty;
-            lblUAT_Status.Text = string.Empty;
-
-            cmbUAT.DisplayMember = "Text";
-            cmbUAT.ValueMember = "Value";
 
             var projects = await _gitLab.GetProjectsAsync(true);
-            var items = projects.OrderBy(x => x.name).Select(x => new LookupItem { Text = x.name, Value = x.id }).ToArray();
-
+            var items = projects.OrderBy(x => x.name).Select(x => new { Text = x.name, Value = x.id }).ToArray();
             cmbGitProjectName.DisplayMember = "Text";
             cmbGitProjectName.ValueMember = "Value";
-            cmbGitProjectName.Items.AddRange(items);
+            cmbGitProjectName.DataSource = items;
             cmbGitProjectName.SelectedItem = items.FirstOrDefault(x => x.Text == _gitLabOptions.DefaultGitProjectName);
 
             lblMergeRequestLink.LinkClicked += (x, y) => { Process.Start(y.Link.LinkData as string); };
@@ -116,7 +113,7 @@ namespace Shorthand
         private void Rdb_CheckedChanged(object sender, EventArgs e)
         {
             chkCreateDPLY.Checked = rdbProduction.Checked;
-            chkCreateUAT.Checked = rdbTest.Checked;
+            chkCreateUAT.Checked  = rdbTest.Checked;
             chkCreateMergeRequest.Checked = rdbProduction.Checked;
             chkCopyExecutables.Checked = true;
         }
@@ -158,17 +155,17 @@ namespace Shorthand
 
             try
             {
-                var projectId = cmbGitProjectName.GetSelectedValue();
-                var ctx = await this.BuildDeliveryContext(txtInternal.Text, projectId);
+                var projectId = (int) cmbGitProjectName.SelectedValue;
+                var ctx = await this.BuildDeliveryContext();
 
-                if (string.IsNullOrEmpty(ctx.RequestIssueKey))
+                if (string.IsNullOrEmpty(ctx.RequestIssue))
                 {
                     this.Dump("ERROR: Can not locate request issue");
                     return;
                 }
 
-                var deployment = this.BuildDelivery();
-                deployment.Deliver(ctx);
+                var delivery = this.BuildDelivery();
+                delivery.Deliver(ctx);
                 this.SendMail(ctx);
 
                 await this.RefreshUIAsync();
@@ -189,18 +186,31 @@ namespace Shorthand
             await this.RefreshUIAsync();
         }
 
+        private async Task RefreshUIAsync()
+        {
+            if (!this.SanityCheck())
+                return;
 
-        private void ClearDisplayedState()
+            this.ClearBaseData();
+                     
+            var projectId = (int)cmbGitProjectName.SelectedValue;
+            var baseData = await this.GetBaseData(txtInternal.Text, projectId);
+            if (string.IsNullOrEmpty(baseData.RequestIssue?.key))
+                this.Dump("WARNING: Can not locate request issue");
+
+            this.DisplayBaseData(baseData);
+        }
+
+        private void ClearBaseData()
         {
             lblInternal_Status.Text = string.Empty;
             lblREQ_Status.Text      = string.Empty;
-            lblDPLY_Status.Text     = string.Empty;
-            lblUAT_Status.Text      = string.Empty;
+            lblDPLY_Status.Text     = string.Empty;            
 
             txtREQ.Clear();
             txtDPLY.Clear();
-            txtUAT.Clear();
-            cmbUAT.Items.Clear();
+            lbxUAT.DataSource = null;
+
             txtGitMergeRequestNo.Clear();
 
             lblMergeRequestLink.Text = $"merge request state unknown";
@@ -209,64 +219,67 @@ namespace Shorthand
             Application.DoEvents();
         }
 
-        private async Task DisplayState(DeliveryContext ctx)
+        private async Task<BaseData> GetBaseData(string issueKey, int projectId)
         {
-            var tasks = new List<Task<string>> { _jira.GetStatusOfIssueAsync(ctx.InternalIssueKey)
-                                               , _jira.GetStatusOfIssueAsync(ctx.RequestIssueKey)
-                                               , _jira.GetStatusOfIssueAsync(ctx.DeploymentIssueKey)
-                                               , _jira.GetStatusOfIssueAsync(ctx.UatIssueKey) };
-            string[] status = await Task.WhenAll(tasks);
+            var baseData = new BaseData();
 
-            txtREQ.Text = ctx.RequestIssueKey;
-            txtDPLY.Text = ctx.DeploymentIssueKey;
-            txtUAT.Text = ctx.UatIssueKey;
-            cmbUAT.Items.Clear();
-            if (ctx.UatIssueKeys.Count() > 1)
+            // Jira
+            var internalIssue = await _jira.GetIssueAsync(issueKey);
+            baseData.InternalIssue = new boIssue { key = internalIssue.key, status = internalIssue.fields.status.name, description = internalIssue.fields.description };
+
+            var linksOfInternalIssue = this.ExtractLinksOfIssue(internalIssue);
+            baseData.RequestIssue = linksOfInternalIssue.FirstOrDefault(x => x.key.Contains(_jiraOptions.REQ_ProjectKey));
+            baseData.DeploymentIssue = linksOfInternalIssue.FirstOrDefault(x => x.key.Contains(_jiraOptions.DPLY_ProjectKey));
+
+            if (baseData.RequestIssue != null)
             {
-                cmbUAT.Items.AddRange(ctx.UatIssueKeys.Select(x => new { Text = x, Value = x }).ToArray());
-                cmbUAT.SelectedIndex = 0;
+                var reqIssue = await _jira.GetIssueAsync(baseData.RequestIssue.key);
+                var linksOfReqIssue = this.ExtractLinksOfIssue(reqIssue);
+                baseData.UatIssues = linksOfReqIssue?.Where(x => x.key.Contains(_jiraOptions.UAT_ProjectKey)).ToArray();
             }
-            txtGitMergeRequestNo.Text = ctx.GitMergeRequestNo.ToString();
 
-            lblInternal_Status.Text = string.IsNullOrEmpty(status[0]) ? "N/A" : status[0];
-            lblREQ_Status.Text      = string.IsNullOrEmpty(status[1]) ? "N/A" : status[1];
-            lblDPLY_Status.Text     = string.IsNullOrEmpty(status[2]) ? "N/A" : status[2];
-            lblUAT_Status.Text      = string.IsNullOrEmpty(status[3]) ? "N/A" : status[3];
+            // GitLab      
+            var project = await _gitLab.GetProjectByIdAsync(projectId);
+            var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, issueKey);
+            var mergeReqNo = mergeReq?.iid ?? 0;
+            var mergeReqState = mergeReq?.state ?? "unknown";
 
-            var mergeReqUrl = $"{ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}";
-            lblMergeRequestLink.Text = $"merge request state {ctx.GitMergeRequestState}";
+            baseData.GitProjectName = project.name;
+            baseData.GitProjectId = project.id;
+            baseData.GitProjectWebUrl = project.web_url;
+            baseData.GitMergeRequestNo = mergeReqNo;
+            baseData.GitMergeRequestState = mergeReqState;
+
+            return baseData;
+        }
+
+        private void DisplayBaseData(BaseData baseData)
+        {
+            txtREQ.Text  = baseData.RequestIssue?.key;
+            txtDPLY.Text = baseData.DeploymentIssue?.key;
+            lbxUAT.SelectedItem = baseData.UatIssue?.key;
+
+            lbxUAT.DataSource = baseData.UatIssues?.Select(x => new { Text = $"{x?.key} - {x?.status}", Value = x?.key}).ToArray();
+            lbxUAT.DisplayMember = "Text";
+            lbxUAT.ValueMember = "Value";
+
+            lblInternal_Status.Text = baseData.InternalIssue?.status;
+            lblREQ_Status.Text = baseData.RequestIssue?.status;
+            lblDPLY_Status.Text = baseData.DeploymentIssue?.status;
+
+            txtGitMergeRequestNo.Text = baseData.GitMergeRequestNo.ToString();
+            var mergeReqUrl = $"{baseData.GitProjectWebUrl}/merge_requests/{baseData.GitMergeRequestNo}";
+            lblMergeRequestLink.Text = $"merge request state {baseData.GitMergeRequestState}";
             lblMergeRequestLink.Links.Add(0, lblMergeRequestLink.Text.Length, mergeReqUrl);
         }
 
-        private async Task RefreshUIAsync()
-        {
-            if (!this.SanityCheck())
-                return;
-
-            this.ClearDisplayedState();
-
-            var projectId = cmbGitProjectName.GetSelectedValue();
-            var ctx = await this.BuildDeliveryContext(txtInternal.Text, projectId);
-            if (string.IsNullOrEmpty(ctx.RequestIssueKey))
-                this.Dump("WARNING: Can not locate request issue");
-
-            await DisplayState(ctx);
-        }
 
 
-        private IDelivery BuildDelivery()
-        {
-            if (rdbProduction.Checked)
-                return new DeliveryToProduction(x => this.Dump(x));
-            else if (rdbTest.Checked)
-                return new DeliveryToTest(x => this.Dump(x));
-
-            return null;
-        }
-
-        private async Task<DeliveryContext> BuildDeliveryContext(string issueKey, int projectId)
+        private async Task<DeliveryContext> BuildDeliveryContext()
         {
             var ctx = new DeliveryContext();
+
+            // Deployment Spec.
             if (rdbProduction.Checked)
                 ctx.DeliveryTo = DeliveryContext.ToProduction;
             else if (rdbTest.Checked)
@@ -278,34 +291,42 @@ namespace Shorthand
             ctx.CopyExecutables = chkCopyExecutables.Checked;
 
             // Jira
-            var linksOfInternalIssue = await this.GetLinksOfIssueAsync(issueKey);
-            ctx.InternalIssueKey = issueKey;
-            ctx.RequestIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.REQ_ProjectKey));
-            ctx.DeploymentIssueKey = linksOfInternalIssue.FirstOrDefault(x => x.Contains(_jiraOptions.DPLY_ProjectKey));
-            if (!string.IsNullOrEmpty(ctx.RequestIssueKey))
-            {
-                var linksOfReqIssue = await this.GetLinksOfIssueAsync(ctx.RequestIssueKey);
-                ctx.UatIssueKeys = linksOfReqIssue.Where(x => x.Contains(_jiraOptions.UAT_ProjectKey)).ToArray();
-                
-                if (cmbUAT.Items.Count > 1)
-                    ctx.UatIssueKey = cmbUAT.SelectedText;
-                else
-                    ctx.UatIssueKey = linksOfReqIssue.FirstOrDefault(x => x.Contains(_jiraOptions.UAT_ProjectKey));
-            }
+            ctx.InternalIssue = txtInternal.Text;
+            ctx.RequestIssue = txtREQ.Text;
+            ctx.DeploymentIssue = txtDPLY.Text;
+            ctx.UatIssue = lbxUAT.SelectedValue?.ToString();
 
-            // GitLab      
+            // GitLab
+            var projectId = (int)cmbGitProjectName.SelectedValue;
             var project = await _gitLab.GetProjectByIdAsync(projectId);
-            var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, issueKey);
+            var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, ctx.InternalIssue);
             var mergeReqNo = mergeReq?.iid ?? 0;
             var mergeReqState = mergeReq?.state ?? "unknown";
 
-            ctx.GitProjectName = project.name;
-            ctx.GitProjectId = project.id;
+            ctx.GitProjectName = cmbGitProjectName.SelectedText;
+            ctx.GitProjectId = (int) ( cmbGitProjectName.SelectedValue ?? 0 );
             ctx.GitProjectWebUrl = project.web_url;
             ctx.GitMergeRequestNo = mergeReqNo;
             ctx.GitMergeRequestState = mergeReqState;
+
             return ctx;
         }
+
+        private IDelivery BuildDelivery()
+        {
+            if (rdbProduction.Checked)
+                return new DeliveryToProduction(x => this.Dump(x));
+            else if (rdbTest.Checked)
+                return new DeliveryToTest(x => this.Dump(x));
+
+            return null;
+        }
+
+
+
+
+
+
 
         public void SendMail(DeliveryContext ctx)
         {
@@ -324,10 +345,10 @@ namespace Shorthand
               .AppendLine("")
               .AppendLine("Jira Details")
               .AppendLine("------------")
-              .AppendLine($"Internal Issue Key : {ctx.InternalIssueKey}")
-              .AppendLine($"Request Issue Key : {ctx.RequestIssueKey}")
-              .AppendLine($"Deployment Issue Key : {ctx.DeploymentIssueKey}")
-              .AppendLine($"UAT Issue Key : {ctx.UatIssueKey}")
+              .AppendLine($"Internal Issue Key : {ctx.InternalIssue}")
+              .AppendLine($"Request Issue Key : {ctx.RequestIssue}")
+              .AppendLine($"Deployment Issue Key : {ctx.DeploymentIssue}")
+              .AppendLine($"UAT Issue Key : {ctx.UatIssue}")
               .AppendLine("")
               .AppendLine("Git Details")
               .AppendLine("------------")
@@ -351,21 +372,18 @@ namespace Shorthand
             txtDump.Log(line);
         }
 
-        private async Task<string[]> GetLinksOfIssueAsync(string issueKey)
+        private boIssue[] ExtractLinksOfIssue(Issue issue)
         {
-            var issueLinks = await _jira.GetLinksOfIssueAsync(issueKey);
-            var q1 = issueLinks.Where(x => x.inwardIssue != null).Select(x => x.inwardIssue.key);
-            var q2 = issueLinks.Where(x => x.outwardIssue != null).Select(x => x.outwardIssue.key);
+          var q1 = issue.fields.issuelinks.Where(x => x.inwardIssue != null).Select(x => new boIssue { key = x.inwardIssue.key, status = x.inwardIssue.fields.status.name });
+          var q2 = issue.fields.issuelinks.Where(x => x.outwardIssue != null).Select(x => new boIssue { key = x.outwardIssue.key, status = x.outwardIssue.fields.status.name });
 
-            return q1.Union(q2).ToArray();
+          return q1.Union(q2).ToArray();
         }
 
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             txtDump.Clear();
         }
-
-
 
         public void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
         {
@@ -384,8 +402,6 @@ namespace Shorthand
             this.InitializePlugin();
             this.InitializeUIAsync().ConfigureAwait(false);
         }
-
-
 
         private async void frmDeployment_KeyUp(object sender, KeyEventArgs e)
         {
@@ -406,16 +422,16 @@ namespace Shorthand
         private async Task FireLinksAsync()
         {
             int projectId = cmbGitProjectName.GetSelectedValue();
-            var ctx = await this.BuildDeliveryContext(txtInternal.Text, projectId);
+            var ctx = await this.BuildDeliveryContext();
 
-            if (!string.IsNullOrEmpty(ctx.InternalIssueKey))
-                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.InternalIssueKey}");
-            if (!string.IsNullOrEmpty(ctx.DeploymentIssueKey))
-                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.DeploymentIssueKey}");
-            if (!string.IsNullOrEmpty(ctx.RequestIssueKey))
-                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.RequestIssueKey}");
-            if (!string.IsNullOrEmpty(ctx.UatIssueKey))
-                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.UatIssueKey}");
+            if (!string.IsNullOrEmpty(ctx.InternalIssue))
+                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.InternalIssue}");
+            if (!string.IsNullOrEmpty(ctx.DeploymentIssue))
+                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.DeploymentIssue}");
+            if (!string.IsNullOrEmpty(ctx.RequestIssue))
+                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.RequestIssue}");
+            if (!string.IsNullOrEmpty(ctx.UatIssue))
+                Process.Start($"{_jiraOptions.JiraBaseUrl}/browse/{ctx.UatIssue}");
 
             if (!string.IsNullOrEmpty(ctx.GitProjectWebUrl) && ctx.GitMergeRequestNo > 0)
                 Process.Start($"{ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}");
@@ -425,7 +441,7 @@ namespace Shorthand
 
         private void btnMakeExecutable_Click(object sender, EventArgs e)
         {
-            var buildScriptFile = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\build.cmd";
+            var buildScriptFile  = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\build.cmd";
             var workingDirectory = "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice";
 
             var pi = new ProcessStartInfo
@@ -436,6 +452,7 @@ namespace Shorthand
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
+                Arguments = @"\\192.168.126.154"
             };
 
             Process p = new Process { StartInfo = pi };
@@ -443,6 +460,7 @@ namespace Shorthand
             p.OutputDataReceived += (s, args) => { txtDump.Log(args.Data); };
             p.ErrorDataReceived += (s, args) => { txtDump.Log($"ERROR: {args.Data}"); };
             p.Exited += (s, args) => { txtDump.Log($"Exit Code {p.ExitCode}"); };
+
             p.Start();
             p.BeginOutputReadLine();
 
@@ -477,11 +495,6 @@ namespace Shorthand
             Process.Start(pi);
         }
 
-        private void cmbUAT_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            txtUAT.Text = cmbUAT.SelectedText;
-        }
-
         private async void btnJenkins_Click(object sender, EventArgs e)
         {
             var jenkins = new Jenkins(x => this.Dump(x));
@@ -493,5 +506,8 @@ namespace Shorthand
             }
 
         }
+
+
+
     }
 }

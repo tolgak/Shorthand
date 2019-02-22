@@ -7,7 +7,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace Shorthand
+namespace Shorthand.GitLabEntity
 {
 
   // http://sisgit.bilgi.networks/help/api/merge_requests.md

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Shorthand.JiraEntity;
 
 namespace Shorthand
 {
@@ -66,8 +67,7 @@ namespace Shorthand
                                           , description = description
                                           , issuetype = new { name = issueType } } };
             var response = this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
-
-            // update assignee
+            
             if (!response.Success)
                 return string.Empty;
 
@@ -90,8 +90,6 @@ namespace Shorthand
             return issueKey;
         }
 
-
-
         public void SetDescription(string issueKey, string description)
         {
             var url = $"{_options.JiraBaseUrl}/rest/api/2/issue/{issueKey}";
@@ -99,20 +97,7 @@ namespace Shorthand
             var response = this.SendApiRequest(url, data.AsJson(), ApiMethod.PUT);
         }
 
-        public Issuelink[] GetLinksOfIssue(string issueKey)
-        {
-            var response = this.json_GetIssue(issueKey);
 
-            var regex = new Regex("\"issuelinks\":\\[(?<Links>.*?)\\]", RegexOptions.Multiline | RegexOptions.CultureInvariant);
-            var m = regex.Match(response.Result);
-            if (!m.Success)
-                return new Issuelink[0] { };
-
-            var issueLinks = $"[{m.Groups["Links"].Value}]";
-            var issueObjects = JsonConvert.DeserializeObject<Issuelink[]>(issueLinks);
-
-            return issueObjects;
-        }
 
         public async Task<Issuelink[]> GetLinksOfIssueAsync(string issueKey)
         {
@@ -164,34 +149,35 @@ namespace Shorthand
         }
 
 
-        public object GetIssuesOfAssignee(string assignee)
+
+
+
+
+
+
+
+
+
+        public async Task<Issue> GetIssueAsync(string issueKey)
         {
-            //var url = $"{ _options.JiraBaseUrl}/rest/api/2/search";
-            //var data = new { jql = $"assignee = {assignee} and status = \"open\" order by duedate desc" , startAt = 0, maxResults = 10, fields = new string[5] { "id", "key", "assignee", "dueDate", "reporter" } };
+            var url = $"{_options.JiraBaseUrl}/rest/api/2/issue/{issueKey}";
+            var response = await this.SendApiRequestAsync(url, null, ApiMethod.GET);
 
-            //var response = this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
+            if (string.IsNullOrEmpty(response?.Result))
+                return null;
 
-            //JObject searchText = JObject.Parse(response.Result);
-            //var results = searchText["issues"];
-
-
-            //results.ForEach(x => JsonConvert.DeserializeObject<IssueOverview>( x.ToString()) );
-
-
-            return null;
-
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+            return JsonConvert.DeserializeObject<Issue>(response.Result, settings);
         }
 
 
 
 
-        public List<JiraProject> GetProjects()
-        {
-            var url = $"{_options.JiraBaseUrl}/rest/api/2/project";
-            var response = this.SendApiRequest(url, null, ApiMethod.GET);
 
-            return JsonConvert.DeserializeObject<List<JiraProject>>(response.Result);
-        }
 
 
 
@@ -226,6 +212,23 @@ namespace Shorthand
 
             return attachments.Select(x => (string)x["filename"]).ToArray();
         }
+
+
+
+
+
+
+        public List<Project> GetProjects()
+        {
+            var url = $"{_options.JiraBaseUrl}/rest/api/2/project";
+            var response = this.SendApiRequest(url, null, ApiMethod.GET);
+
+            return JsonConvert.DeserializeObject<List<Project>>(response.Result);
+        }
+
+
+
+
 
         private JsonResponse json_GetIssue(string issueKey)
         {
@@ -453,9 +456,6 @@ namespace Shorthand
             }
 
         }
-
-
-
 
         private string EncodeCredentials(string userName, string password)
         {

@@ -35,23 +35,23 @@ namespace Shorthand
     {
       this.Log("Preparing Jira");
 
-      if (string.IsNullOrEmpty(ctx.RequestIssueKey))      
+      if (string.IsNullOrEmpty(ctx.RequestIssue))      
         throw new ArgumentNullException("RequestIssueKey", "Context does not contain a request issue key.");
 
-      if (string.IsNullOrEmpty(ctx.InternalIssueKey))
+      if (string.IsNullOrEmpty(ctx.InternalIssue))
         throw new ArgumentNullException("InternalIssueKey", "Context does not contain an internal issue key.");
 
       var jira = new Jira();
 
       // announce that testers can test by adding comment to request issue
       var comment = this.BuilRequestComment(ctx);
-      jira.AddCommentToIssue(ctx.RequestIssueKey, comment);
+      jira.AddCommentToIssue(ctx.RequestIssue, comment);
       
       // advance workflow for internal issue
-      var transitions = jira.GetTransitionsForIssue(ctx.InternalIssueKey);
+      var transitions = jira.GetTransitionsForIssue(ctx.InternalIssue);
       var q = transitions.FirstOrDefault(x => x.name == "Deployed for Test");
       if ( q != null )
-        jira.SetTransitionForIssue(ctx.InternalIssueKey, q.id);
+        jira.SetTransitionForIssue(ctx.InternalIssue, q.id);
 
       if (!ctx.CreateUatIssue)
       {
@@ -60,14 +60,13 @@ namespace Shorthand
       }
 
       // create uat issue if it does not exist
-      if (string.IsNullOrEmpty(ctx.UatIssueKey))
+      if (string.IsNullOrEmpty(ctx.UatIssue))
       {
-        var summary = string.Format("UAT for {0}", ctx.RequestIssueKey);
+        var summary = $"UAT for {ctx.RequestIssue}";
         var description = this.BuildUATDescription(ctx);
-        ctx.UatIssueKey = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
-
+        ctx.UatIssue = jira.CreateIssue(_jiraOptions.UAT_ProjectKey, summary, description, "Task");
         // link uat issue to request issue
-        jira.CreateLink("UAT", ctx.RequestIssueKey, ctx.UatIssueKey, "UAT oluşturuldu.");
+        jira.CreateLink("UAT", ctx.RequestIssue, ctx.UatIssue, "UAT oluşturuldu.");
 
         //jira.SetDescription(ctx.UatIssueKey, this.BuildUATDescription(ctx));
       }
@@ -114,7 +113,7 @@ namespace Shorthand
                                 .AppendLine("# Yeni eklenen işlevin, diğer işlevleri bozmadığından emin olunur.")
                                 .AppendLine("# Ekran görüntüsü bu işe eklenir")
                                 .AppendLine("# Bu iş, *Done* ile kapatılır")
-                                .AppendLine($"# {ctx.RequestIssueKey} *Passed* ile kapatılır")
+                                .AppendLine($"# {ctx.RequestIssue} *Passed* ile kapatılır")
                                 .ToString();
     }
 
@@ -123,7 +122,7 @@ namespace Shorthand
       if (!ctx.CopyExecutables)
         return "IBU.exe";
 
-      var header = $"IBU_{ctx.RequestIssueKey}".Replace("-", " ").Replace(" ", "_");
+      var header = $"IBU_{ctx.RequestIssue}".Replace("-", " ").Replace(" ", "_");
       var versionNumber = Directory.GetFiles(_deploymentOptions.TestDeliveryFolder)
                                    .Where(x => x.Contains(header))
                                    .Count();

@@ -59,8 +59,7 @@ namespace Shorthand.TCPServer
             // _deployOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
 
             cmbPortNames.Items.Clear();
-            cmbPortNames.Items.AddRange(SyncSerialPort.PortNames);
-            
+            cmbPortNames.Items.AddRange(SyncSerialPort.PortNames);            
         }
 
 

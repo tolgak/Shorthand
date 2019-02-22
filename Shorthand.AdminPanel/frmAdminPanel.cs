@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +16,8 @@ namespace Shorthand.AdminPanel
     public partial class frmAdminPanel : Form, IPlugin
     {
         private IPluginContext _context;
+        private PerformanceCounter _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total", "D10067185");
+        private int i = 0;
 
         public frmAdminPanel()
         {
@@ -71,6 +75,10 @@ namespace Shorthand.AdminPanel
         private void InitializeUI()
         {
             txtUserName.Text = UserPrincipal.Current.SamAccountName;
+
+            _cpuCounter.BeginInit();
+            _cpuCounter.NextValue();
+            _cpuCounter.EndInit();
         }
 
         private void btnChange_Click(object sender, EventArgs e)
@@ -126,6 +134,41 @@ namespace Shorthand.AdminPanel
                 }
             }
         }
+
+        private async void btnCheckCPU_Click(object sender, EventArgs e)
+        {
+
+            do {
+              await this.getCPUUsageAsync();
+              Application.DoEvents();
+              
+            } while (chkRepeat.Checked);
+
+        }
+
+
+        private async Task getCPUUsageAsync()
+        {
+            Thread.Sleep(1000);
+            //int satiCPU  = await Task<int>.FromResult( (int)_cpuCounter.NextValue() );
+
+            var finalCpuCounter = await new TaskFactory().StartNew( () => {
+                //PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                CounterSample cs1 = _cpuCounter.NextSample();
+                Thread.Sleep(500);
+                CounterSample cs2 = _cpuCounter.NextSample();
+                return CounterSample.Calculate(cs1, cs2);
+            });
+
+            txtLog.Log($"sati : {finalCpuCounter}");
+            pbCPU.Value = (int)finalCpuCounter;
+            lblCPU.Text = finalCpuCounter.ToString();
+            chart1.Series["Series1"].Points.AddXY(i++, finalCpuCounter);
+
+
+        }
+
+
 
 
 

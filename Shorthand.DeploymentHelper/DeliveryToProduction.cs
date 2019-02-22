@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using PragmaTouchUtils;
 using System.Reflection;
+using Shorthand.GitLabEntity;
 
 namespace Shorthand
 {
@@ -44,8 +45,8 @@ namespace Shorthand
             var git = new GitLab();
 
             int projectId = ctx.GitProjectId;
-            var sourceBranch = $"feature/{ctx.InternalIssueKey}";
-            var title = $"feature/{ctx.InternalIssueKey}";
+            var sourceBranch = $"feature/{ctx.InternalIssue}";
+            var title = $"feature/{ctx.InternalIssue}";
             var description = this.BuildGitDescription(ctx);
             var assigneeId = "";
 
@@ -61,45 +62,47 @@ namespace Shorthand
             }
 
             this.Log("Creating deployment issue");
-            if (string.IsNullOrEmpty(ctx.RequestIssueKey))
+            if (string.IsNullOrEmpty(ctx.RequestIssue))
                 throw new ArgumentNullException("RequestIssueKey", "Context does not contain a request issue key.");
 
-            if (string.IsNullOrEmpty(ctx.InternalIssueKey))
+            if (string.IsNullOrEmpty(ctx.InternalIssue))
                 throw new ArgumentNullException("InternalIssueKey", "Context does not contain an internal issue key.");
 
             var jira = new Jira();
             // check if deployment has sql script file
-            var sqlFilePath = Directory.GetFiles($"{_dplyOptions.LocalBinPath}\\sql", $"{ctx.InternalIssueKey}.sql").FirstOrDefault();
+            var sqlFilePath = Directory.GetFiles($"{_dplyOptions.LocalBinPath}\\sql", $"{ctx.InternalIssue}.sql").FirstOrDefault();
             ctx.HasSqlScript = !string.IsNullOrEmpty(sqlFilePath);
 
             // create deployment issue if it does not exist
-            if (string.IsNullOrEmpty(ctx.DeploymentIssueKey))
+            if (string.IsNullOrEmpty(ctx.DeploymentIssue))
             {
-                var summary = $"Deploy {ctx.InternalIssueKey}";
-                ctx.DeploymentIssueKey = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, "", "Task");
+                var summary = $"Deploy {ctx.InternalIssue}";
+                ctx.DeploymentIssue = jira.CreateIssue(_jiraOptions.DPLY_ProjectKey, summary, "", "Task");
 
                 var description = this.BuilDeploymentDescription(ctx);
-                jira.SetDescription(ctx.DeploymentIssueKey, description);
+                jira.SetDescription(ctx.DeploymentIssue, description);
 
                 // link internal issue to deployment issue
-                jira.CreateLink("Production", ctx.DeploymentIssueKey, ctx.InternalIssueKey, "Deployment oluşturuldu");
+                jira.CreateLink("Production", ctx.DeploymentIssue, ctx.InternalIssue, "Deployment oluşturuldu");
+                jira.CreateLink("Production", ctx.DeploymentIssue, ctx.RequestIssue, "Deployment oluşturuldu");
+                jira.CreateLink("UAT", ctx.DeploymentIssue, ctx.UatIssue, "Deployment oluşturuldu");
 
-                this.Log($"Deployment created : {ctx.DeploymentIssueKey}");
+                this.Log($"Deployment created : {ctx.DeploymentIssue}");
             }
 
             // attach sql script file to deployment issue
             if (ctx.HasSqlScript)            
-                jira.AddAttachment(ctx.DeploymentIssueKey, sqlFilePath);
+                jira.AddAttachment(ctx.DeploymentIssue, sqlFilePath);
 
             // advance workflow for internal issue
-            var q1 = jira.GetTransitionsForIssue(ctx.InternalIssueKey).FirstOrDefault(x => x.name == "Waiting for Production");
+            var q1 = jira.GetTransitionsForIssue(ctx.InternalIssue).FirstOrDefault(x => x.name == "Waiting for Production");
             if (q1 != null)
-                jira.SetTransitionForIssue(ctx.InternalIssueKey, q1.id);
+                jira.SetTransitionForIssue(ctx.InternalIssue, q1.id);
 
             // advance workflow for deployment issue
-            var q2 = jira.GetTransitionsForIssue(ctx.DeploymentIssueKey).FirstOrDefault(x => x.name == "Waiting for Production");
+            var q2 = jira.GetTransitionsForIssue(ctx.DeploymentIssue).FirstOrDefault(x => x.name == "Waiting for Production");
             if (q2 != null)
-                jira.SetTransitionForIssue(ctx.DeploymentIssueKey, q2.id);
+                jira.SetTransitionForIssue(ctx.DeploymentIssue, q2.id);
         }
 
         private void DeployExecutables(DeliveryContext ctx)
@@ -133,7 +136,7 @@ namespace Shorthand
                     File.Copy(file, destinationfile, true);
                 }
 
-                var zipFileName = $"{ctx.DeploymentIssueKey}.zip";
+                var zipFileName = $"{ctx.DeploymentIssue}.zip";
                 var qualifiedZipFileName = destinationFolder + zipFileName;
 
                 var startInfo = new ProcessStartInfo(_dplyOptions.ArchiveToolPath)
@@ -155,25 +158,27 @@ namespace Shorthand
         private string BuilDeploymentDescription(DeliveryContext ctx)
         {
             var options = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
-            return new StringBuilder().AppendLine(ctx.InternalIssueKey)
+            return new StringBuilder().AppendLine(ctx.InternalIssue)
+                                      .AppendLine(ctx.RequestIssue)
+                                      .AppendLine(ctx.UatIssue)
                                       .AppendConditionally(ctx.CopyExecutables, $"merge request {ctx.GitProjectWebUrl}/merge_requests/{ctx.GitMergeRequestNo}")
-                                      //.AppendLine("{noformat}")
-                                      .AppendConditionally(ctx.CopyExecutables, $"{options.ProductionDeliveryFolder}\\{ctx.DeploymentIssueKey}.zip")
+
+                                      .AppendConditionally(ctx.CopyExecutables, $"{options.ProductionDeliveryFolder}\\{ctx.DeploymentIssue}.zip")
                                       .AppendConditionally(ctx.CopyExecutables, "Bu arşivdeki exe dosyalar uygulama dizinine kopyalanacak.")
                                       .AppendConditionally(!ctx.CopyExecutables, "Bu iş için exe kopyalanmasına gerek *YOK*")
 
                                       .AppendConditionally(ctx.HasSqlScript, "İşe ekli sql script dosyaları pandora.ibu veritabanında çalıştırılacak.")
                                       .AppendConditionally(!ctx.HasSqlScript, "İşe ekli sql script dosyası *YOK*")
-                                      //.AppendLine("{noformat}")
+
                                       .ToString();
         }
 
         private string BuildGitDescription(DeliveryContext ctx)
         {
-            var description = new StringBuilder().AppendLine($"* **Internal Issue :** {ctx.InternalIssueKey}")
-                                                 .AppendLine($"* **Request Issue :** {ctx.RequestIssueKey}")
-                                                 .AppendLine($"* **Deployment Issue :** {ctx.DeploymentIssueKey}")
-                                                 .AppendLine($"* **Uat Issue :** {ctx.UatIssueKey}")
+            var description = new StringBuilder().AppendLine($"* **Internal Issue :** {ctx.InternalIssue}")
+                                                 .AppendLine($"* **Request Issue :** {ctx.RequestIssue}")
+                                                 .AppendLine($"* **Deployment Issue :** {ctx.DeploymentIssue}")
+                                                 .AppendLine($"* **Uat Issue :** {ctx.UatIssue}")
                                                  .ToString();
             _logger?.Invoke(description);
             return description;
