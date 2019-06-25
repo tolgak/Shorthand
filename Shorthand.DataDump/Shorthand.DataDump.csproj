@@ -83,6 +83,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PragmaTouchUtils\PragmaTouchUtils.csproj">
+      <Project>{0B5243D8-8B48-496E-A709-7F56E6C21DB3}</Project>
+      <Name>PragmaTouchUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shorthand.Common\Shorthand.Common.csproj">
       <Project>{ace55c38-8663-4bb1-bf22-6690a422a30b}</Project>
       <Name>Shorthand.Common</Name>

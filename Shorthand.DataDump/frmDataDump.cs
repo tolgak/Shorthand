@@ -10,12 +10,13 @@ using Shorthand.Common;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Linq;
+using PragmaTouchUtils;
 
 namespace Shorthand
 {
 
   [Export(typeof(IPluginMarker))]
-  public partial class frmDataDump : Form, IPlugin
+  public partial class frmDataDump : Form, IAsyncPlugin
   {
 
     private IPluginContext _context;
@@ -25,37 +26,94 @@ namespace Shorthand
       InitializeComponent();      
     }
 
-    public void Initialize(IPluginContext context)
-    {
-      _context = context;
-      this.MdiParent = _context.Host;
+    //public Form Initialize(IPluginContext context)
+    //{
+    //  _context = context;
 
-      var mnuTools = _context.Host.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
-      if (mnuTools == null)
+    //  //this.MdiParent = _context.Host;
+    //  //var mnuTools = _context.Host.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
+    //  //if (mnuTools == null)
+    //  //  return;
+
+    //  //var subItem = new ToolStripMenuItem(this.Text);
+    //  //if (this.Icon != null)
+    //  //  subItem.Image = this.Icon.ToBitmap();
+    //  //(mnuTools as ToolStripMenuItem).DropDownItems.Add(subItem);
+    //  //subItem.Click += (object sender, EventArgs e) => { this.Show(); };
+
+    //  this.FormClosing += (object sender, FormClosingEventArgs e) => { e.Cancel = true; this.Hide(); };
+
+    //  this.InitializePlugin();
+    //  this.InitializeUI();
+
+    //  return this;
+    //}
+    //private void InitializePlugin()
+    //{
+
+    //}
+    //private void InitializeUI()
+    //{
+    //  txtConnection.Text = this.GetDefaultConnectionString();
+    //  dlgLoad.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+    //}
+    //public void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
+    //{
+    //  var shouldRefresh = e.ChangedOptions.Contains("FieldSelectOptions");
+    //  if (!shouldRefresh)
+    //    return;
+
+    //  this.InitializePlugin();
+    //  this.InitializeUI();
+    //}
+
+
+    public async Task<Form> InitializeAsync(IPluginContext context)
+    {
+      return await Task.Run(async () =>
+      {
+        _context = context;
+        _context.Configuration.LoadConfiguration();
+
+        this.FormClosing += (object sender, FormClosingEventArgs e) =>
+        {
+          e.Cancel = true;
+          this.Hide();
+        };
+
+        await this.InitializePlugin();
+        await this.InitializeUI();
+
+        return this;
+      });
+    }
+    private async Task<bool> InitializePlugin()
+    {
+      return await Task.Run(() => { return true; });
+    }
+    private async Task<bool> InitializeUI()
+    {
+      return await Task.Run(() =>
+      {
+        txtConnection.Text = this.GetDefaultConnectionString();
+        dlgLoad.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+        return true;
+      });
+    }
+    public async void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
+    {
+      var shouldRefresh = e.ChangedOptions.Contains("FieldSelectOptions");
+      if (!shouldRefresh)
         return;
 
-      var subItem = new ToolStripMenuItem(this.Text);
-      if (this.Icon != null)
-        subItem.Image = this.Icon.ToBitmap();
-      (mnuTools as ToolStripMenuItem).DropDownItems.Add(subItem);
-      subItem.Click += (object sender, EventArgs e) => { this.Show(); };
-
-      this.FormClosing += (object sender, FormClosingEventArgs e) => { e.Cancel = true; this.Hide(); };
-
-      this.InitializePlugin();
-      this.InitializeUI();
+      await this.InitializePlugin();
+      await this.InitializeUI();
     }
 
-    private void InitializePlugin()
-    {
 
-    }
 
-    private void InitializeUI()
-    {
-      txtConnection.Text = this.GetDefaultConnectionString();
-      dlgLoad.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-    }
+
+
 
     private void btnDump_Click(object sender, EventArgs e)
     {

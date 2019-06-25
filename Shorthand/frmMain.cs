@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using PragmaTouchUtils;
 using Shorthand.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shorthand
 {
@@ -40,12 +41,12 @@ namespace Shorthand
         this.Cursor = Cursors.AppStarting;
 
         this.InitializeComponent();
+        this.initializeConfiguration();
+        this.initializeUI();
 
         this.setVersionInfo();
-        this.initializeConfiguration();
-        this.initializePluginContainer();
 
-        this.initializeUI();
+        this.initializePluginContainer();
       }
       finally
       {
@@ -59,7 +60,15 @@ namespace Shorthand
       ConfigContent.Current.LoadConfiguration();
     }
 
-    private void initializePluginContainer()
+    private void initializeUI()
+    {
+      var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
+      this.Width  = options.Width;
+      this.Height = options.Height;
+    }
+
+
+    private async void initializePluginContainer()
     {
       var pluginFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)  + @"\plugins\";
       if (!Directory.Exists(pluginFilePath))
@@ -69,8 +78,8 @@ namespace Shorthand
       catalog.Catalogs.Add(new DirectoryCatalog(pluginFilePath));
       _container = new CompositionContainer(catalog);
 
-      var context = new PluginContext { Host = this, Configuration = ConfigContent.Current };
       _container.ComposeParts(this);
+
       foreach (var x in _plugins)
       {
         try
@@ -78,42 +87,64 @@ namespace Shorthand
           switch (x)
           {
             case IAsyncPlugin y :
-              y.InitializeAsync(context);
+              await this.RegisterAsync(y);
               break;
             case IPlugin y:
-              y.Initialize(context);
-              break;
-            default:
+              this.Register(y);
               break;
           }
+
+          Application.DoEvents();
         }
         catch (Exception compositionException)
         {
           MessageBox.Show(compositionException.Message);
         }
-      }       
+      }
 
+      //statMsg.Text = "Ready";
     }
 
-    private void initializeUI()
+    public async Task RegisterAsync(IAsyncPlugin y)
     {
-      var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
-      this.Width  = options.Width;
-      this.Height = options.Height;
+      var context = new PluginContext { Configuration = ConfigContent.Current };
+      var p = await y.InitializeAsync(context);
+      statMsg.Text = $"Loading plugin - {p.Text}";
 
-      var mnuTools = this.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
-      if (mnuTools == null)
-        return;
-              
-      (mnuTools as ToolStripMenuItem).DropDownItems.Add(new ToolStripSeparator());
+      p.MdiParent = this;
+      var subItem = new ToolStripMenuItem(p.Text);
+      if (p.Icon != null)
+        subItem.Image = p.Icon.ToBitmap();
 
-      var mnuSettings = new ToolStripMenuItem("Settings");
-      (mnuTools as ToolStripMenuItem).DropDownItems.Add(mnuSettings);
-      mnuSettings.Click += (object sender, EventArgs e) => {
-        frmConfigurationDlg.Show(ConfigContent.Current, this, this.onFinalSelection);
-      };
+      mnuTools.DropDownItems.Add(subItem);
+      subItem.Click += (object sender, EventArgs e) => { p.Show(); };
 
+      this.onSettingsChanged += y.OnSettingsChangedEventHandler;
+
+      statMsg.Text = string.Empty;
     }
+
+    public void Register(IPlugin y)
+    {
+      var context = new PluginContext { Configuration = ConfigContent.Current };
+      var p = y.Initialize(context);
+      statMsg.Text = $"Loading plugin - {p.Text}";
+
+      p.MdiParent = this;
+      var subItem = new ToolStripMenuItem(p.Text);
+      if (p.Icon != null)
+        subItem.Image = p.Icon.ToBitmap();
+
+      mnuTools.DropDownItems.Add(subItem);
+      subItem.Click += (object sender, EventArgs e) => { p.Show(); };
+
+      this.onSettingsChanged += y.OnSettingsChangedEventHandler;
+
+      statMsg.Text = string.Empty;
+    }
+
+
+
 
 
 
@@ -155,7 +186,9 @@ namespace Shorthand
 
     }
 
-
-
+    private void mnuItemSettings_Click(object sender, EventArgs e)
+    {
+      frmConfigurationDlg.Show(ConfigContent.Current, this, this.onFinalSelection);
+    }
   }
 }

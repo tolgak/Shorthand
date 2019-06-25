@@ -38,12 +38,15 @@
       this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
+      this.statMsg = new System.Windows.Forms.ToolStripStatusLabel();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+      this.mnuItemSettings = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuMain.SuspendLayout();
+      this.appStat.SuspendLayout();
       this.SuspendLayout();
       // 
       // mnuMain
@@ -64,6 +67,8 @@
       // mnuFile
       // 
       this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuItemSettings,
+            this.toolStripSeparator1,
             this.mnuItemExit});
       this.mnuFile.Name = "mnuFile";
       this.mnuFile.Size = new System.Drawing.Size(39, 21);
@@ -72,22 +77,15 @@
       // mnuItemExit
       // 
       this.mnuItemExit.Name = "mnuItemExit";
-      this.mnuItemExit.Size = new System.Drawing.Size(96, 22);
+      this.mnuItemExit.Size = new System.Drawing.Size(180, 22);
       this.mnuItemExit.Text = "Exit";
       this.mnuItemExit.Click += new System.EventHandler(this.mnuItemExit_Click);
       // 
       // mnuTools
       // 
-      this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
       this.mnuTools.Name = "mnuTools";
       this.mnuTools.Size = new System.Drawing.Size(51, 21);
       this.mnuTools.Text = "Tools";
-      // 
-      // toolStripMenuItem1
-      // 
-      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
       // 
       // mnuWindow
       // 
@@ -106,17 +104,38 @@
       // mnuAbout
       // 
       this.mnuAbout.Name = "mnuAbout";
-      this.mnuAbout.Size = new System.Drawing.Size(111, 22);
+      this.mnuAbout.Size = new System.Drawing.Size(180, 22);
       this.mnuAbout.Text = "About";
       this.mnuAbout.Click += new System.EventHandler(this.mnuAbout_Click);
       // 
       // appStat
       // 
+      this.appStat.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statMsg});
       this.appStat.Location = new System.Drawing.Point(2, 537);
       this.appStat.Name = "appStat";
       this.appStat.Size = new System.Drawing.Size(780, 22);
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
+      // 
+      // statMsg
+      // 
+      this.statMsg.AutoSize = false;
+      this.statMsg.Name = "statMsg";
+      this.statMsg.Size = new System.Drawing.Size(200, 17);
+      this.statMsg.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+      // 
+      // mnuItemSettings
+      // 
+      this.mnuItemSettings.Name = "mnuItemSettings";
+      this.mnuItemSettings.Size = new System.Drawing.Size(180, 22);
+      this.mnuItemSettings.Text = "Settings";
+      this.mnuItemSettings.Click += new System.EventHandler(this.mnuItemSettings_Click);
       // 
       // frmMain
       // 
@@ -137,6 +156,8 @@
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
       this.mnuMain.ResumeLayout(false);
       this.mnuMain.PerformLayout();
+      this.appStat.ResumeLayout(false);
+      this.appStat.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -151,8 +172,10 @@
     private System.Windows.Forms.ToolStripMenuItem mnuHelp;
     private System.Windows.Forms.ToolStripMenuItem mnuWindow;
     private System.Windows.Forms.StatusStrip appStat;
-    private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem mnuAbout;
+    private System.Windows.Forms.ToolStripStatusLabel statMsg;
+    private System.Windows.Forms.ToolStripMenuItem mnuItemSettings;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
   }
 }
 

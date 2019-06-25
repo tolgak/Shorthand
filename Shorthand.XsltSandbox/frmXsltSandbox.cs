@@ -14,7 +14,7 @@ using System.Linq;
 namespace Shorthand
 {
   [Export(typeof(IPluginMarker))]
-  public partial class frmXsltSandbox : Form, IPlugin
+  public partial class frmXsltSandbox : Form, IAsyncPlugin
   {
     private IPluginContext _context;
 
@@ -23,38 +23,54 @@ namespace Shorthand
       InitializeComponent();
     }
 
-
-    public void Initialize(IPluginContext context)
+    public async Task<Form> InitializeAsync(IPluginContext context)
     {
-      _context = context;
-      this.MdiParent = _context.Host;      
+      return await Task.Run(async () =>
+      {
+        _context = context;
+        _context.Configuration.LoadConfiguration();
 
-      var mnuTools = _context.Host.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
-      if (mnuTools == null)
+        this.FormClosing += (object sender, FormClosingEventArgs e) =>
+        {
+          e.Cancel = true;
+          this.Hide();
+        };
+
+        await this.InitializePlugin();
+        await this.InitializeUI();
+
+        return this;
+      });
+    }
+    private async Task<bool> InitializePlugin()
+    {
+      return await Task.Run(() => {
+        return true;
+      });
+    }
+    private async Task<bool> InitializeUI()
+    {
+      return await Task.Run(() =>
+      {
+        tabSource.SelectedTab = tabXSL;
+        return true;
+      });
+    }
+    public async void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
+    {
+      var shouldRefresh = e.ChangedOptions.Contains("FieldSelectOptions");
+      if (!shouldRefresh)
         return;
 
-      var subItem = new ToolStripMenuItem(this.Text);
-      if (this.Icon != null)
-        subItem.Image = this.Icon.ToBitmap();
-
-      (mnuTools as ToolStripMenuItem).DropDownItems.Add(subItem);
-      subItem.Click += (object sender, EventArgs e) => { this.Show(); };
-
-      this.FormClosing += (object sender, FormClosingEventArgs e) => { e.Cancel = true; this.Hide(); };
-
-      this.InitializePlugin();
-      this.InitializeUI();
+      await this.InitializePlugin();
+      await this.InitializeUI();
     }
 
-    private void InitializePlugin()
-    {
 
-    }
 
-    private void InitializeUI()
-    {
-      tabSource.SelectedTab = tabXSL;
-    }
+
+
+
 
     private void btnRun_Click(object sender, EventArgs e)
     {

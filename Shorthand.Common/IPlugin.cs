@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-
+﻿using PragmaTouchUtils;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Shorthand.Common
 {
@@ -10,12 +11,14 @@ namespace Shorthand.Common
 
   public interface IPlugin : IPluginMarker
   {
-    void Initialize(IPluginContext context);
+    Form Initialize(IPluginContext context);
+    void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e);
   }
 
   public interface IAsyncPlugin : IPluginMarker
   {
-    Task InitializeAsync(IPluginContext context);
+    Task<Form> InitializeAsync(IPluginContext context);
+    void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e);
   }
 
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Shorthand.Mqtt
 {
   [Export(typeof(IPluginMarker))]
-  public partial class frmMqttClient : Form, IPlugin
+  public partial class frmMqttClient : Form, IAsyncPlugin
   {
     private MqttClient  _client;
     private IPluginContext _context;
@@ -29,76 +29,120 @@ namespace Shorthand.Mqtt
       _logger = (x) => txtLog.Log(x);
     }
 
+    //public Form Initialize(IPluginContext context)
+    //{
+    //  _context = context;      
+    //  _context.Configuration.LoadConfiguration();
+
+    //  //this.MdiParent = _context.Host;
+    //  //var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
+    //  //if (strips.Length == 0)
+    //  //  return;
+
+    //  //var subItem = new ToolStripMenuItem(this.Text);
+    //  //if (this.Icon != null)
+    //  //  subItem.Image = this.Icon.ToBitmap();
+    //  //(strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
+    //  //subItem.Click += (object sender, EventArgs e) => { this.Show(); };
+
+    //  //if (_context.Host is IPluginHost host)
+    //  //  host.onSettingsChanged += this.OnSettingsChangedEventHandler;
+
+    //  this.FormClosing += (object sender, FormClosingEventArgs e) =>
+    //  {
+    //    e.Cancel = true;
+    //    this.Hide();
+    //  };
+
+    //  this.InitializePlugin();
+    //  this.InitializeUI();
+
+    //  return this;
+    //}
+    //private void InitializePlugin()
+    //{
+    //  //_mqttOptions = ConfigContent.Current.GetConfigContentItem("MqttOptions") as MqttOptions;
+
+    //  _hostname = "mqtt.dioty.co";
+    //  _userId = "tolga.kurkcuoglu@gmail.com";
+    //  _password = "65bac065";
+    //  _rootTopic = "/tolga.kurkcuoglu@gmail.com/#";
+
+    //  //_hostname = "verbum.westeurope.cloudapp.azure.com";  //"52.178.115.89";
+    //  //_userId = "tolgak";
+    //  //_password = "Sakura3x_azure";
+    //  //_rootTopic = "/tolgak/#";
+    //}
+    //private void InitializeUI()
+    //{
+
+    //}
+    //public void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
+    //{
+    //  var shouldRefresh = e.ChangedOptions.Contains("MqttOptions");
+    //  if (!shouldRefresh)
+    //    return;
+
+    //  this.InitializePlugin();
+    //  this.InitializeUI();
+    //}
+
+    public async Task<Form> InitializeAsync(IPluginContext context)
+    {
+      return await Task.Run(async () =>
+      {
+        _context = context;
+        _context.Configuration.LoadConfiguration();
+
+        this.FormClosing += (object sender, FormClosingEventArgs e) =>
+        {
+          e.Cancel = true;
+          this.Hide();
+        };
+
+        await this.InitializePlugin();
+        await this.InitializeUI();
+
+        return this;
+      });
+    }
+    private async Task<bool> InitializePlugin()
+    {
+      return await Task.Run(() => {
+        _hostname = "mqtt.dioty.co";
+        _userId = "tolga.kurkcuoglu@gmail.com";
+        _password = "65bac065";
+        _rootTopic = "/tolga.kurkcuoglu@gmail.com/#";
+
+        return true;
+      });
+    }
+    private async Task<bool> InitializeUI()
+    {
+      return await Task.Run(() =>
+      {
+        return true;
+      });
+    }
+    public async void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
+    {
+      var shouldRefresh = e.ChangedOptions.Contains("FieldSelectOptions");
+      if (!shouldRefresh)
+        return;
+
+      await this.InitializePlugin();
+      await this.InitializeUI();
+    }
+
+
+
+
+
+
     private void _client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
     {      
       var message = System.Text.Encoding.Default.GetString(e.Message);
       _logger?.Invoke($"[{e.Topic}] {message}");
-    }
-
-
-    public void Initialize(IPluginContext context)
-    {
-      _context = context;
-      this.MdiParent = _context.Host;
-      _context.Configuration.LoadConfiguration();
-
-      var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
-      if (strips.Length == 0)
-        return;
-
-      var subItem = new ToolStripMenuItem(this.Text);
-      if (this.Icon != null)
-        subItem.Image = this.Icon.ToBitmap();
-      (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
-      subItem.Click += (object sender, EventArgs e) => { this.Show(); };
-
-      if (_context.Host is IPluginHost host)
-        host.onSettingsChanged += this.OnSettingsChangedEventHandler;
-
-      this.FormClosing += (object sender, FormClosingEventArgs e) =>
-      {
-        e.Cancel = true;
-        this.Hide();
-      };
-
-      this.InitializePlugin();
-      this.InitializeUI();
-    }
-
-    public Task InitializeAsync(IPluginContext context)
-    {
-      throw new NotImplementedException();
-    }
-
-    private void InitializeUI()
-    {
-      //throw new NotImplementedException();
-    }
-
-    private void InitializePlugin()
-    {
-      //_mqttOptions = ConfigContent.Current.GetConfigContentItem("MqttOptions") as MqttOptions;
-
-      _hostname = "mqtt.dioty.co";
-      _userId = "tolga.kurkcuoglu@gmail.com";
-      _password = "65bac065";
-      _rootTopic = "/tolga.kurkcuoglu@gmail.com/#";
-
-      //_hostname = "verbum.westeurope.cloudapp.azure.com";  //"52.178.115.89";
-      //_userId = "tolgak";
-      //_password = "Sakura3x_azure";
-      //_rootTopic = "/tolgak/#";
-
-    }
-
-    private void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
-    {
-      var shouldRefresh = e.ChangedOptions.Contains("MqttOptions");
-      if (!shouldRefresh)
-        return;
-
-      this.InitializePlugin();
-      this.InitializeUI();
     }
 
     private void btnConnect_Click(object sender, EventArgs e)
