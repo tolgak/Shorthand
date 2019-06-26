@@ -42,6 +42,8 @@
       this.txtSolutionFile = new System.Windows.Forms.TextBox();
       this.txtFolder = new System.Windows.Forms.TextBox();
       this.btnCheckFolder = new System.Windows.Forms.Button();
+      this.btnRunningProcess = new System.Windows.Forms.Button();
+      this.btnKill = new System.Windows.Forms.Button();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -167,11 +169,33 @@
       this.btnCheckFolder.UseVisualStyleBackColor = true;
       this.btnCheckFolder.Click += new System.EventHandler(this.btnCheckFolder_Click);
       // 
+      // btnRunningProcess
+      // 
+      this.btnRunningProcess.Location = new System.Drawing.Point(725, 168);
+      this.btnRunningProcess.Name = "btnRunningProcess";
+      this.btnRunningProcess.Size = new System.Drawing.Size(129, 25);
+      this.btnRunningProcess.TabIndex = 39;
+      this.btnRunningProcess.Text = "List Win Processes";
+      this.btnRunningProcess.UseVisualStyleBackColor = true;
+      this.btnRunningProcess.Click += new System.EventHandler(this.btnRunningProcess_Click);
+      // 
+      // btnKill
+      // 
+      this.btnKill.Location = new System.Drawing.Point(725, 199);
+      this.btnKill.Name = "btnKill";
+      this.btnKill.Size = new System.Drawing.Size(129, 25);
+      this.btnKill.TabIndex = 40;
+      this.btnKill.Text = "Kill";
+      this.btnKill.UseVisualStyleBackColor = true;
+      this.btnKill.Click += new System.EventHandler(this.btnKill_Click);
+      // 
       // frmAdminPanel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(866, 612);
+      this.Controls.Add(this.btnKill);
+      this.Controls.Add(this.btnRunningProcess);
       this.Controls.Add(this.btnCheckFolder);
       this.Controls.Add(this.txtFolder);
       this.Controls.Add(this.txtSolutionFile);
@@ -210,5 +234,7 @@
     private System.Windows.Forms.TextBox txtSolutionFile;
     private System.Windows.Forms.TextBox txtFolder;
     private System.Windows.Forms.Button btnCheckFolder;
+    private System.Windows.Forms.Button btnRunningProcess;
+    private System.Windows.Forms.Button btnKill;
   }
 }

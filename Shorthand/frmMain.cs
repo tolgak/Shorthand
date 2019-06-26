@@ -67,7 +67,6 @@ namespace Shorthand
       this.Text = $"{this.Text} - {versionInfo}";
     }
 
-
     private async void initializePluginContainer()
     {
       var pluginFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)  + @"\plugins\";
@@ -93,12 +92,10 @@ namespace Shorthand
       {
         var context = new PluginContext { Configuration = ConfigContent.Current };
         var p = await y.InitializeAsync(context);
-
         p.MdiParent = this;
-        var subItem = new ToolStripMenuItem(p.Text);
-        if (p.Icon != null)
-          subItem.Image = p.Icon.ToBitmap();
 
+        var subItem = new ToolStripMenuItem(p.Text);
+        subItem.Image = p.Icon?.ToBitmap();
         mnuTools.DropDownItems.Add(subItem);
         subItem.Click += (object sender, EventArgs e) => { p.Show(); };
 

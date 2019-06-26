@@ -3,9 +3,11 @@ using Shorthand.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -205,6 +207,45 @@ namespace Shorthand.AdminPanel
       catch (Exception)
       {
         throw;
+      }
+    }
+
+    private void btnRunningProcess_Click(object sender, EventArgs e)
+    {
+      // var processes = Process.GetProcesses();
+      var processes = Process.GetProcessesByName("IBU");
+      var users = new List<string>();
+      processes.ToList()
+               .ForEach(p => users.Add($"{p.ProcessName} {GetProcessOwner(p.Id)}" ));
+
+      txtLog.Lines = users.ToArray();
+    }
+
+    private string GetProcessOwner(int processId)
+    {
+      var query = "Select * From Win32_Process Where ProcessID = " + processId;
+      using (var searcher = new ManagementObjectSearcher(query))
+      {
+        object[] args = { string.Empty, string.Empty };
+        var owner = searcher.Get()
+                            .OfType<ManagementObject>()
+                            .Select( mo => {                                          
+                                             mo.InvokeMethod("GetOwner", args);
+                                             return $"{args[1]}\\{args[0]}" ?? "NO OWNER";
+                                           })
+                            .FirstOrDefault();
+
+        return owner?.ToString();
+      }
+    }
+
+    private void btnKill_Click(object sender, EventArgs e)
+    {
+      var processes = Process.GetProcessesByName("IBU");
+      foreach (var p in processes)
+      {
+        txtLog.Log($"{p.ProcessName} bye!");
+        p.Kill();        
       }
     }
 

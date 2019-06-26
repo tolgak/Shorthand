@@ -8,26 +8,8 @@ namespace AppBuilderService
 {
   class Program
   {
-    //static void Main(string[] args)
-    //{
-
-    //  try
-    //  {
-    //    AsyncService service = new AsyncService(24185);
-    //    service.Run();
-
-    //    Console.ReadLine();
-    //  }
-    //  catch (Exception ex)
-    //  {
-    //    Console.WriteLine(ex.Message);
-    //    Console.ReadLine();
-    //  }
-    //}
-
     // https://www.winsocketdotnetworkprogramming.com/clientserversocketnetworkcommunication8b.html
     // https://www.winsocketdotnetworkprogramming.com/clientserversocketnetworkcommunication8b_1.html
-
 
     static void Main(string[] args)
     {
@@ -69,9 +51,6 @@ namespace AppBuilderService
       {
         Console.WriteLine($"Client: Socket error occurred: {err.Message}");
       }
-
-
-
 
     }
 
@@ -152,8 +131,8 @@ namespace AppBuilderService
       byte[] sendBuffer = Encoding.ASCII.GetBytes(request);
 
       var rc = clientSocket.Send(sendBuffer);
-      Console.WriteLine("Client: send() is OK...TCP...");
-      Console.WriteLine("Client: Sent request of {0} bytes", rc);
+      Console.WriteLine("Client: send() is OK.");
+      Console.WriteLine("Client: Sent {0} bytes", rc);
 
       clientSocket.Shutdown(SocketShutdown.Send);
       Console.WriteLine("Client: Shutdown() is OK...");
