@@ -42,11 +42,13 @@ namespace Shorthand
         this.InitializeComponent();
         this.initializeConfiguration();
         this.initializeUI();
-       
+
+        mnuMain.Enabled = false;
         this.initializePluginContainer();
       }
       finally
-      {        
+      {
+        mnuMain.Enabled = true;
         this.Cursor = Cursors.Default;
       }
     }
