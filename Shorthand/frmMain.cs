@@ -15,11 +15,10 @@ namespace Shorthand
 {
   public partial class frmMain : Form, IPluginHost
   {
-
     private CompositionContainer _container;
 
-    [ImportMany(typeof(IPluginMarker))]
-    private  List<IPluginMarker> _plugins;
+    [ImportMany(typeof(IAsyncPlugin))]
+    private  List<IAsyncPlugin> _plugins;
 
     private Action<object, ConfigEventArgs> _onSettingsChanged;
     public event Action<object, ConfigEventArgs> onSettingsChanged
@@ -43,13 +42,11 @@ namespace Shorthand
         this.InitializeComponent();
         this.initializeConfiguration();
         this.initializeUI();
-
-        this.setVersionInfo();
-
+       
         this.initializePluginContainer();
       }
       finally
-      {
+      {        
         this.Cursor = Cursors.Default;
       }
     }
@@ -65,6 +62,9 @@ namespace Shorthand
       var options = ConfigContent.Current.GetConfigContentItem("GuiOptions") as GuiOptions;
       this.Width  = options.Width;
       this.Height = options.Height;
+
+      var versionInfo = this.getVersionInfo();
+      this.Text = $"{this.Text} - {versionInfo}";
     }
 
 
@@ -74,74 +74,45 @@ namespace Shorthand
       if (!Directory.Exists(pluginFilePath))
         return;
 
+      statMsg.Text = $"Loading plugins";
+
       var catalog = new AggregateCatalog();
       catalog.Catalogs.Add(new DirectoryCatalog(pluginFilePath));
       _container = new CompositionContainer(catalog);
-
       _container.ComposeParts(this);
+      
+      var initializers = _plugins.Select(async x => await this.RegisterAsync(x));
+      await Task.WhenAll(initializers);
 
-      foreach (var x in _plugins)
+      statMsg.Text = $"Ready";
+    }
+
+    private async Task RegisterAsync(IAsyncPlugin y)
+    {
+      try
       {
-        try
-        {
-          switch (x)
-          {
-            case IAsyncPlugin y :
-              await this.RegisterAsync(y);
-              break;
-            case IPlugin y:
-              this.Register(y);
-              break;
-          }
+        var context = new PluginContext { Configuration = ConfigContent.Current };
+        var p = await y.InitializeAsync(context);
 
-          Application.DoEvents();
-        }
-        catch (Exception compositionException)
-        {
-          MessageBox.Show(compositionException.Message);
-        }
+        p.MdiParent = this;
+        var subItem = new ToolStripMenuItem(p.Text);
+        if (p.Icon != null)
+          subItem.Image = p.Icon.ToBitmap();
+
+        mnuTools.DropDownItems.Add(subItem);
+        subItem.Click += (object sender, EventArgs e) => { p.Show(); };
+
+        this.onSettingsChanged += y.OnSettingsChangedEventHandler;
+
+        Application.DoEvents();
       }
-
-      //statMsg.Text = "Ready";
+      catch (Exception compositionException)
+      {
+        MessageBox.Show(compositionException.Message);
+      }
     }
 
-    public async Task RegisterAsync(IAsyncPlugin y)
-    {
-      var context = new PluginContext { Configuration = ConfigContent.Current };
-      var p = await y.InitializeAsync(context);
-      statMsg.Text = $"Loading plugin - {p.Text}";
 
-      p.MdiParent = this;
-      var subItem = new ToolStripMenuItem(p.Text);
-      if (p.Icon != null)
-        subItem.Image = p.Icon.ToBitmap();
-
-      mnuTools.DropDownItems.Add(subItem);
-      subItem.Click += (object sender, EventArgs e) => { p.Show(); };
-
-      this.onSettingsChanged += y.OnSettingsChangedEventHandler;
-
-      statMsg.Text = string.Empty;
-    }
-
-    public void Register(IPlugin y)
-    {
-      var context = new PluginContext { Configuration = ConfigContent.Current };
-      var p = y.Initialize(context);
-      statMsg.Text = $"Loading plugin - {p.Text}";
-
-      p.MdiParent = this;
-      var subItem = new ToolStripMenuItem(p.Text);
-      if (p.Icon != null)
-        subItem.Image = p.Icon.ToBitmap();
-
-      mnuTools.DropDownItems.Add(subItem);
-      subItem.Click += (object sender, EventArgs e) => { p.Show(); };
-
-      this.onSettingsChanged += y.OnSettingsChangedEventHandler;
-
-      statMsg.Text = string.Empty;
-    }
 
 
 
@@ -172,13 +143,13 @@ namespace Shorthand
       _onSettingsChanged?.Invoke(this, e);
     }
 
-    private void setVersionInfo()
+    private string getVersionInfo()
     {
       var versionInfo = Assembly.GetExecutingAssembly().GetName().Version;
       var startDate = new DateTime(2000, 1, 1);      
       var lastBuilt = startDate.AddDays(versionInfo.Build).ToShortDateString();
 
-      this.Text = $"{this.Text} - Version {versionInfo.ToString()} ({lastBuilt})";
+      return $"Version {versionInfo.ToString()} ({lastBuilt})";
     }
 
     private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -190,5 +161,7 @@ namespace Shorthand
     {
       frmConfigurationDlg.Show(ConfigContent.Current, this, this.onFinalSelection);
     }
+
+
   }
 }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Shorthand
 {
-  public class LookupItem
+  public class LookupItem<T>
   {
-    public string Text { get; set; }
-    public int Value { get; set; }
+    public string Name { get; set; }
+    public T Value { get; set; }
   }
 
 

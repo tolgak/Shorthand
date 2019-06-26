@@ -11,7 +11,7 @@ namespace Shorthand.Common
   public class PluginContext : IPluginContext
   {
     //public MenuStrip MainMenu { get; set; }
-    public Form Host { get; set; }
+    //public Form Host { get; set; }
     public ConfigContent Configuration { get; set; }
   }
 }

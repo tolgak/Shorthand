@@ -17,7 +17,7 @@ using System.Windows.Forms;
 namespace Shorthand
 {
 
-  [Export(typeof(IPluginMarker))]
+  [Export(typeof(IAsyncPlugin))]
   public partial class frmDeployment : Form, IAsyncPlugin
   {
     private IPluginContext _context;
@@ -38,7 +38,7 @@ namespace Shorthand
     public async Task<Form> InitializeAsync(IPluginContext context)
     {
       _context = context;
-      _context.Configuration.LoadConfiguration();
+      context.Configuration.LoadConfiguration();
 
       this.FormClosing += (object sender, FormClosingEventArgs e) =>
       {

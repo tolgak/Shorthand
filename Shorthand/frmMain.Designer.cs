@@ -36,6 +36,8 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
       this.mnuMain = new System.Windows.Forms.MenuStrip();
       this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+      this.mnuItemSettings = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.mnuItemExit = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,8 +45,6 @@
       this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
       this.appStat = new System.Windows.Forms.StatusStrip();
       this.statMsg = new System.Windows.Forms.ToolStripStatusLabel();
-      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.mnuItemSettings = new System.Windows.Forms.ToolStripMenuItem();
       this.mnuMain.SuspendLayout();
       this.appStat.SuspendLayout();
       this.SuspendLayout();
@@ -62,7 +62,7 @@
       this.mnuMain.Name = "mnuMain";
       this.mnuMain.Size = new System.Drawing.Size(780, 25);
       this.mnuMain.TabIndex = 12;
-      this.mnuMain.Text = "menuStrip1";
+      this.mnuMain.Text = "Main menu";
       // 
       // mnuFile
       // 
@@ -74,10 +74,22 @@
       this.mnuFile.Size = new System.Drawing.Size(39, 21);
       this.mnuFile.Text = "File";
       // 
+      // mnuItemSettings
+      // 
+      this.mnuItemSettings.Name = "mnuItemSettings";
+      this.mnuItemSettings.Size = new System.Drawing.Size(122, 22);
+      this.mnuItemSettings.Text = "Settings";
+      this.mnuItemSettings.Click += new System.EventHandler(this.mnuItemSettings_Click);
+      // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(119, 6);
+      // 
       // mnuItemExit
       // 
       this.mnuItemExit.Name = "mnuItemExit";
-      this.mnuItemExit.Size = new System.Drawing.Size(180, 22);
+      this.mnuItemExit.Size = new System.Drawing.Size(122, 22);
       this.mnuItemExit.Text = "Exit";
       this.mnuItemExit.Click += new System.EventHandler(this.mnuItemExit_Click);
       // 
@@ -104,7 +116,7 @@
       // mnuAbout
       // 
       this.mnuAbout.Name = "mnuAbout";
-      this.mnuAbout.Size = new System.Drawing.Size(180, 22);
+      this.mnuAbout.Size = new System.Drawing.Size(111, 22);
       this.mnuAbout.Text = "About";
       this.mnuAbout.Click += new System.EventHandler(this.mnuAbout_Click);
       // 
@@ -124,18 +136,6 @@
       this.statMsg.Name = "statMsg";
       this.statMsg.Size = new System.Drawing.Size(200, 17);
       this.statMsg.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // toolStripSeparator1
-      // 
-      this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-      // 
-      // mnuItemSettings
-      // 
-      this.mnuItemSettings.Name = "mnuItemSettings";
-      this.mnuItemSettings.Size = new System.Drawing.Size(180, 22);
-      this.mnuItemSettings.Text = "Settings";
-      this.mnuItemSettings.Click += new System.EventHandler(this.mnuItemSettings_Click);
       // 
       // frmMain
       // 

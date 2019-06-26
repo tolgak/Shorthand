@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace Shorthand.FieldSelector
 {
-  [Export(typeof(IPluginMarker))]
+  [Export(typeof(IAsyncPlugin))]
   public partial class frmFields : Form, IAsyncPlugin
   {
     private IPluginContext _context;
@@ -28,7 +28,6 @@ namespace Shorthand.FieldSelector
       return await Task.Run(async () =>
       {
         _context = context;
-        _context.Configuration.LoadConfiguration();
 
         this.FormClosing += (object sender, FormClosingEventArgs e) =>
         {

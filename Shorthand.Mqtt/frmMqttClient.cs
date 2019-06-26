@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Shorthand.Mqtt
 {
-  [Export(typeof(IPluginMarker))]
+  [Export(typeof(IAsyncPlugin))]
   public partial class frmMqttClient : Form, IAsyncPlugin
   {
     private MqttClient  _client;
@@ -92,7 +92,6 @@ namespace Shorthand.Mqtt
       return await Task.Run(async () =>
       {
         _context = context;
-        _context.Configuration.LoadConfiguration();
 
         this.FormClosing += (object sender, FormClosingEventArgs e) =>
         {

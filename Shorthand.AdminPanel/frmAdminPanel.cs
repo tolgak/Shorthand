@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace Shorthand.AdminPanel
 {
-  [Export(typeof(IPluginMarker))]
+  [Export(typeof(IAsyncPlugin))]
   public partial class frmAdminPanel : Form, IAsyncPlugin
   {
     private IPluginContext _context;
@@ -29,9 +29,7 @@ namespace Shorthand.AdminPanel
     {
       return await Task.Run(async () =>
       {
-
         _context = context;
-        _context.Configuration.LoadConfiguration();
 
         this.FormClosing += (object sender, FormClosingEventArgs e) =>
         {
@@ -51,15 +49,11 @@ namespace Shorthand.AdminPanel
     }
     private async Task<bool> InitializeUI()
     {
-
       return await Task.Run(() =>
       {
         txtUserName.Text = UserPrincipal.Current.SamAccountName;
         return true;
       });
-
-
-
     }
     public async void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
     {
@@ -213,36 +207,6 @@ namespace Shorthand.AdminPanel
         throw;
       }
     }
-
-
-    //public void Initialize(IPluginContext context)
-    //{
-    //  _context = context;
-    //  this.MdiParent = _context.Host;
-    //  _context.Configuration.LoadConfiguration();
-
-    //  var strips = _context.Host.MainMenuStrip.Items.Find("mnuTools", true);
-    //  if (strips.Length == 0)
-    //    return;
-
-    //  var subItem = new ToolStripMenuItem(this.Text);
-    //  if (this.Icon != null)
-    //    subItem.Image = this.Icon.ToBitmap();
-    //  (strips[0] as ToolStripMenuItem).DropDownItems.Add(subItem);
-    //  subItem.Click += (object sender, EventArgs e) => { this.Show(); };
-
-    //  if (_context.Host is IPluginHost host)
-    //    host.onSettingsChanged += this.OnSettingsChangedEventHandler;
-
-    //  this.FormClosing += (object sender, FormClosingEventArgs e) =>
-    //  {
-    //    e.Cancel = true;
-    //    this.Hide();
-    //  };
-
-    //  this.InitializePlugin();
-    //  this.InitializeUI();
-    //}
 
 
 

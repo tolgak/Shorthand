@@ -7,6 +7,5 @@ namespace Shorthand.Common
   public interface IPluginHost
   {
     event Action<object, ConfigEventArgs> onSettingsChanged;
-    //void Register(ToolStripMenuItem subItem);
   }
 }

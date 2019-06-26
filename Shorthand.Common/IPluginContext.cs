@@ -11,7 +11,7 @@ namespace Shorthand.Common
 {
   public interface IPluginContext
   {
-    Form Host { get; set; }
+    //Form Host { get; set; }
     ConfigContent Configuration { get; set; }
   }
 }

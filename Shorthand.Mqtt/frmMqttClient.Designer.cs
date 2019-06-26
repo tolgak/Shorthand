@@ -32,6 +32,7 @@
       this.txtLog = new System.Windows.Forms.TextBox();
       this.panel1 = new System.Windows.Forms.Panel();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.btnDisconnect = new System.Windows.Forms.Button();
       this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
@@ -49,7 +50,6 @@
       this.textBox3 = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.textBox2 = new System.Windows.Forms.TextBox();
-      this.btnDisconnect = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -98,6 +98,16 @@
       this.groupBox3.TabIndex = 0;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Connect";
+      // 
+      // btnDisconnect
+      // 
+      this.btnDisconnect.Location = new System.Drawing.Point(316, 131);
+      this.btnDisconnect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+      this.btnDisconnect.Name = "btnDisconnect";
+      this.btnDisconnect.Size = new System.Drawing.Size(87, 30);
+      this.btnDisconnect.TabIndex = 27;
+      this.btnDisconnect.Text = "Disconnect";
+      this.btnDisconnect.UseVisualStyleBackColor = true;
       // 
       // maskedTextBox1
       // 
@@ -263,16 +273,6 @@
       this.textBox2.Name = "textBox2";
       this.textBox2.Size = new System.Drawing.Size(396, 25);
       this.textBox2.TabIndex = 24;
-      // 
-      // btnDisconnect
-      // 
-      this.btnDisconnect.Location = new System.Drawing.Point(316, 131);
-      this.btnDisconnect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-      this.btnDisconnect.Name = "btnDisconnect";
-      this.btnDisconnect.Size = new System.Drawing.Size(87, 30);
-      this.btnDisconnect.TabIndex = 27;
-      this.btnDisconnect.Text = "Disconnect";
-      this.btnDisconnect.UseVisualStyleBackColor = true;
       // 
       // frmMqttClient
       // 

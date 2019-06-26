@@ -15,7 +15,7 @@ using PragmaTouchUtils;
 namespace Shorthand
 {
 
-  [Export(typeof(IPluginMarker))]
+  [Export(typeof(IAsyncPlugin))]
   public partial class frmDataDump : Form, IAsyncPlugin
   {
 
@@ -26,54 +26,12 @@ namespace Shorthand
       InitializeComponent();      
     }
 
-    //public Form Initialize(IPluginContext context)
-    //{
-    //  _context = context;
-
-    //  //this.MdiParent = _context.Host;
-    //  //var mnuTools = _context.Host.MainMenuStrip.Items.Find("mnuTools", true).FirstOrDefault();
-    //  //if (mnuTools == null)
-    //  //  return;
-
-    //  //var subItem = new ToolStripMenuItem(this.Text);
-    //  //if (this.Icon != null)
-    //  //  subItem.Image = this.Icon.ToBitmap();
-    //  //(mnuTools as ToolStripMenuItem).DropDownItems.Add(subItem);
-    //  //subItem.Click += (object sender, EventArgs e) => { this.Show(); };
-
-    //  this.FormClosing += (object sender, FormClosingEventArgs e) => { e.Cancel = true; this.Hide(); };
-
-    //  this.InitializePlugin();
-    //  this.InitializeUI();
-
-    //  return this;
-    //}
-    //private void InitializePlugin()
-    //{
-
-    //}
-    //private void InitializeUI()
-    //{
-    //  txtConnection.Text = this.GetDefaultConnectionString();
-    //  dlgLoad.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-    //}
-    //public void OnSettingsChangedEventHandler(object sender, ConfigEventArgs e)
-    //{
-    //  var shouldRefresh = e.ChangedOptions.Contains("FieldSelectOptions");
-    //  if (!shouldRefresh)
-    //    return;
-
-    //  this.InitializePlugin();
-    //  this.InitializeUI();
-    //}
-
 
     public async Task<Form> InitializeAsync(IPluginContext context)
     {
       return await Task.Run(async () =>
       {
         _context = context;
-        _context.Configuration.LoadConfiguration();
 
         this.FormClosing += (object sender, FormClosingEventArgs e) =>
         {

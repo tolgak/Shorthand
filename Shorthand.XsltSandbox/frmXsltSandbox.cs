@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Shorthand
 {
-  [Export(typeof(IPluginMarker))]
+  [Export(typeof(IAsyncPlugin))]
   public partial class frmXsltSandbox : Form, IAsyncPlugin
   {
     private IPluginContext _context;
@@ -28,7 +28,6 @@ namespace Shorthand
       return await Task.Run(async () =>
       {
         _context = context;
-        _context.Configuration.LoadConfiguration();
 
         this.FormClosing += (object sender, FormClosingEventArgs e) =>
         {
