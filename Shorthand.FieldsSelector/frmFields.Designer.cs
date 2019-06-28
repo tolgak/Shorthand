@@ -60,7 +60,7 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
       this.panel1.Location = new System.Drawing.Point(2, 3);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(310, 582);
+      this.panel1.Size = new System.Drawing.Size(310, 630);
       this.panel1.TabIndex = 7;
       // 
       // tvFieldList
@@ -70,7 +70,7 @@
       this.tvFieldList.Location = new System.Drawing.Point(0, 0);
       this.tvFieldList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.tvFieldList.Name = "tvFieldList";
-      this.tvFieldList.Size = new System.Drawing.Size(308, 556);
+      this.tvFieldList.Size = new System.Drawing.Size(308, 604);
       this.tvFieldList.StateImageList = this.imgTreeView;
       this.tvFieldList.TabIndex = 1;
       this.tvFieldList.DoubleClick += new System.EventHandler(this.tvFieldList_DoubleClick);
@@ -86,7 +86,7 @@
       // 
       this.lblStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-      this.lblStatus.Location = new System.Drawing.Point(0, 556);
+      this.lblStatus.Location = new System.Drawing.Point(0, 604);
       this.lblStatus.Name = "lblStatus";
       this.lblStatus.Size = new System.Drawing.Size(308, 24);
       this.lblStatus.TabIndex = 3;
@@ -99,7 +99,7 @@
       this.tabControl1.Location = new System.Drawing.Point(312, 143);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(619, 442);
+      this.tabControl1.Size = new System.Drawing.Size(570, 490);
       this.tabControl1.TabIndex = 10;
       // 
       // tabPage1
@@ -108,7 +108,7 @@
       this.tabPage1.Location = new System.Drawing.Point(4, 26);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(5);
-      this.tabPage1.Size = new System.Drawing.Size(611, 412);
+      this.tabPage1.Size = new System.Drawing.Size(562, 460);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "script";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -123,7 +123,7 @@
       this.txtLog.Multiline = true;
       this.txtLog.Name = "txtLog";
       this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtLog.Size = new System.Drawing.Size(601, 402);
+      this.txtLog.Size = new System.Drawing.Size(552, 450);
       this.txtLog.TabIndex = 11;
       // 
       // tabPage2
@@ -160,7 +160,7 @@
       this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
       this.panel2.Location = new System.Drawing.Point(312, 3);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(619, 140);
+      this.panel2.Size = new System.Drawing.Size(570, 140);
       this.panel2.TabIndex = 11;
       // 
       // btnTraverse
@@ -204,7 +204,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(933, 588);
+      this.ClientSize = new System.Drawing.Size(884, 636);
       this.Controls.Add(this.tabControl1);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);

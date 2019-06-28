@@ -67,7 +67,7 @@
       this.panel1.Location = new System.Drawing.Point(2, 3);
       this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(680, 152);
+      this.panel1.Size = new System.Drawing.Size(880, 152);
       this.panel1.TabIndex = 1;
       // 
       // label1
@@ -178,7 +178,7 @@
       this.txtEditor.Multiline = true;
       this.txtEditor.Name = "txtEditor";
       this.txtEditor.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtEditor.Size = new System.Drawing.Size(680, 257);
+      this.txtEditor.Size = new System.Drawing.Size(880, 432);
       this.txtEditor.TabIndex = 2;
       // 
       // dlgLoad
@@ -192,10 +192,10 @@
       this.panel2.Controls.Add(this.pbRecordCounter);
       this.panel2.Controls.Add(this.btnSave);
       this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel2.Location = new System.Drawing.Point(2, 412);
+      this.panel2.Location = new System.Drawing.Point(2, 587);
       this.panel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(680, 46);
+      this.panel2.Size = new System.Drawing.Size(880, 46);
       this.panel2.TabIndex = 4;
       // 
       // pbRecordsetCounter
@@ -219,7 +219,7 @@
       // btnSave
       // 
       this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnSave.Location = new System.Drawing.Point(589, 8);
+      this.btnSave.Location = new System.Drawing.Point(789, 8);
       this.btnSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.btnSave.Name = "btnSave";
       this.btnSave.Size = new System.Drawing.Size(87, 30);
@@ -240,7 +240,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(684, 461);
+      this.ClientSize = new System.Drawing.Size(884, 636);
       this.Controls.Add(this.txtEditor);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);
