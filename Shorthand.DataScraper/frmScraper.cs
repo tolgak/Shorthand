@@ -17,7 +17,7 @@ namespace Shorthand.DataScraper
   public partial class frmScraper : Form, IAsyncPlugin
   {
     private IPluginContext _context;
-    private IWebDataProvider _webDataProvider;
+    private IWebDataProvider _bloomberg;
 
     public frmScraper()
     {
@@ -47,12 +47,7 @@ namespace Shorthand.DataScraper
     {
       return await Task.Run(() =>
       {
-        _webDataProvider = new BloombergDataProvider
-        {
-          BaseUrl = "https://www.bloomberght.com/borsa/hisseler",
-          RequiresAuthentication = false
-        };
-
+        _bloomberg = new BloombergDataProvider();
         return true;
       });
     }
@@ -91,14 +86,14 @@ namespace Shorthand.DataScraper
         //Task.WhenAll(tasks)
         //    .ContinueWith(t => equities.OrderBy(x => x.Name).ToList().ForEach(x => txtLog.Log(x.Name)));
         
-        Parallel.For(1, 30, i => equities.AddRange(_webDataProvider.GetData(i)));
-        foreach (var item in equities.OrderBy(x => x.Name).ToArray())
+        Parallel.For(1, 30, i => equities.AddRange(_bloomberg.GetData(i)));
+        var eq = equities.OrderBy(x => x.Name).ToArray();
+        foreach (var item in eq)
         {
           txtLog.Log(item.Name);
           item.DateOfValue = Convert.ToDateTime("2019-06-28");
-          await this.SaveOrUpdate(item);
+          //await this.SaveOrUpdate(item);
         }
-        //equities.OrderBy(x => x.Name).ToList().ForEach(x => txtLog.Log(x.Name));
       }
       catch (Exception ex)
       {

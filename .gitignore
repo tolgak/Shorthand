@@ -41,6 +41,7 @@ $RECYCLE.BIN/
 *.orig
 **/bin/Debug/
 **/bin/Release/
+.vs/
 packages/
 
 # =========================
