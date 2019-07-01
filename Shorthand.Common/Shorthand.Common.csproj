@@ -55,6 +55,7 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
@@ -78,6 +79,7 @@
     <Compile Include="SortableList.cs" />
     <Compile Include="SqlDbType2DbType.cs" />
     <Compile Include="SqlParameterHelper.cs" />
+    <Compile Include="Sql\SqlUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PragmaTouchUtils\PragmaTouchUtils.csproj">

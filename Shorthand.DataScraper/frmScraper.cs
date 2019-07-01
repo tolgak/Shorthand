@@ -1,8 +1,4 @@
-﻿
-using PragmaTouchUtils;
-using Shorthand.Common;
-using Shorthand.DataScraper.WebDataProvider;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
@@ -11,6 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using PragmaTouchUtils;
+using Shorthand.Common;
+using Shorthand.Common.Sql;
+using Shorthand.DataScraper.WebDataProvider;
+
 namespace Shorthand.DataScraper
 {
   [Export(typeof(IAsyncPlugin))]
@@ -18,6 +19,8 @@ namespace Shorthand.DataScraper
   {
     private IPluginContext _context;
     private IWebDataProvider _bloomberg;
+
+    private const string Equity_SaveOrUpdate = @"execute spEquity_SaveOrUpdate @Name, @Last, @Yesterday, @Percentage, @High, @Low, @VolumeInLots, @VolumeInTL, @DateOfValue";
 
     public frmScraper()
     {
@@ -77,7 +80,7 @@ namespace Shorthand.DataScraper
       txtLog.Log("getting data");
       this.Cursor = Cursors.WaitCursor;
       var equities = new List<Equity>();
-      
+
       try
       {
         //var tasks = Enumerable.Range(1, 27)
@@ -110,8 +113,9 @@ namespace Shorthand.DataScraper
 
     private async Task<int> SaveOrUpdate(object entity)
     {
-      var connectionString = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=StockExchange;Integrated Security=True;MultipleActiveResultSets=True;";
-      var commandText = "execute spEquity_SaveOrUpdate @Name, @Last, @Yesterday, @Percentage, @High, @Low, @VolumeInLots, @VolumeInTL, @DateOfValue"; 
+      //@"Data Source=localhost\SQLEXPRESS;Initial Catalog=StockExchange;Integrated Security=True;MultipleActiveResultSets=True;";
+      var connectionString = SqlUtility.GetConnectionString("home");
+      var commandText = frmScraper.Equity_SaveOrUpdate;
 
       return await this.ExecuteCommand(connectionString, commandText, entity);      
     }

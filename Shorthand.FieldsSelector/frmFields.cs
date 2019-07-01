@@ -1,5 +1,6 @@
 ﻿using PragmaTouchUtils;
 using Shorthand.Common;
+using Shorthand.Common.Sql;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -49,7 +50,7 @@ namespace Shorthand.FieldSelector
     {
       return await Task.Run(() =>
       {
-        txtConnection.Text = this.GetDefaultConnectionString();
+        txtConnection.Text = SqlUtility.GetConnectionString("pandoradev");
         return true;
       });
     }
@@ -64,22 +65,22 @@ namespace Shorthand.FieldSelector
     }
 
 
-    private string GetDefaultConnectionString()
-    {
-      var result = string.Empty;
+    //private string GetDefaultConnectionString()
+    //{
+    //  var result = string.Empty;
 
-      foreach (var item in ConfigurationManager.ConnectionStrings)
-      {
-        var x = (item as ConnectionStringSettings).ElementInformation.Properties["name"];
-        if (x.Value.ToString() != "Default")
-          continue;
+    //  foreach (var item in ConfigurationManager.ConnectionStrings)
+    //  {
+    //    var x = (item as ConnectionStringSettings).ElementInformation.Properties["name"];
+    //    if (x.Value.ToString() != "pandoradev")
+    //      continue;
 
-        var y = (item as ConnectionStringSettings).ElementInformation.Properties["connectionString"];
-        result = y.Value.ToString();
-      }
+    //    var y = (item as ConnectionStringSettings).ElementInformation.Properties["connectionString"];
+    //    result = y.Value.ToString();
+    //  }
 
-      return result;
-    }
+    //  return result;
+    //}
 
     private Task<DataSet> BuildDataSet(string connectionString, string commandText)
     {
