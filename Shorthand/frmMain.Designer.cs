@@ -60,7 +60,7 @@
       this.mnuMain.Location = new System.Drawing.Point(2, 2);
       this.mnuMain.MdiWindowListItem = this.mnuWindow;
       this.mnuMain.Name = "mnuMain";
-      this.mnuMain.Size = new System.Drawing.Size(1004, 25);
+      this.mnuMain.Size = new System.Drawing.Size(780, 25);
       this.mnuMain.TabIndex = 12;
       this.mnuMain.Text = "Main menu";
       // 
@@ -124,9 +124,9 @@
       // 
       this.appStat.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statMsg});
-      this.appStat.Location = new System.Drawing.Point(2, 705);
+      this.appStat.Location = new System.Drawing.Point(2, 537);
       this.appStat.Name = "appStat";
-      this.appStat.Size = new System.Drawing.Size(1004, 22);
+      this.appStat.Size = new System.Drawing.Size(780, 22);
       this.appStat.TabIndex = 14;
       this.appStat.Text = "status";
       // 
@@ -142,7 +142,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-      this.ClientSize = new System.Drawing.Size(1008, 729);
+      this.ClientSize = new System.Drawing.Size(784, 561);
       this.Controls.Add(this.appStat);
       this.Controls.Add(this.mnuMain);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));

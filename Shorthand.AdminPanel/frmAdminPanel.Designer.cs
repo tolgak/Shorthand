@@ -74,11 +74,11 @@
       this.txtLog.BackColor = System.Drawing.Color.Black;
       this.txtLog.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.txtLog.ForeColor = System.Drawing.Color.Lime;
-      this.txtLog.Location = new System.Drawing.Point(2, 316);
+      this.txtLog.Location = new System.Drawing.Point(2, 292);
       this.txtLog.Multiline = true;
       this.txtLog.Name = "txtLog";
       this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.txtLog.Size = new System.Drawing.Size(880, 318);
+      this.txtLog.Size = new System.Drawing.Size(862, 318);
       this.txtLog.TabIndex = 23;
       this.txtLog.WordWrap = false;
       // 
@@ -193,7 +193,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(884, 636);
+      this.ClientSize = new System.Drawing.Size(866, 612);
       this.Controls.Add(this.btnKill);
       this.Controls.Add(this.btnRunningProcess);
       this.Controls.Add(this.btnCheckFolder);
