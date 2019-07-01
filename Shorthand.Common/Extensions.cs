@@ -53,7 +53,10 @@ namespace Shorthand
 
     public static string ToTidyString(this string str)
     {
-      string x = str.Replace("\n", string.Empty);
+      if (string.IsNullOrWhiteSpace(str))
+        return string.Empty;
+
+      var x = str.Replace("\n", string.Empty);
       return Regex.Replace(x, "\\s+", " ").Trim();
     }
 

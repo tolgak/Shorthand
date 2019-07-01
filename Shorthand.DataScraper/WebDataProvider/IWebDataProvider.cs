@@ -18,16 +18,8 @@ namespace Shorthand.DataScraper.WebDataProvider
     Equity[] GetData(int pageIndex = 1);
     Task<Equity[]> GetDataAsync(int pageIndex = 1);
 
-    //boLodge[] GetLodgeList();
-    //boLodge GetLodgeByNo(int lodgeNo);
-
-    //boBrother GetLoggedInBrother();
-    //boBrother GetBrotherByUserProfileId(int userProfileId);
-    //string GetBrotherInfoHtml(int userProfileId);
-    //boBrother[] GetMatriculeByLodgeNo(int lodgeNo);
-
-    //boOfficer[] GetEnvarByLodgeNo(int lodgeNo);
-    //boOfficer[] GetEnvarByLodgeNo(int lodgeNo, string year);
+    Equity[] GetIndex();
 
   }
+
 }

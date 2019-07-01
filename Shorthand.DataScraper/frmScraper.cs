@@ -20,7 +20,7 @@ namespace Shorthand.DataScraper
     private IPluginContext _context;
     private IWebDataProvider _bloomberg;
 
-    private const string Equity_SaveOrUpdate = @"execute spEquity_SaveOrUpdate @Name, @Last, @Yesterday, @Percentage, @High, @Low, @VolumeInLots, @VolumeInTL, @DateOfValue";
+    private const string Equity_SaveOrUpdate = @"execute spEquity_SaveOrUpdate @Name, @Last, @Yesterday, @Percentage, @High, @Low, @VolumeInLots, @VolumeInTL, @DateOfValue, @Type";
 
     public frmScraper()
     {
@@ -59,7 +59,6 @@ namespace Shorthand.DataScraper
     {
       return await Task.Run(() =>
       {
-        //txtUserName.Text = UserPrincipal.Current.SamAccountName;
         return true;
       });
     }
@@ -90,12 +89,15 @@ namespace Shorthand.DataScraper
         //    .ContinueWith(t => equities.OrderBy(x => x.Name).ToList().ForEach(x => txtLog.Log(x.Name)));
         
         Parallel.For(1, 30, i => equities.AddRange(_bloomberg.GetData(i)));
+        equities.AddRange(_bloomberg.GetIndex());
+
         var eq = equities.OrderBy(x => x.Name).ToArray();
         foreach (var item in eq)
         {
           txtLog.Log(item.Name);
-          item.DateOfValue = Convert.ToDateTime("2019-06-28");
-          //await this.SaveOrUpdate(item);
+          item.DateOfValue = Convert.ToDateTime("2019-07-01 00:00:00").Date; // DateTime.Now.Date;
+
+          await this.SaveOrUpdate(item);
         }
       }
       catch (Exception ex)

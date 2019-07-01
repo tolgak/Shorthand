@@ -1,4 +1,5 @@
-﻿if object_id('Equity') is not null
+﻿-- 30.06.2019
+if object_id('Equity') is not null
   drop table dbo.Equity
 go
 create table Equity (
@@ -17,4 +18,7 @@ create table Equity (
 )
 go
 create nonclustered index [Equity_Name_DateOfValue] ON [dbo].[Equity](Name asc, DateOfValue asc)
+go
+-- 01.07.2019
+alter table Equity add Type int
 go
