@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace Shorthand
+namespace Shorthand.Common.Sql
 {
   /// <summary>
   /// Use for an alternative param name other than the propery name
@@ -90,7 +90,7 @@ namespace Shorthand
           pinfo.Name = p.Property.Name.Replace("@", "");
 
         pinfo.Value = p.Property.GetValue(obj) ?? DBNull.Value;
-        var sqlParam = new SqlParameter(pinfo.Name, Shorthand.TypeConvertor.ToSqlDbType(p.Property.PropertyType))
+        var sqlParam = new SqlParameter(pinfo.Name, TypeConvertor.ToSqlDbType(p.Property.PropertyType))
         {
           Value = pinfo.Value,
         };

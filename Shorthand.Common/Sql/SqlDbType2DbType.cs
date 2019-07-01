@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Data;
 
-namespace Shorthand
+namespace Shorthand.Common.Sql
 {
   /// <summary>
   /// Convert a base data type to another base data type
