@@ -28,7 +28,7 @@ namespace Shorthand
 
     private GitLab _gitLab;
     private GitLabOptions _gitLabOptions;
-
+    
 
     public frmDeployment()
     {
@@ -59,10 +59,10 @@ namespace Shorthand
          _deployOptions = ConfigContent.Current.GetConfigContentItem("DeploymentOptions") as DeploymentOptions;
 
          _jira = _jira ?? new Jira(x => this.Dump(x));
-         _jiraOptions = ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
+         _jiraOptions = _jira.Options; // ConfigContent.Current.GetConfigContentItem("JiraOptions") as JiraOptions;
 
          _gitLab = _gitLab ?? new GitLab(x => this.Dump(x));
-         _gitLabOptions = ConfigContent.Current.GetConfigContentItem("GitLabOptions") as GitLabOptions;
+         _gitLabOptions = _gitLab.Options; // ConfigContent.Current.GetConfigContentItem("GitLabOptions") as GitLabOptions;
 
          return true;
        });
@@ -79,11 +79,11 @@ namespace Shorthand
       lblDPLY_Status.Text = string.Empty;
 
       var projects = await _gitLab.GetProjectsAsync(true);
-      var items = projects.OrderBy(x => x.name).Select(x => new { Text = x.name, Value = x.id }).ToArray();
+      var items = projects?.OrderBy(x => x.name).Select(x => new { Text = x.name, Value = x.id }).ToArray();
       cmbGitProjectName.DisplayMember = "Text";
       cmbGitProjectName.ValueMember = "Value";
       cmbGitProjectName.DataSource = items;
-      cmbGitProjectName.SelectedItem = items.FirstOrDefault(x => x.Text == _gitLabOptions.DefaultGitProjectName);
+      cmbGitProjectName.SelectedItem = items?.FirstOrDefault(x => x.Text == _gitLabOptions.DefaultGitProjectName);
 
       lblMergeRequestLink.LinkClicked += (x, y) => { Process.Start(y.Link.LinkData as string); };
 
@@ -199,7 +199,7 @@ namespace Shorthand
 
       this.ClearBaseData();
 
-      var projectId = (int)cmbGitProjectName.SelectedValue;
+      var projectId = (int) (cmbGitProjectName.SelectedValue ?? 0);
       var baseData = await this.GetBaseData(txtInternal.Text, projectId);
       if (string.IsNullOrEmpty(baseData.RequestIssue?.key))
         this.Dump("WARNING: Can not locate request issue");
@@ -244,17 +244,20 @@ namespace Shorthand
         baseData.UatIssues = linksOfReqIssue?.Where(x => x.key.Contains(_jiraOptions.UAT_ProjectKey)).ToArray();
       }
 
-      // GitLab      
-      var project = await _gitLab.GetProjectByIdAsync(projectId);
-      var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, issueKey);
-      var mergeReqNo = mergeReq?.iid ?? 0;
-      var mergeReqState = mergeReq?.state ?? "unknown";
+      // GitLab
+      if (projectId > 0)
+      {
+        var project = await _gitLab.GetProjectByIdAsync(projectId);
+        var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, issueKey);
+        var mergeReqNo = mergeReq?.iid ?? 0;
+        var mergeReqState = mergeReq?.state ?? "unknown";
 
-      baseData.GitProjectName = project.name;
-      baseData.GitProjectId = project.id;
-      baseData.GitProjectWebUrl = project.web_url;
-      baseData.GitMergeRequestNo = mergeReqNo;
-      baseData.GitMergeRequestState = mergeReqState;
+        baseData.GitProjectName = project.name;
+        baseData.GitProjectId = project.id;
+        baseData.GitProjectWebUrl = project.web_url;
+        baseData.GitMergeRequestNo = mergeReqNo;
+        baseData.GitMergeRequestState = mergeReqState;
+      }
 
       return baseData;
     }

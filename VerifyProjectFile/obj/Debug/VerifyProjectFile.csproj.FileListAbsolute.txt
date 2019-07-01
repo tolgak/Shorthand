@@ -1,0 +1,6 @@
+C:\_development\GitHub\Shorthand\VerifyProjectFile\bin\Debug\VerifyProjectFile.exe.config
+C:\_development\GitHub\Shorthand\VerifyProjectFile\bin\Debug\VerifyProjectFile.exe
+C:\_development\GitHub\Shorthand\VerifyProjectFile\bin\Debug\VerifyProjectFile.pdb
+C:\_development\GitHub\Shorthand\VerifyProjectFile\obj\Debug\VerifyProjectFile.csproj.CoreCompileInputs.cache
+C:\_development\GitHub\Shorthand\VerifyProjectFile\obj\Debug\VerifyProjectFile.exe
+C:\_development\GitHub\Shorthand\VerifyProjectFile\obj\Debug\VerifyProjectFile.pdb

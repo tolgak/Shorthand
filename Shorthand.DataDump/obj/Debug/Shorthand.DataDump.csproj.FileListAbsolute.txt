@@ -1,0 +1,17 @@
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\Shorthand.DataDump.dll
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\Shorthand.DataDump.pdb
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\PragmaTouchUtils.dll
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\Shorthand.Common.dll
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\DocumentFormat.OpenXml.dll
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\Newtonsoft.Json.dll
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\PragmaTouchUtils.pdb
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\Shorthand.Common.pdb
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\DocumentFormat.OpenXml.xml
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\bin\Debug\Newtonsoft.Json.xml
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.DataDump.csprojAssemblyReference.cache
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.frmDataDump.resources
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.DataDump.csproj.GenerateResource.cache
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.DataDump.csproj.CoreCompileInputs.cache
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.DataDump.csproj.CopyComplete
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.DataDump.dll
+C:\_development\GitHub\Shorthand\Shorthand.DataDump\obj\Debug\Shorthand.DataDump.pdb
