@@ -76,6 +76,8 @@
     <Compile Include="PluginContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableList.cs" />
+    <Compile Include="SqlDbType2DbType.cs" />
+    <Compile Include="SqlParameterHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PragmaTouchUtils\PragmaTouchUtils.csproj">

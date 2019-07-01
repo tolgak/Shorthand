@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using PragmaTouchUtils;
-using System.Net;
-using System.IO;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Shorthand.GitLabEntity
@@ -15,6 +15,7 @@ namespace Shorthand.GitLabEntity
   {
     private Action<string> _logger;
     private GitLabOptions _options;
+    public GitLabOptions Options => _options;
 
     public GitLab()
     {
@@ -86,9 +87,9 @@ namespace Shorthand.GitLabEntity
 
 
     public MergeRequestResponse GetMergeRequestByInternalIssueKey(int projectId, string internalIssueKey)
-    {            
+    {
       var mergeRequests = this.GetMergeRequests(projectId);
-      return mergeRequests.FirstOrDefault(x => x.source_branch.Contains(internalIssueKey) );
+      return mergeRequests.FirstOrDefault(x => x.source_branch.Contains(internalIssueKey));
     }
 
     public async Task<MergeRequestResponse> GetMergeRequestByInternalIssueKeyAsync(int projectId, string internalIssueKey)
@@ -131,7 +132,7 @@ namespace Shorthand.GitLabEntity
       if (data != null)
         using (var writer = new StreamWriter(request.GetRequestStream()))
           writer.Write(data);
-      
+
       request.Headers.Add("PRIVATE-TOKEN", _options.PrivateToken);
 
       HttpWebResponse response = null;

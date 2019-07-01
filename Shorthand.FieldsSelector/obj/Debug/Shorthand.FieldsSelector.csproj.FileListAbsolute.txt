@@ -1,0 +1,16 @@
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\Shorthand.FieldsSelector.dll
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\Shorthand.FieldsSelector.pdb
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\PragmaTouchUtils.dll
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\Shorthand.Common.dll
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\DocumentFormat.OpenXml.dll
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\Newtonsoft.Json.dll
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\PragmaTouchUtils.pdb
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\Shorthand.Common.pdb
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\DocumentFormat.OpenXml.xml
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\bin\Debug\Newtonsoft.Json.xml
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\obj\Debug\Shorthand.FieldSelector.frmFields.resources
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\obj\Debug\Shorthand.FieldsSelector.csproj.GenerateResource.cache
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\obj\Debug\Shorthand.FieldsSelector.csproj.CoreCompileInputs.cache
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\obj\Debug\Shorthand.FieldsSelector.csproj.CopyComplete
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\obj\Debug\Shorthand.FieldsSelector.dll
+C:\_development\GitHub\Shorthand\Shorthand.FieldsSelector\obj\Debug\Shorthand.FieldsSelector.pdb

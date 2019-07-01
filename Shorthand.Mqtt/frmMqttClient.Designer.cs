@@ -67,7 +67,7 @@
       this.txtLog.Multiline = true;
       this.txtLog.Name = "txtLog";
       this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtLog.Size = new System.Drawing.Size(939, 424);
+      this.txtLog.Size = new System.Drawing.Size(872, 389);
       this.txtLog.TabIndex = 1;
       // 
       // panel1
@@ -79,7 +79,7 @@
       this.panel1.Location = new System.Drawing.Point(6, 7);
       this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(939, 208);
+      this.panel1.Size = new System.Drawing.Size(872, 208);
       this.panel1.TabIndex = 0;
       // 
       // groupBox3
@@ -92,16 +92,16 @@
       this.groupBox3.Controls.Add(this.label2);
       this.groupBox3.Controls.Add(this.txtHost);
       this.groupBox3.Controls.Add(this.btnConnect);
-      this.groupBox3.Location = new System.Drawing.Point(15, 13);
+      this.groupBox3.Location = new System.Drawing.Point(9, 13);
       this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(413, 179);
+      this.groupBox3.Size = new System.Drawing.Size(376, 179);
       this.groupBox3.TabIndex = 0;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Connect";
       // 
       // btnDisconnect
       // 
-      this.btnDisconnect.Location = new System.Drawing.Point(316, 131);
+      this.btnDisconnect.Location = new System.Drawing.Point(271, 131);
       this.btnDisconnect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.btnDisconnect.Name = "btnDisconnect";
       this.btnDisconnect.Size = new System.Drawing.Size(87, 30);
@@ -114,7 +114,7 @@
       this.maskedTextBox1.Location = new System.Drawing.Point(79, 97);
       this.maskedTextBox1.Name = "maskedTextBox1";
       this.maskedTextBox1.PasswordChar = '*';
-      this.maskedTextBox1.Size = new System.Drawing.Size(194, 25);
+      this.maskedTextBox1.Size = new System.Drawing.Size(156, 25);
       this.maskedTextBox1.TabIndex = 26;
       // 
       // label3
@@ -142,7 +142,7 @@
       this.textBox1.Location = new System.Drawing.Point(79, 60);
       this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.textBox1.Name = "textBox1";
-      this.textBox1.Size = new System.Drawing.Size(324, 25);
+      this.textBox1.Size = new System.Drawing.Size(279, 25);
       this.textBox1.TabIndex = 23;
       // 
       // label2
@@ -160,12 +160,12 @@
       this.txtHost.Location = new System.Drawing.Point(79, 27);
       this.txtHost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.txtHost.Name = "txtHost";
-      this.txtHost.Size = new System.Drawing.Size(324, 25);
+      this.txtHost.Size = new System.Drawing.Size(279, 25);
       this.txtHost.TabIndex = 20;
       // 
       // btnConnect
       // 
-      this.btnConnect.Location = new System.Drawing.Point(316, 93);
+      this.btnConnect.Location = new System.Drawing.Point(271, 93);
       this.btnConnect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.btnConnect.Name = "btnConnect";
       this.btnConnect.Size = new System.Drawing.Size(87, 30);
@@ -179,16 +179,16 @@
       this.groupBox2.Controls.Add(this.btnSubscribe);
       this.groupBox2.Controls.Add(this.label7);
       this.groupBox2.Controls.Add(this.textBox5);
-      this.groupBox2.Location = new System.Drawing.Point(434, 129);
+      this.groupBox2.Location = new System.Drawing.Point(397, 129);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(485, 63);
+      this.groupBox2.Size = new System.Drawing.Size(455, 63);
       this.groupBox2.TabIndex = 2;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Subscribe";
       // 
       // btnSubscribe
       // 
-      this.btnSubscribe.Location = new System.Drawing.Point(382, 20);
+      this.btnSubscribe.Location = new System.Drawing.Point(357, 20);
       this.btnSubscribe.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.btnSubscribe.Name = "btnSubscribe";
       this.btnSubscribe.Size = new System.Drawing.Size(87, 30);
@@ -211,7 +211,7 @@
       this.textBox5.Location = new System.Drawing.Point(73, 24);
       this.textBox5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.textBox5.Name = "textBox5";
-      this.textBox5.Size = new System.Drawing.Size(303, 25);
+      this.textBox5.Size = new System.Drawing.Size(278, 25);
       this.textBox5.TabIndex = 24;
       // 
       // groupBox1
@@ -221,16 +221,16 @@
       this.groupBox1.Controls.Add(this.textBox3);
       this.groupBox1.Controls.Add(this.label4);
       this.groupBox1.Controls.Add(this.textBox2);
-      this.groupBox1.Location = new System.Drawing.Point(434, 13);
+      this.groupBox1.Location = new System.Drawing.Point(397, 13);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(485, 110);
+      this.groupBox1.Size = new System.Drawing.Size(455, 110);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Publish";
       // 
       // btnPublish
       // 
-      this.btnPublish.Location = new System.Drawing.Point(382, 59);
+      this.btnPublish.Location = new System.Drawing.Point(357, 60);
       this.btnPublish.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.btnPublish.Name = "btnPublish";
       this.btnPublish.Size = new System.Drawing.Size(87, 30);
@@ -271,14 +271,14 @@
       this.textBox2.Location = new System.Drawing.Point(73, 27);
       this.textBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.textBox2.Name = "textBox2";
-      this.textBox2.Size = new System.Drawing.Size(396, 25);
+      this.textBox2.Size = new System.Drawing.Size(371, 25);
       this.textBox2.TabIndex = 24;
       // 
       // frmMqttClient
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(951, 646);
+      this.ClientSize = new System.Drawing.Size(884, 611);
       this.Controls.Add(this.txtLog);
       this.Controls.Add(this.panel1);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F);

@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Shorthand
 {
@@ -19,16 +20,16 @@ namespace Shorthand
     public const string DELETE = "DELETE";
   }
 
-    public enum RestMethod
-    {
-        POST,
-        GET,
-        PUT,
-        DELETE
-    }
+  public enum RestMethod
+  {
+    POST,
+    GET,
+    PUT,
+    DELETE
+  }
 
-    public static class Extensions
-  {  
+  public static class Extensions
+  {
 
     public static StringBuilder AppendConditionally(this StringBuilder sb, bool predicate, string text)
     {
@@ -39,10 +40,10 @@ namespace Shorthand
 
     public static void InvokeIfRequired<T>(this T obj, InvokeIfRequiredDelegate<T> action) where T : ISynchronizeInvoke
     {
-      if (obj.InvokeRequired)      
-        obj.Invoke(action, new object[] { obj });      
-      else      
-        action(obj);      
+      if (obj.InvokeRequired)
+        obj.Invoke(action, new object[] { obj });
+      else
+        action(obj);
     }
 
     public static string AsJson(this object data)
@@ -50,6 +51,11 @@ namespace Shorthand
       return JsonConvert.SerializeObject(data);
     }
 
+    public static string ToTidyString(this string str)
+    {
+      string x = str.Replace("\n", string.Empty);
+      return Regex.Replace(x, "\\s+", " ").Trim();
+    }
 
     public static string GetMd5Hash(this object o)
     {
@@ -86,5 +92,6 @@ namespace Shorthand
     }
 
   }
+
 
 }

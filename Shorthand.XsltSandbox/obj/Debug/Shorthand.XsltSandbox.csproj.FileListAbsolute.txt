@@ -1,0 +1,17 @@
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\Shorthand.XsltSandbox.dll
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\Shorthand.XsltSandbox.pdb
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\PragmaTouchUtils.dll
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\Shorthand.Common.dll
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\DocumentFormat.OpenXml.dll
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\Newtonsoft.Json.dll
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\PragmaTouchUtils.pdb
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\Shorthand.Common.pdb
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\DocumentFormat.OpenXml.xml
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\bin\Debug\Newtonsoft.Json.xml
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.frmXsltSandbox.resources
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.XsltSandbox.csproj.GenerateResource.cache
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.XsltSandbox.csproj.CoreCompileInputs.cache
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.XsltSandbox.csproj.CopyComplete
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.XsltSandbox.dll
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.XsltSandbox.pdb
+C:\_development\GitHub\Shorthand\Shorthand.XsltSandbox\obj\Debug\Shorthand.XsltSandbox.csprojAssemblyReference.cache
