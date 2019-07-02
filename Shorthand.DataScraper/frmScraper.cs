@@ -95,7 +95,7 @@ namespace Shorthand.DataScraper
         foreach (var item in eq)
         {
           txtLog.Log(item.Name);
-          item.DateOfValue = Convert.ToDateTime("2019-07-01 00:00:00").Date; // DateTime.Now.Date;
+          item.DateOfValue = DateTime.Now.Date;
 
           await this.SaveOrUpdate(item);
         }
@@ -116,7 +116,7 @@ namespace Shorthand.DataScraper
     private async Task<int> SaveOrUpdate(object entity)
     {
       //@"Data Source=localhost\SQLEXPRESS;Initial Catalog=StockExchange;Integrated Security=True;MultipleActiveResultSets=True;";
-      var connectionString = SqlUtility.GetConnectionString("home");
+      var connectionString = SqlUtility.GetConnectionString("stockOffice");
       var commandText = frmScraper.Equity_SaveOrUpdate;
 
       return await this.ExecuteCommand(connectionString, commandText, entity);      

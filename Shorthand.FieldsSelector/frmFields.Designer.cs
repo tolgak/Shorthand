@@ -58,7 +58,7 @@
       this.panel1.Controls.Add(this.tvFieldList);
       this.panel1.Controls.Add(this.lblStatus);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-      this.panel1.Location = new System.Drawing.Point(2, 3);
+      this.panel1.Location = new System.Drawing.Point(3, 3);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(310, 605);
       this.panel1.TabIndex = 7;
@@ -96,10 +96,10 @@
       this.tabControl1.Controls.Add(this.tabPage1);
       this.tabControl1.Controls.Add(this.tabPage2);
       this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tabControl1.Location = new System.Drawing.Point(312, 143);
+      this.tabControl1.Location = new System.Drawing.Point(313, 143);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(570, 465);
+      this.tabControl1.Size = new System.Drawing.Size(568, 465);
       this.tabControl1.TabIndex = 10;
       // 
       // tabPage1
@@ -108,7 +108,7 @@
       this.tabPage1.Location = new System.Drawing.Point(4, 26);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(5);
-      this.tabPage1.Size = new System.Drawing.Size(562, 435);
+      this.tabPage1.Size = new System.Drawing.Size(560, 435);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "script";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -123,7 +123,7 @@
       this.txtLog.Multiline = true;
       this.txtLog.Name = "txtLog";
       this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtLog.Size = new System.Drawing.Size(552, 425);
+      this.txtLog.Size = new System.Drawing.Size(550, 425);
       this.txtLog.TabIndex = 11;
       // 
       // tabPage2
@@ -132,7 +132,7 @@
       this.tabPage2.Location = new System.Drawing.Point(4, 26);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(5);
-      this.tabPage2.Size = new System.Drawing.Size(611, 412);
+      this.tabPage2.Size = new System.Drawing.Size(562, 435);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "result";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -148,7 +148,7 @@
       this.grd.Location = new System.Drawing.Point(5, 5);
       this.grd.Name = "grd";
       this.grd.ShowEditingIcon = false;
-      this.grd.Size = new System.Drawing.Size(601, 402);
+      this.grd.Size = new System.Drawing.Size(552, 425);
       this.grd.TabIndex = 0;
       // 
       // panel2
@@ -158,9 +158,9 @@
       this.panel2.Controls.Add(this.lblConnection);
       this.panel2.Controls.Add(this.txtConnection);
       this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panel2.Location = new System.Drawing.Point(312, 3);
+      this.panel2.Location = new System.Drawing.Point(313, 3);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(570, 140);
+      this.panel2.Size = new System.Drawing.Size(568, 140);
       this.panel2.TabIndex = 11;
       // 
       // btnTraverse
@@ -212,7 +212,7 @@
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.Name = "frmFields";
-      this.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+      this.Padding = new System.Windows.Forms.Padding(3);
       this.Text = "Field Selector";
       this.panel1.ResumeLayout(false);
       this.tabControl1.ResumeLayout(false);

@@ -107,15 +107,5 @@ namespace Shorthand.Common.Sql
 
     }
 
-    //public static SqlParameter ToIntArraySqlParameter(this List<int> values, string paramName)
-    //{
-    //  var result = new SqlParameter();
-    //  result.ParameterName = paramName;
-    //  result.TypeName = "dbo.IntArray";
-    //  result.Value = values
-    //      .Select(v => new { Value = v })
-    //      .ToDataTable();
-    //  return result;
-    //}
   }
 }

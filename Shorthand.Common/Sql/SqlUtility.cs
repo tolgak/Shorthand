@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Shorthand.Common.Sql
 {
@@ -26,6 +28,34 @@ namespace Shorthand.Common.Sql
 
       return result;
     }
+
+    public static Task<DataSet> BuildDataSet(string connectionString, string commandText)
+    {
+      return Task.Run(() =>
+      {
+        DataSet dataSet = new DataSet("DataDump");
+        using (var connection = new SqlConnection(connectionString))
+        {
+          using (var command = connection.CreateCommand())
+          {
+            command.CommandType = CommandType.Text;
+            command.CommandText = commandText;
+
+            command.Connection.ConnectionString = connectionString;
+            command.Connection.Open();
+            using (var adapter = new SqlDataAdapter(command))
+            {
+              adapter.SelectCommand.CommandTimeout = 15000;
+              adapter.Fill(dataSet);
+            }
+
+            return dataSet;
+          }
+        }
+      }
+      );
+    }
+
 
   }
 }

@@ -1,16 +1,15 @@
-﻿using PragmaTouchUtils;
-using Shorthand.Common;
-using Shorthand.Common.Sql;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using PragmaTouchUtils;
+using Shorthand.Common;
+using Shorthand.Common.Sql;
 
 namespace Shorthand.FieldSelector
 {
@@ -65,51 +64,32 @@ namespace Shorthand.FieldSelector
     }
 
 
-    //private string GetDefaultConnectionString()
+    //private Task<DataSet> BuildDataSet(string connectionString, string commandText)
     //{
-    //  var result = string.Empty;
-
-    //  foreach (var item in ConfigurationManager.ConnectionStrings)
+    //  return Task.Run(() =>
     //  {
-    //    var x = (item as ConnectionStringSettings).ElementInformation.Properties["name"];
-    //    if (x.Value.ToString() != "pandoradev")
-    //      continue;
+    //    DataSet dataSet = new DataSet("DataDump");
+    //    using (var connection = new SqlConnection(connectionString))
+    //    {
+    //      using (var command = connection.CreateCommand())
+    //      {
+    //        command.CommandType = CommandType.Text;
+    //        command.CommandText = commandText;
 
-    //    var y = (item as ConnectionStringSettings).ElementInformation.Properties["connectionString"];
-    //    result = y.Value.ToString();
+    //        command.Connection.ConnectionString = connectionString;
+    //        command.Connection.Open();
+    //        using (var adapter = new SqlDataAdapter(command))
+    //        {
+    //          adapter.SelectCommand.CommandTimeout = 15000;
+    //          adapter.Fill(dataSet);
+    //        }
+
+    //        return dataSet;
+    //      }
+    //    }
     //  }
-
-    //  return result;
+    //  );
     //}
-
-    private Task<DataSet> BuildDataSet(string connectionString, string commandText)
-    {
-
-      return Task.Run(() =>
-      {
-        DataSet dataSet = new DataSet("DataDump");
-        using (var connection = new SqlConnection(connectionString))
-        {
-          using (var command = connection.CreateCommand())
-          {
-            command.CommandType = CommandType.Text;
-            command.CommandText = commandText;
-
-            command.Connection.ConnectionString = connectionString;
-            command.Connection.Open();
-            using (var adapter = new SqlDataAdapter(command))
-            {
-              adapter.SelectCommand.CommandTimeout = 15000;
-              adapter.Fill(dataSet);
-            }
-
-            return dataSet;
-          }
-        }
-      }
-      );
-
-    }
 
     private async void FillTreeList()
     {
@@ -121,7 +101,7 @@ namespace Shorthand.FieldSelector
         var connectionString = txtConnection.Text;
         var commandText = "exec spFields_GetTreeList";
 
-        var dataSet = await this.BuildDataSet(connectionString, commandText);
+        var dataSet = await SqlUtility.BuildDataSet(connectionString, commandText);
         foreach (DataTable table in dataSet.Tables)
         {
           foreach (DataRow dr in table.Rows)
