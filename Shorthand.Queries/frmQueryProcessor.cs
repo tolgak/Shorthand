@@ -20,6 +20,7 @@ namespace Shorthand.Queries
   public partial class frmQueryProcessor : Form, IAsyncPlugin
   {
     private IPluginContext _context;
+    private string _connectionString;
 
     public frmQueryProcessor()
     {
@@ -56,7 +57,9 @@ namespace Shorthand.Queries
     {
       return await Task.Run(() =>
       {
-        txtConnectionString.Text = SqlUtility.GetConnectionString("stockOffice");
+        _connectionString = SqlUtility.GetConnectionString("stockOffice");
+        this.FillTreeList();
+
         return true;
       });
     }
@@ -78,21 +81,21 @@ namespace Shorthand.Queries
 
       try
       {
-        var connectionString = txtConnection.Text;
-        var commandText = "exec spFields_GetTreeList";
+        var connectionString = _connectionString;
+        var commandText = "select * from Query order by ParentId, Id";
 
         var dataSet = await SqlUtility.BuildDataSet(connectionString, commandText);
         foreach (DataTable table in dataSet.Tables)
         {
           foreach (DataRow dr in table.Rows)
           {
-            var parent = tvFieldList.Nodes.Find(dr["ParentID"].ToString(), true).FirstOrDefault();
+            var parent = tvQuery.Nodes.Find(dr["ParentID"].ToString(), true).FirstOrDefault();
             if (parent != null)
             {
-              parent.Nodes.Add(dr["ID"].ToString(), dr["ItemName"].ToString()).Tag = dr["ID"].ToString();
+              parent.Nodes.Add(dr["ID"].ToString(), dr["Name"].ToString()).Tag = dr["ID"].ToString();
             }
             else
-              tvFieldList.Nodes.Add(dr["ID"].ToString(), dr["ItemName"].ToString()).Tag = dr["ID"].ToString();
+              tvQuery.Nodes.Add(dr["ID"].ToString(), dr["Name"].ToString()).Tag = dr["ID"].ToString();
           }
         }
       }
@@ -106,7 +109,9 @@ namespace Shorthand.Queries
       }
     }
 
-
-
+    private void btnRun_Click(object sender, EventArgs e)
+    {
+      
+    }
   }
 }

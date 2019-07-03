@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="ControlBuilder.cs" />
     <Compile Include="frmQueryProcessor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -52,6 +53,8 @@
       <DependentUpon>frmQueryProcessor.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryParam.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="dbScript\Queries.sql" />
@@ -75,4 +78,7 @@
     <Folder Include="Content\img\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)Shorthand\$(OutDir)plugins\*.* /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

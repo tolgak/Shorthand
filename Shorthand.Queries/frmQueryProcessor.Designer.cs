@@ -28,29 +28,15 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.txtConnectionString = new System.Windows.Forms.TextBox();
-      this.label1 = new System.Windows.Forms.Label();
       this.panel1 = new System.Windows.Forms.Panel();
       this.tvQuery = new System.Windows.Forms.TreeView();
       this.lblStatus = new System.Windows.Forms.Label();
+      this.panel2 = new System.Windows.Forms.Panel();
+      this.pnlParams = new System.Windows.Forms.Panel();
+      this.btnRun = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
+      this.pnlParams.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // txtConnectionString
-      // 
-      this.txtConnectionString.Location = new System.Drawing.Point(486, 6);
-      this.txtConnectionString.Name = "txtConnectionString";
-      this.txtConnectionString.Size = new System.Drawing.Size(392, 25);
-      this.txtConnectionString.TabIndex = 1;
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(370, 9);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(110, 17);
-      this.label1.TabIndex = 2;
-      this.label1.Text = "Connection string";
       // 
       // panel1
       // 
@@ -79,30 +65,57 @@
       this.lblStatus.Size = new System.Drawing.Size(310, 24);
       this.lblStatus.TabIndex = 2;
       // 
+      // panel2
+      // 
+      this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panel2.Location = new System.Drawing.Point(313, 317);
+      this.panel2.Name = "panel2";
+      this.panel2.Size = new System.Drawing.Size(568, 291);
+      this.panel2.TabIndex = 5;
+      // 
+      // pnlParams
+      // 
+      this.pnlParams.Controls.Add(this.btnRun);
+      this.pnlParams.Dock = System.Windows.Forms.DockStyle.Top;
+      this.pnlParams.Location = new System.Drawing.Point(313, 3);
+      this.pnlParams.Name = "pnlParams";
+      this.pnlParams.Size = new System.Drawing.Size(568, 314);
+      this.pnlParams.TabIndex = 6;
+      // 
+      // btnRun
+      // 
+      this.btnRun.Location = new System.Drawing.Point(6, 285);
+      this.btnRun.Name = "btnRun";
+      this.btnRun.Size = new System.Drawing.Size(75, 23);
+      this.btnRun.TabIndex = 7;
+      this.btnRun.Text = "Run";
+      this.btnRun.UseVisualStyleBackColor = true;
+      // 
       // frmQueryProcessor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(884, 611);
+      this.Controls.Add(this.panel2);
+      this.Controls.Add(this.pnlParams);
       this.Controls.Add(this.panel1);
-      this.Controls.Add(this.label1);
-      this.Controls.Add(this.txtConnectionString);
       this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
       this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.Name = "frmQueryProcessor";
       this.Padding = new System.Windows.Forms.Padding(3);
       this.Text = "Query Processor";
       this.panel1.ResumeLayout(false);
+      this.pnlParams.ResumeLayout(false);
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 
     #endregion
-    private System.Windows.Forms.TextBox txtConnectionString;
-    private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.Label lblStatus;
     private System.Windows.Forms.TreeView tvQuery;
+    private System.Windows.Forms.Panel panel2;
+    private System.Windows.Forms.Panel pnlParams;
+    private System.Windows.Forms.Button btnRun;
   }
 }
