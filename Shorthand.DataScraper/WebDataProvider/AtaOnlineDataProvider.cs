@@ -14,14 +14,10 @@ namespace Shorthand.DataScraper.WebDataProvider
     public string BaseUrl { get; set; }
     public string LoginPageUrl { get; set; }
 
-
-
     public AtaOnlineDataProvider()
     {
       this.BaseUrl = "https://www.ataonline.com.tr/equity/getequities";
       this.RequiresAuthentication = false;
-
-      //HttpAutomation.LoginPostData = new Dictionary<string, string>();
     }
 
     public void SetAuthenticationParameters(string loginPageUrl, string userName, string password)
@@ -34,22 +30,20 @@ namespace Shorthand.DataScraper.WebDataProvider
       throw new NotImplementedException();
     }
 
-    public Equity[] GetData(int pageIndex = 1)
-    {
-      var eq = new List<Equity>();
-      string url = this.BaseUrl;
 
+    public List<Equity> GetData(int pageIndex = 1)
+    {
+      string url = this.BaseUrl;
       var result = HttpAutomation.DoGet(url);
       var hDoc = result?.Document;
-      if (hDoc != null)
-      {
-        eq.AddRange(this.ParseEquities(hDoc));
-      }
 
-      return eq.ToArray();
+      if (hDoc == null)
+        return new List<Equity>();
+
+      return this.ParseEquities(hDoc);
     }
 
-    public Task<Equity[]> GetDataAsync(int pageIndex = 1)
+    public Task<List<Equity>> GetDataAsync(int pageIndex = 1)
     {
       return Task.Run(() =>
       {
@@ -57,24 +51,32 @@ namespace Shorthand.DataScraper.WebDataProvider
       });
     }
 
+    /*
+
+    -- moving average
+    select Name, DateOfValue, Last
+         , avg(Last) over (order by Name, DateOfValue rows between 14 preceding and current row) as MovingAverageWindowSize15
+    from Equity
+    order by Name, DateOfValue;
+    
+    */
+
     private List<Equity> ParseEquities(HtmlDocument document)
     {
       HtmlNode root = document.DocumentNode;
-      var equityNodes = root.SelectNodes("descendant::table[@id='table-equities']//tr");
-
-      if (equityNodes == null)
+      var equityNodes = root.SelectNodes("descendant::table[@id='table-equities']//tr").ToList();
+      if (equityNodes == null || equityNodes.Count == 0)      
         return new List<Equity> { };
 
       var formatProvider = CultureInfo.GetCultureInfo("tr-TR");
       var equities = new List<Equity>();
-      foreach (var tr in equityNodes)
-      {
+
+      equityNodes.ForEach(  tr => {
         var cells = tr.ChildNodes.Where(c => c.Name == "td").ToArray();
         if (cells.Length == 0)
-          continue;
+          return;
 
-        equities.Add(new Equity
-        {
+        equities.Add(new Equity {
           Name = cells[0].InnerText.ToTidyString(),
           Last = Convert.ToDouble(cells[2].InnerText.ToTidyString(), formatProvider),
           Low = Convert.ToDouble(cells[3].InnerText.ToTidyString(), formatProvider),
@@ -82,15 +84,18 @@ namespace Shorthand.DataScraper.WebDataProvider
 
           //Yesterday = Convert.ToDouble(cells[2].InnerText.ToTidyString(), formatProvider),
           Percentage = Convert.ToDouble(cells[6].InnerText.ToTidyString(), formatProvider),
-          
-          
+
+
           //VolumeInLots = Convert.ToInt32(cells[6].InnerText.ToTidyString().Replace(".", ""), formatProvider),
-          VolumeInTL = Convert.ToInt32(cells[7].InnerText.ToTidyString().Replace(".", "").Replace(" ", "").Replace("TL", ""), formatProvider),
+          VolumeInTL = Convert.ToInt32(cells[7].InnerText.ToTidyString()
+                                                         .Replace(".", "")
+                                                         .Replace(" ", "")
+                                                         .Replace("TL", ""), formatProvider),
           Type = 0
         });
-      };
+      });
 
-      return equities.ToList();
+      return equities;
     }
 
 

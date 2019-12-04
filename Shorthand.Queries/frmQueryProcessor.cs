@@ -58,7 +58,7 @@ namespace Shorthand.Queries
       return await Task.Run(() =>
       {
         _connectionString = SqlUtility.GetConnectionString("stockOffice");
-        this.FillTreeList();
+        //this.FillTreeList();
 
         return true;
       });

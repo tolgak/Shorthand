@@ -18,7 +18,7 @@ namespace Shorthand.DataScraper
   public partial class frmScraper : Form, IAsyncPlugin
   {
     private IPluginContext _context;
-    private IWebDataProvider _bloomberg;
+    private IWebDataProvider _provider;
 
     private const string Equity_SaveOrUpdate = @"execute spEquity_SaveOrUpdate @Name, @Last, @Yesterday, @Percentage, @High, @Low, @VolumeInLots, @VolumeInTL, @DateOfValue, @Type";
 
@@ -50,8 +50,7 @@ namespace Shorthand.DataScraper
     {
       return await Task.Run(() =>
       {
-        //_bloomberg = new BloombergDataProvider();
-        _bloomberg = new AtaOnlineDataProvider();
+        _provider = new AtaOnlineDataProvider();
         return true;
       });
     }
@@ -75,33 +74,17 @@ namespace Shorthand.DataScraper
     }
 
     private async void btnGetData_Click(object sender, EventArgs e)
-    {
-      //int.TryParse(txtPage.Text, out int pageIndex);
-      txtLog.Log("getting data");
+    {      
+      txtLog.Log("Scraping ...");
       this.Cursor = Cursors.WaitCursor;
-      var equities = new List<Equity>();
-
       try
       {
-        //var tasks = Enumerable.Range(1, 27)
-        //                      .Select(pageIndex => new TaskFactory().StartNew(() => _webDataProvider.GetData(pageIndex)))
-        //                      .ToArray();
-        //Task.WhenAll(tasks)
-        //    .ContinueWith(t => equities.OrderBy(x => x.Name).ToList().ForEach(x => txtLog.Log(x.Name)));
-        
-        //Parallel.For(1, 30, i => equities.AddRange(_bloomberg.GetData(i)));
-        equities.AddRange(_bloomberg.GetData(1));
+        (await _provider.GetDataAsync()).ForEach(eq => {
+          txtLog.Log(eq.Name);
+          eq.DateOfValue = DateTime.Now.Date;
 
-        //equities.AddRange(_bloomberg.GetIndex());
-
-        var eq = equities.OrderBy(x => x.Name).ToArray();
-        foreach (var item in eq)
-        {
-          txtLog.Log(item.Name);
-          item.DateOfValue = DateTime.Now.Date;
-
-          await this.SaveOrUpdate(item);
-        }
+          this.SaveOrUpdate(eq);
+        }); 
       }
       catch (Exception ex)
       {
@@ -113,42 +96,30 @@ namespace Shorthand.DataScraper
         this.Cursor = Cursors.Default;
       }
 
-
     }
 
-    private async Task<int> SaveOrUpdate(object entity)
+    private int SaveOrUpdate(object entity)
     {
       //@"Data Source=localhost\SQLEXPRESS;Initial Catalog=StockExchange;Integrated Security=True;MultipleActiveResultSets=True;";
-      var connectionString = SqlUtility.GetConnectionString("stockOffice");
-      var commandText = frmScraper.Equity_SaveOrUpdate;
+      //var connectionString = SqlUtility.GetConnectionString("stockOffice");
+      var connectionString = SqlUtility.GetConnectionString("stockHome");
 
-      return await this.ExecuteCommand(connectionString, commandText, entity);      
-    }
-
-    private Task<int> ExecuteCommand(string connectionString, string commandText, object entity)
-    {
-      return Task.Run(() =>
+      var sqlParams = entity.ToSqlParamsArray();
+      using (var connection = new SqlConnection(connectionString))
       {
-        var sqlParams = entity.ToSqlParamsArray();
-        using (var connection = new SqlConnection(connectionString))
+        using (var command = connection.CreateCommand())
         {
-          using (var command = connection.CreateCommand())
-          {
-            command.CommandType = CommandType.Text;
-            command.CommandText = commandText;
-            command.Parameters.AddRange(sqlParams);
-
-            command.Connection.ConnectionString = connectionString;
-            command.Connection.Open();
-            var retVal = command.ExecuteNonQuery();
-
-            return retVal;
-          }
+          command.CommandType = CommandType.Text;
+          command.CommandText = frmScraper.Equity_SaveOrUpdate;           
+          command.Parameters.AddRange(sqlParams);
+          command.Connection.Open();
+          var retVal = command.ExecuteNonQuery();
+          
+          return retVal;
         }
-      }
-      );
-
+      } 
     }
+
 
 
 

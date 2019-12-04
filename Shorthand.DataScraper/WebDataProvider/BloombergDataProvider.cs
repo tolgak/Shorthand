@@ -52,7 +52,7 @@ namespace Shorthand.DataScraper.WebDataProvider
       return response.success == "1";
     }
 
-    public Equity[] GetData(int pageIndex = 1)
+    public List<Equity> GetData(int pageIndex = 1)
     {
       var eq = new List<Equity>();
       string url = pageIndex > 1 ? $"{this.BaseUrl}/{pageIndex}" : this.BaseUrl;
@@ -64,10 +64,10 @@ namespace Shorthand.DataScraper.WebDataProvider
         eq.AddRange(this.ParseEquities(hDoc));
       }
 
-      return eq.ToArray();
+      return eq.ToList();
     }
 
-    public Task<Equity[]> GetDataAsync(int pageIndex = 1)
+    public Task<List<Equity>> GetDataAsync(int pageIndex = 1)
     {
       return Task.Run(() =>
       {
