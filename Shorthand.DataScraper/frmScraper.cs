@@ -50,7 +50,8 @@ namespace Shorthand.DataScraper
     {
       return await Task.Run(() =>
       {
-        _bloomberg = new BloombergDataProvider();
+        //_bloomberg = new BloombergDataProvider();
+        _bloomberg = new AtaOnlineDataProvider();
         return true;
       });
     }
@@ -88,8 +89,10 @@ namespace Shorthand.DataScraper
         //Task.WhenAll(tasks)
         //    .ContinueWith(t => equities.OrderBy(x => x.Name).ToList().ForEach(x => txtLog.Log(x.Name)));
         
-        Parallel.For(1, 30, i => equities.AddRange(_bloomberg.GetData(i)));
-        equities.AddRange(_bloomberg.GetIndex());
+        //Parallel.For(1, 30, i => equities.AddRange(_bloomberg.GetData(i)));
+        equities.AddRange(_bloomberg.GetData(1));
+
+        //equities.AddRange(_bloomberg.GetIndex());
 
         var eq = equities.OrderBy(x => x.Name).ToArray();
         foreach (var item in eq)
