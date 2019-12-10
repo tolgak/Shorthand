@@ -6,9 +6,9 @@ create function dbo.fnIND_MACD(@name varchar(200))
 returns @data table ( n           int
                     , name        varchar(200)
                     , quote_date  smalldatetime
-                    , close_price decimal(6,2)
-                    , ema12       decimal(6,2)
-                    , ema26       decimal(6,2)
+                    , close_price float
+                    , ema12       float
+                    , ema26       float
                     , macd  as ema12 - ema26 )
 as begin
 
@@ -24,10 +24,10 @@ as begin
   declare @K1 decimal(4,3) = 2 / (1 + @ema_1_intervals + .000)
   declare @K2 decimal(4,3) = 2 / (1 + @ema_2_intervals + .000)
 
-  declare @prev_ema_1    decimal(8,2)
-        , @prev_ema_2    decimal(8,2)
-        , @initial_sma_1 decimal(8,2)
-        , @initial_sma_2 decimal(8,2)
+  declare @prev_ema_1    float
+        , @prev_ema_2    float
+        , @initial_sma_1 float
+        , @initial_sma_2 float
 
   declare @anchor int
 
@@ -58,25 +58,13 @@ as begin
               , ema12       = @prev_ema_1
               , ema26       = @prev_ema_2
               , @anchor     = n --anchor so that carryover works properly
-    from @data t1 --with (TABLOCKX)
+    from @data t1
     option (maxdop 1)
 
 exit_func:
    return
 end
 go 
-
-
---insert into StockQuote (
--- name
---, quote_date
---, open_price
---, close_price
---, high_price
---, low_price
---, dateOfEntry )
---select 'GOOG', *, getdate() from google_stock
-
 
 
 

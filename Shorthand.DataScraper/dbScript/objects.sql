@@ -1,4 +1,26 @@
-﻿-- 30.06.2019
+create table Stock (
+    id   int identity(1,1)
+  , name varchar(20)
+  , constraint PK_StockId primary key clustered(id)
+)
+go
+
+create table dbo.StockQuote(
+  id          int identity(1,1)
+, name        varchar(200)      not null
+, quote_date  smalldatetime     not null
+, open_price  float 
+, close_price float             not null
+, high_price  float 
+, low_price   float 
+, volume      float 
+, dateOfEntry smalldatetime     not null
+
+, constraint PK_StockQuote primary key clustered (id asc) )
+go
+
+
+-- 30.06.2019
 if object_id('Equity') is not null
   drop table dbo.Equity
 go
