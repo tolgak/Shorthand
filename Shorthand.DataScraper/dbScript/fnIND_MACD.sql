@@ -1,21 +1,22 @@
 ﻿if object_id('fnIND_MACD') is not null
   drop function dbo.fnIND_MACD
 go
-
 create function dbo.fnIND_MACD(@name varchar(200))
-returns @data table ( n           int
-                    , name        varchar(200)
+returns @data table ( name        varchar(200)
+                    , n           int
                     , quote_date  smalldatetime
                     , close_price float
                     , ema12       float
                     , ema26       float
-                    , macd  as ema12 - ema26 )
+                    , macd        as ema12 - ema26
+                    , index IX_Result clustered (name, n) )
 as begin
 
 -- https://www.sqlservercentral.com/articles/calculating-moving-averages-with-t-sql
 -- https://www.mssqltips.com/sqlservertip/5541/using-two-samples-to-validate-macd-with-tsql
 -- https://www.investopedia.com/ask/answers/122414/what-moving-average-convergence-divergence-macd-formula-and-how-it-calculated.asp
 
+-- v1.0 [tolga 9.12.2019 11:57:21]
 -- select * from dbo.fnIND_MACD('GOOG')
 
   declare @ema_1_intervals int = 12

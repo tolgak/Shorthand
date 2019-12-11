@@ -4,6 +4,7 @@ go
 create function dbo.fnIND_RSI(@name varchar(200))
 returns @result table ( name varchar(200)
                       , n int
+                      , quote_date  smalldatetime
                       , close_price float
                       , gain        float
                       , avgGain     float
@@ -12,15 +13,17 @@ returns @result table ( name varchar(200)
                       , rsi         as 100 * avgGain / (avgGain + avgLoss)
                       , index IX_Result clustered (name, n))
 as begin
-
+-- v1.0 [tolga 10.12.2019 12:23:42]
 -- select * from dbo.fnIND_RSI('goog')
 
-  insert into @result (name, n, close_price, gain)
+  insert into @result (name, n, quote_date, close_price, gain)
     select T.Name
          , row_number() over(order by T.Name, T.quote_date)
+         , T.quote_date
          , T.close_price
          , close_price - lag(close_price) over(order by name, quote_date)
     from dbo.StockQuote T
+    where name = @name
 
   update T set avgGain = A.aG, avgLoss = A.aL
     from @result T
