@@ -13,7 +13,7 @@ returns @result table ( name varchar(200)
                       , rsi         as 100 * avgGain / (avgGain + avgLoss)
                       , index IX_Result clustered (name, n))
 as begin
--- v1.0 [tolga 10.12.2019 12:23:42]
+-- v1.0 [tolga 10.12.2019 12:23:42] Relative Strength Index (RSI)
 -- select * from dbo.fnIND_RSI('goog')
 
   insert into @result (name, n, quote_date, close_price, gain)
@@ -33,6 +33,8 @@ as begin
                  , avg( iif(gain <  0, - gain, 0) ) over (partition by name order by name, n rows between 13 preceding and current row) aL
             from @result ) A on A.Name = T.Name and A.n = T.n
     where T.n >= 14
+
+
 
 exit_func:
    return

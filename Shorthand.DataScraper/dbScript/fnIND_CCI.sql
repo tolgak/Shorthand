@@ -12,7 +12,7 @@ returns @result table ( name varchar(200)
                       , cci           float
                       , index IX_Result clustered (name, n))
 as begin
--- v1.0 [tolga 11.12.2019 15:50:21]
+-- v1.0 [tolga 11.12.2019 15:50:21] Commodity Channel Index (CCI)
 -- select * from dbo.fnIND_CCI('GOOG')
 
 ; with _base      as ( select Q.*

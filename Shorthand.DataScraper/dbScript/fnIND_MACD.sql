@@ -6,6 +6,7 @@ returns @data table ( name        varchar(200)
                     , n           int
                     , quote_date  smalldatetime
                     , close_price float
+                    , signal      float
                     , ema12       float
                     , ema26       float
                     , macd        as ema12 - ema26
@@ -16,7 +17,7 @@ as begin
 -- https://www.mssqltips.com/sqlservertip/5541/using-two-samples-to-validate-macd-with-tsql
 -- https://www.investopedia.com/ask/answers/122414/what-moving-average-convergence-divergence-macd-formula-and-how-it-calculated.asp
 
--- v1.0 [tolga 9.12.2019 11:57:21]
+-- v1.0 [tolga 9.12.2019 11:57:21] Moving Average Convergence and Divergence (MACD)
 -- select * from dbo.fnIND_MACD('GOOG')
 
   declare @ema_1_intervals int = 12
@@ -32,14 +33,14 @@ as begin
 
   declare @anchor int
 
-  insert into @data (n, name, quote_date, close_price)
-    select row_number() over (order by quote_date) n
-         , name
+  insert into @data (name, n, quote_date, close_price)
+    select name
+         , row_number() over (order by name, quote_date)
          , quote_date
          , close_price
       from StockQuote
       where name = @name
-      order by quote_date
+      order by name, quote_date
 
   select @initial_sma_1 = avg(case when n < @ema_1_intervals then close_price else null end)
        , @initial_sma_2 = avg(case when n < @ema_2_intervals then close_price else null end)
@@ -61,6 +62,12 @@ as begin
               , @anchor     = n --anchor so that carryover works properly
     from @data t1
     option (maxdop 1)
+
+
+
+
+
+
 
 exit_func:
    return
