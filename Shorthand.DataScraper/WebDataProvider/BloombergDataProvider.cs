@@ -21,13 +21,16 @@ namespace Shorthand.DataScraper.WebDataProvider
     private const string BIST50  = "bist-50";
     private const string BIST30  = "bist-30";
 
+    private object _lock = new object();
+
     public string BaseUrl { get; set; }
     public bool RequiresAuthentication { get; set; }
     public string LoginPageUrl { get; set; }
 
     public BloombergDataProvider()
     {
-      this.BaseUrl = "https://www.bloomberght.com/borsa/hisseler";
+      //this.BaseUrl = "https://www.bloomberght.com/borsa/hisseler";      
+      this.BaseUrl = "https://www.bloomberght.com/borsa/borsa-kapanis";     
       this.RequiresAuthentication = false;
 
       HttpAutomation.LoginPostData = new Dictionary<string, string>();
@@ -52,26 +55,33 @@ namespace Shorthand.DataScraper.WebDataProvider
       return response.success == "1";
     }
 
-    public List<Equity> GetData(int pageIndex = 1)
+    public List<Equity> GetData(DateTime date, int pageIndex = 1)
     {
       var eq = new List<Equity>();
-      string url = pageIndex > 1 ? $"{this.BaseUrl}/{pageIndex}" : this.BaseUrl;
+
+      var day = date.Day < 10 ? $"0{date.Day}" : $"{date.Day}";
+      var month = date.Month < 10 ? $"0{date.Month}" : $"{date.Month}";
+      var dateTrailer = $"{day}-{month}-{date.Year}";
+      string datedUrl = $"{this.BaseUrl}/{dateTrailer}";
+      string url = pageIndex > 1 ? $"{datedUrl}/{pageIndex}" : datedUrl;
 
       var result = HttpAutomation.DoGet(url, "");
       var hDoc = result?.Document;
       if (hDoc != null)
       {
-        eq.AddRange(this.ParseEquities(hDoc));
+
+          eq.AddRange(this.ParseEquities(hDoc));
+
       }
 
       return eq.ToList();
     }
 
-    public Task<List<Equity>> GetDataAsync(int pageIndex = 1)
+    public Task<List<Equity>> GetDataAsync(DateTime date,int pageIndex = 1)
     {
       return Task.Run(() =>
       {
-        return this.GetData(pageIndex);
+        return this.GetData(date, pageIndex);
       });
     }
 
@@ -83,7 +93,7 @@ namespace Shorthand.DataScraper.WebDataProvider
       if (equityNodes == null)
         return new List<Equity> { };
 
-      var formatProvider = CultureInfo.GetCultureInfo("tr-TR");
+      var formatProvider = CultureInfo.GetCultureInfo("en-EN");
       var equities = new List<Equity>();
       foreach (var tr in equityNodes)
       {
@@ -91,13 +101,13 @@ namespace Shorthand.DataScraper.WebDataProvider
         equities.Add(new Equity
         {
           Name = cells[0].InnerText.ToTidyString(),
-          Last = Convert.ToDouble(cells[1].InnerText.ToTidyString(), formatProvider),
-          Yesterday = Convert.ToDouble(cells[2].InnerText.ToTidyString(), formatProvider),
-          Percentage = Convert.ToDouble(cells[3].InnerText.ToTidyString(), formatProvider),
-          High = Convert.ToDouble(cells[4].InnerText.ToTidyString(), formatProvider),
-          Low = Convert.ToDouble(cells[5].InnerText.ToTidyString(), formatProvider),
-          VolumeInLots = Convert.ToInt32(cells[6].InnerText.ToTidyString().Replace(".", ""), formatProvider),
-          VolumeInTL = Convert.ToInt32(cells[7].InnerText.ToTidyString().Replace(".", ""), formatProvider),
+          Last = Convert.ToDouble(cells[2].InnerText.ToTidyString(), formatProvider),
+          //Yesterday = Convert.ToDecimal(cells[2].InnerText.ToTidyString(), formatProvider),
+          //Percentage = Convert.ToDecimal(cells[3].InnerText.ToTidyString(), formatProvider),
+          High = Convert.ToDouble(cells[3].InnerText.ToTidyString(), formatProvider),
+          Low = Convert.ToDouble(cells[4].InnerText.ToTidyString(), formatProvider),
+          //VolumeInLots = Convert.ToInt32(cells[6].InnerText.ToTidyString().Replace(".", ""), formatProvider),
+          //VolumeInTL = Convert.ToInt32(cells[7].InnerText.ToTidyString().Replace(".", ""), formatProvider),
           Type = 0
         });
       };

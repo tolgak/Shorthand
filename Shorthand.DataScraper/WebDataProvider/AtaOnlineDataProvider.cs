@@ -31,7 +31,7 @@ namespace Shorthand.DataScraper.WebDataProvider
     }
 
 
-    public List<Equity> GetData(int pageIndex = 1)
+    public List<Equity> GetData(DateTime date, int pageIndex = 1)
     {
       string url = this.BaseUrl;
       var result = HttpAutomation.DoGet(url);
@@ -43,11 +43,11 @@ namespace Shorthand.DataScraper.WebDataProvider
       return this.ParseEquities(hDoc);
     }
 
-    public Task<List<Equity>> GetDataAsync(int pageIndex = 1)
+    public Task<List<Equity>> GetDataAsync(DateTime date, int pageIndex = 1)
     {
       return Task.Run(() =>
       {
-        return this.GetData(pageIndex);
+        return this.GetData(date, pageIndex);
       });
     }
 
@@ -81,11 +81,8 @@ namespace Shorthand.DataScraper.WebDataProvider
           Last = Convert.ToDouble(cells[2].InnerText.ToTidyString(), formatProvider),
           Low = Convert.ToDouble(cells[3].InnerText.ToTidyString(), formatProvider),
           High = Convert.ToDouble(cells[4].InnerText.ToTidyString(), formatProvider),
-
           //Yesterday = Convert.ToDouble(cells[2].InnerText.ToTidyString(), formatProvider),
           Percentage = Convert.ToDouble(cells[6].InnerText.ToTidyString(), formatProvider),
-
-
           //VolumeInLots = Convert.ToInt32(cells[6].InnerText.ToTidyString().Replace(".", ""), formatProvider),
           VolumeInTL = Convert.ToInt32(cells[7].InnerText.ToTidyString()
                                                          .Replace(".", "")

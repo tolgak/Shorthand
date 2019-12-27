@@ -32,6 +32,7 @@
       this.txtLog = new System.Windows.Forms.TextBox();
       this.btnGetData = new System.Windows.Forms.Button();
       this.txtPage = new System.Windows.Forms.TextBox();
+      this.dateQuote = new System.Windows.Forms.DateTimePicker();
       this.SuspendLayout();
       // 
       // txtLog
@@ -66,11 +67,19 @@
       this.txtPage.Size = new System.Drawing.Size(100, 25);
       this.txtPage.TabIndex = 26;
       // 
+      // dateQuote
+      // 
+      this.dateQuote.Location = new System.Drawing.Point(186, 29);
+      this.dateQuote.Name = "dateQuote";
+      this.dateQuote.Size = new System.Drawing.Size(200, 25);
+      this.dateQuote.TabIndex = 27;
+      // 
       // frmScraper
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(884, 611);
+      this.Controls.Add(this.dateQuote);
       this.Controls.Add(this.txtPage);
       this.Controls.Add(this.btnGetData);
       this.Controls.Add(this.txtLog);
@@ -89,6 +98,7 @@
     private System.Windows.Forms.TextBox txtLog;
     private System.Windows.Forms.Button btnGetData;
     private System.Windows.Forms.TextBox txtPage;
+    private System.Windows.Forms.DateTimePicker dateQuote;
   }
 }
 

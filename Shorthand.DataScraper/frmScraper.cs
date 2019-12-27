@@ -1,4 +1,9 @@
-﻿using System;
+﻿using PragmaTouchUtils;
+using Shorthand.Common;
+using Shorthand.Common.Sql;
+using Shorthand.DataScraper.WebDataProvider;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
@@ -6,11 +11,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using PragmaTouchUtils;
-using Shorthand.Common;
-using Shorthand.Common.Sql;
-using Shorthand.DataScraper.WebDataProvider;
 
 namespace Shorthand.DataScraper
 {
@@ -50,7 +50,8 @@ namespace Shorthand.DataScraper
     {
       return await Task.Run(() =>
       {
-        _provider = new AtaOnlineDataProvider();
+        //_provider = new AtaOnlineDataProvider();
+        _provider = new BloombergDataProvider();
         return true;
       });
     }
@@ -73,30 +74,112 @@ namespace Shorthand.DataScraper
       await this.InitializeUI();
     }
 
-    private async void btnGetData_Click(object sender, EventArgs e)
-    {      
+    //private async void btnGetData_Click(object sender, EventArgs e)
+    //{      
+    //  txtLog.Log("Scraping ...");
+    //  var date = dateQuote.Value;
+
+    //  this.Cursor = Cursors.WaitCursor;
+    //  try
+    //  {
+    //    (await _provider.GetDataAsync(date)).ForEach(eq => {
+    //      txtLog.Log(eq.Name);
+    //      eq.DateOfValue = date;
+
+    //      this.SaveOrUpdate(eq);
+    //    }); 
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    txtLog.Log(ex.Message);
+    //  }
+    //  finally
+    //  {
+    //    txtLog.Log("Done.");
+    //    this.Cursor = Cursors.Default;
+    //  }
+    //}
+
+
+    private void btnGetData_Click(object sender, EventArgs e)
+    {
       txtLog.Log("Scraping ...");
+      var date = dateQuote.Value;
+
       this.Cursor = Cursors.WaitCursor;
       try
       {
-        (await _provider.GetDataAsync()).ForEach(eq => {
-          txtLog.Log(eq.Name);
-          eq.DateOfValue = DateTime.Now.Date;
 
-          this.SaveOrUpdate(eq);
-        }); 
+        var equities = new List<Equity>();
+        List<Equity> items = new List<Equity>();
+        // Async 
+        //var tasks = Enumerable.Range(1, 33).Select(i => _provider.GetDataAsync(date, i)).ToArray();
+        //Task.WaitAll(tasks);
+
+        //items = tasks.SelectMany(t => t.Result).ToList();
+        //equities.AddRange(items);
+
+        //foreach (var item in equities)
+        //{
+        //  txtLog.Log($"{item.Name}");
+
+        //  item.DateOfValue = date;
+        //  this.SaveOrUpdate(item);
+        //}
+
+        // Parallel
+        var bag = new ConcurrentDictionary<int, List<Equity>>();
+        var pages = Enumerable.Range(1, 33).ToArray();
+        var partitioner = Partitioner.Create<int>(pages,true);
+            
+        Parallel.ForEach(partitioner, i =>
+        {
+          try
+          {
+            var data = _provider.GetData(date, i);
+            bag.TryAdd(i, data);
+          }
+          catch { }
+        });
+
+        items.Clear();
+        items = bag.SelectMany(kvp => kvp.Value).ToList();
+        equities.AddRange(items);
+
+        foreach (var item in equities)
+        {
+          txtLog.Log($"{item.Name}");
+
+          item.DateOfValue = date;
+          this.SaveOrUpdate(item);
+        }
+
+
+
       }
       catch (Exception ex)
       {
-        txtLog.Log(ex.Message);
+        txtLog.Log(this.GetInnerMostException(ex));
       }
       finally
       {
-        txtLog.Log("Done.");
         this.Cursor = Cursors.Default;
       }
+    }
+
+    public string GetInnerMostException(Exception ex)
+    {
+      var result = "";
+      if (ex.InnerException != null)
+        result = GetInnerMostException(ex.InnerException);
+
+      return result;
 
     }
+
+
+
+
 
     private int SaveOrUpdate(object entity)
     {
@@ -110,14 +193,14 @@ namespace Shorthand.DataScraper
         using (var command = connection.CreateCommand())
         {
           command.CommandType = CommandType.Text;
-          command.CommandText = frmScraper.Equity_SaveOrUpdate;           
+          command.CommandText = frmScraper.Equity_SaveOrUpdate;
           command.Parameters.AddRange(sqlParams);
           command.Connection.Open();
           var retVal = command.ExecuteNonQuery();
-          
+
           return retVal;
         }
-      } 
+      }
     }
 
 
