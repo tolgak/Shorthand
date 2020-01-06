@@ -27,6 +27,16 @@ namespace Shorthand.GitLabEntity
       _logger = logger;
     }
 
+    public CodebaseConfig GetCodebaseConfig()
+    {
+      var url = $"{_options.Url}/snippets/100/raw";
+
+      var jsonResponse = this.SendApiRequest(url, null, ApiMethod.GET);
+
+
+      return CodebaseConfig.FromJson(jsonResponse.Result);
+      //return JsonConvert.DeserializeObject<List<Project>>(jsonResponse.Result);
+    }
 
     public List<Project> GetProjects(bool onlyStarred = false)
     {

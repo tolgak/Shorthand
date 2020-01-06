@@ -172,7 +172,6 @@ namespace Shorthand
 
         var delivery = this.BuildDelivery();
         delivery.Deliver(ctx);
-        this.SendMail(ctx);
 
         await this.RefreshUIAsync();
       }
@@ -222,7 +221,7 @@ namespace Shorthand
       lblMergeRequestLink.Text = $"merge request state unknown";
       lblMergeRequestLink.Links.Clear();
 
-      Application.DoEvents();
+      //Application.DoEvents();
     }
 
     private async Task<BaseData> GetBaseData(string issueKey, int projectId)
@@ -305,14 +304,20 @@ namespace Shorthand
       ctx.DeploymentIssue = txtDPLY.Text;
       ctx.UatIssue = lbxUAT.SelectedValue?.ToString();
 
+
+
+
       // GitLab
+
+      var codebaseConfig = _gitLab.GetCodebaseConfig();
+
       var projectId = (int)cmbGitProjectName.SelectedValue;
       var project = await _gitLab.GetProjectByIdAsync(projectId);
       var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, ctx.InternalIssue);
       var mergeReqNo = mergeReq?.iid ?? 0;
       var mergeReqState = mergeReq?.state ?? "unknown";
 
-      ctx.GitProjectName = cmbGitProjectName.SelectedText;
+      ctx.GitProjectName = cmbGitProjectName.Text;
       ctx.GitProjectId = (int)(cmbGitProjectName.SelectedValue ?? 0);
       ctx.GitProjectWebUrl = project.web_url;
       ctx.GitMergeRequestNo = mergeReqNo;
@@ -430,7 +435,8 @@ namespace Shorthand
       var remotePort = 6200;
       var remoteBuilder = new RemoteBuilder(remoteHost, remotePort, this.Dump);
 
-      remoteBuilder.Build();
+      var args = new string[1] { cmbGitProjectName.Text };
+      remoteBuilder.Build(args);
     }
 
     private void btnOpenLocal_Click(object sender, EventArgs e)

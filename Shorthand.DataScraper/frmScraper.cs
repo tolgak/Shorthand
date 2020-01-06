@@ -130,8 +130,8 @@ namespace Shorthand.DataScraper
         // Parallel
         var bag = new ConcurrentDictionary<int, List<Equity>>();
         var pages = Enumerable.Range(1, 33).ToArray();
-        var partitioner = Partitioner.Create<int>(pages,true);
-            
+
+        var partitioner = Partitioner.Create<int>(pages, true);
         Parallel.ForEach(partitioner, i =>
         {
           try
@@ -139,7 +139,7 @@ namespace Shorthand.DataScraper
             var data = _provider.GetData(date, i);
             bag.TryAdd(i, data);
           }
-          catch { }
+          catch (Exception exception) { txtLog.Log($"{exception.Message}"); }
         });
 
         items.Clear();
@@ -150,7 +150,7 @@ namespace Shorthand.DataScraper
         {
           txtLog.Log($"{item.Name}");
 
-          item.DateOfValue = date;
+          item.DateOfValue = date.Date;
           this.SaveOrUpdate(item);
         }
 

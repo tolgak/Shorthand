@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.AdminPanel", "Sho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Mqtt", "Shorthand.Mqtt\Shorthand.Mqtt.csproj", "{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBuilderService", "AppBuilderService\AppBuilderService.csproj", "{B77BC1F0-D75A-45D9-93F8-5431316F44FE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerifyProjectFile", "VerifyProjectFile\VerifyProjectFile.csproj", "{5E6A2522-BD61-4E63-BE4E-7E6E07AC993D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.FieldsSelector", "Shorthand.FieldsSelector\Shorthand.FieldsSelector.csproj", "{48672FBA-FA01-4BD3-9AAE-85AA2A7EECA0}"
@@ -101,14 +99,6 @@ Global
 		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|x64.ActiveCfg = Release|Any CPU
 		{96BD66A6-98F6-4BC8-B2ED-1D06361D0627}.Release|x64.Build.0 = Release|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Debug|x64.Build.0 = Debug|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Release|x64.ActiveCfg = Release|Any CPU
-		{B77BC1F0-D75A-45D9-93F8-5431316F44FE}.Release|x64.Build.0 = Release|Any CPU
 		{5E6A2522-BD61-4E63-BE4E-7E6E07AC993D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E6A2522-BD61-4E63-BE4E-7E6E07AC993D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E6A2522-BD61-4E63-BE4E-7E6E07AC993D}.Debug|x64.ActiveCfg = Debug|Any CPU

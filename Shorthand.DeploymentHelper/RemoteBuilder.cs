@@ -34,9 +34,11 @@ namespace Shorthand
       _logger = logger ?? new Action<string> (x => Console.WriteLine(x) );
     }
 
-    public void Build()
+    public void Build(params string[] args)
     {
-      this.RemoteExec("build");
+      var trailer = args.Length > 0 ? string.Join(" ", args) : "";
+      var command = "build " + trailer;
+      this.RemoteExec(command);
     }
 
     public void Ping()
