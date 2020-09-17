@@ -14,6 +14,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
+using iText;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel;
+using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using System.Text;
+
 namespace Shorthand.AdminPanel
 {
   [Export(typeof(IAsyncPlugin))]
@@ -125,90 +134,7 @@ namespace Shorthand.AdminPanel
       }
     }
 
-    private void btnCheckSolution_Click(object sender, EventArgs e)
-    {
-      var solutionBasePath = @"D:\Development\GitProjects\BilgiCampus\Bilgi.Sis.MobileWeb";
-      var solutionFilePath = Path.Combine(solutionBasePath, "BilgiCampus.sln");
 
-      var projects = new List<string>();
-      Regex regex = new Regex("Project\\(.*\\) *= *\"(?<projectName>.*)\" *, *\"(?<projectFilePath>.*)\" *, *\"(?<solutionUID>.*)\""
-                             , RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
-
-      var inputText = File.ReadAllText(solutionFilePath);
-      MatchCollection ms = regex.Matches(inputText);
-
-      ms.OfType<Match>()
-        .ToList()
-        .ForEach(m =>
-        {
-          var p = m.Groups["projectFilePath"].Value;
-          if (p != ".nuget")
-          {
-            var x = Path.Combine(solutionBasePath, p);
-            CheckContentReferences(x);
-          }
-        }
-        );
-    }
-
-    private void btnCheckFolder_Click(object sender, EventArgs e)
-    {
-      var projects = Directory.GetFiles(txtFolder.Text, "*.csproj", SearchOption.AllDirectories).ToList();
-      projects.ForEach(p =>
-      {
-        if (p != ".nuget")
-        {
-          var x = Path.Combine(p);
-          CheckContentReferences(x);
-        }
-      });
-
-    }
-
-    private void CheckContentReferences(string projectFilePath)
-    {
-      try
-      {
-        var projectBasePath = Path.GetDirectoryName(projectFilePath);
-        var projectName = Path.GetFileName(projectFilePath);
-        var xmlProject = XDocument.Load(projectFilePath);
-
-        XNamespace ns = xmlProject.Root.GetDefaultNamespace();
-        var result = xmlProject.Element(ns + "Project")
-            .Elements(ns + "ItemGroup")
-            .Elements(ns + "Content")
-            .Select(x => $"{projectBasePath}\\{(string)x.Attribute("Include")}")
-            .ToList();
-
-        //var filesExist = result.TrueForAll(x => File.Exists(x));
-        //var allUnique  = result.Distinct().Count() == result.Count();
-        //var allUnique  = result.GroupBy(x => x).All(g => g.Count() == 1);
-
-        // 1. duplications
-        var duplicates = result.GroupBy(x => x)
-                               .Where(g => g.Count() > 1)
-                               .Select(y => y.Key)
-                               .ToList();
-        if (duplicates.Count() > 0)
-        {
-          txtLog.Log($"{projectName} Duplicates");
-          duplicates.ForEach(x => txtLog.Log(x));
-        }
-
-        // 2. missing in file system
-        var missing = result.Where(x => !File.Exists(x)).ToList();
-        if (missing.Count() > 0)
-        {
-          txtLog.Log($"{projectName} Missing");
-          missing.ForEach(x => txtLog.Log(x));
-        }
-
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
 
 
 
@@ -219,7 +145,7 @@ namespace Shorthand.AdminPanel
       var processes = Process.GetProcessesByName("IBU");
       var users = new List<string>();
       processes.ToList()
-               .ForEach(p => users.Add($"{p.ProcessName} {GetProcessOwner(p.Id)}" ));
+               .ForEach(p => users.Add($"{p.ProcessName} {GetProcessOwner(p.Id)}"));
 
       txtLog.Lines = users.ToArray();
     }
@@ -232,10 +158,10 @@ namespace Shorthand.AdminPanel
         object[] args = { string.Empty, string.Empty };
         var owner = searcher.Get()
                             .OfType<ManagementObject>()
-                            .Select( mo => {                                          
-                                             mo.InvokeMethod("GetOwner", args);
-                                             return $"{args[1]}\\{args[0]}" ?? "NO OWNER";
-                                           })
+                            .Select(mo => {
+                              mo.InvokeMethod("GetOwner", args);
+                              return $"{args[1]}\\{args[0]}" ?? "NO OWNER";
+                            })
                             .FirstOrDefault();
 
         return owner?.ToString();
@@ -248,12 +174,59 @@ namespace Shorthand.AdminPanel
       foreach (var p in processes)
       {
         txtLog.Log($"{p.ProcessName} bye!");
-        p.Kill();        
+        p.Kill();
       }
+    }
+
+    private void btnReadPdf_Click(object sender, EventArgs e)
+    {
+      var src = @"C:\tmp\sandbox\object.pdf";
+      var dest = @"C:\tmp\sandbox\split";
+
+      PdfDocument sourcePdfDoc = new PdfDocument(new PdfReader(src));
+      var cntPage = sourcePdfDoc.GetNumberOfPages();
+
+      for (int i = 1; i <= cntPage; i++)
+      {
+        var page = sourcePdfDoc.GetPage(i);
+        string textFromPage = PdfTextExtractor.GetTextFromPage(page, new LocationTextExtractionStrategy());
+
+        var id = this.ExtractId(textFromPage);
+        var fileName = this.Validate(id) ? id : $"Not Valid - {id}";
+
+        using (var writer = new PdfWriter($"{dest}\\{fileName}.pdf"))
+        using (var destinationPdfDoc = new PdfDocument(writer))
+        {
+          new PdfMerger(destinationPdfDoc).Merge(sourcePdfDoc, i, i);          
+        }
+
+      }
+    }
+
+    private string ExtractId(string input)
+    {
+      var regex = new Regex("\\(T.C.KİMLİK NUMARASI\\)\\n(?<TCKNo>[\\d ]{21,22})", RegexOptions.IgnoreCase| RegexOptions.Singleline| RegexOptions.Compiled);
+      var match = regex.Match(input);
+
+      var value = match.Groups["TCKNo"].Value.Replace(" ", "");
+      return value;
+    }
+
+    private bool Validate(string id)
+    {
+      if (id.Length != 11)
+        return false;
+
+      var digits = id.Select(x => Convert.ToInt32(x.ToString())).ToArray();
+      if (digits[10] % 2 != 0)
+        return false;
+      
+      return digits[10] == digits.Take(10).Sum() % 10;
     }
 
 
 
   }
+
 
 }

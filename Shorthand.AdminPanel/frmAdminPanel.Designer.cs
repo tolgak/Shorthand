@@ -38,12 +38,9 @@
       this.txtPassword = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
-      this.btnCheckSolution = new System.Windows.Forms.Button();
-      this.txtSolutionFile = new System.Windows.Forms.TextBox();
-      this.txtFolder = new System.Windows.Forms.TextBox();
-      this.btnCheckFolder = new System.Windows.Forms.Button();
       this.btnRunningProcess = new System.Windows.Forms.Button();
       this.btnKill = new System.Windows.Forms.Button();
+      this.btnReadPdf = new System.Windows.Forms.Button();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -134,41 +131,6 @@
       this.label2.TabIndex = 34;
       this.label2.Text = "Current Password";
       // 
-      // btnCheckSolution
-      // 
-      this.btnCheckSolution.Location = new System.Drawing.Point(725, 26);
-      this.btnCheckSolution.Name = "btnCheckSolution";
-      this.btnCheckSolution.Size = new System.Drawing.Size(129, 25);
-      this.btnCheckSolution.TabIndex = 35;
-      this.btnCheckSolution.Text = "Check Solution";
-      this.btnCheckSolution.UseVisualStyleBackColor = true;
-      this.btnCheckSolution.Click += new System.EventHandler(this.btnCheckSolution_Click);
-      // 
-      // txtSolutionFile
-      // 
-      this.txtSolutionFile.AllowDrop = true;
-      this.txtSolutionFile.Location = new System.Drawing.Point(409, 26);
-      this.txtSolutionFile.Name = "txtSolutionFile";
-      this.txtSolutionFile.Size = new System.Drawing.Size(310, 25);
-      this.txtSolutionFile.TabIndex = 36;
-      // 
-      // txtFolder
-      // 
-      this.txtFolder.Location = new System.Drawing.Point(409, 59);
-      this.txtFolder.Name = "txtFolder";
-      this.txtFolder.Size = new System.Drawing.Size(310, 25);
-      this.txtFolder.TabIndex = 37;
-      // 
-      // btnCheckFolder
-      // 
-      this.btnCheckFolder.Location = new System.Drawing.Point(725, 59);
-      this.btnCheckFolder.Name = "btnCheckFolder";
-      this.btnCheckFolder.Size = new System.Drawing.Size(129, 25);
-      this.btnCheckFolder.TabIndex = 38;
-      this.btnCheckFolder.Text = "Check Folder";
-      this.btnCheckFolder.UseVisualStyleBackColor = true;
-      this.btnCheckFolder.Click += new System.EventHandler(this.btnCheckFolder_Click);
-      // 
       // btnRunningProcess
       // 
       this.btnRunningProcess.Location = new System.Drawing.Point(725, 168);
@@ -189,17 +151,24 @@
       this.btnKill.UseVisualStyleBackColor = true;
       this.btnKill.Click += new System.EventHandler(this.btnKill_Click);
       // 
+      // btnReadPdf
+      // 
+      this.btnReadPdf.Location = new System.Drawing.Point(725, 44);
+      this.btnReadPdf.Name = "btnReadPdf";
+      this.btnReadPdf.Size = new System.Drawing.Size(101, 28);
+      this.btnReadPdf.TabIndex = 41;
+      this.btnReadPdf.Text = "Read pdf";
+      this.btnReadPdf.UseVisualStyleBackColor = true;
+      this.btnReadPdf.Click += new System.EventHandler(this.btnReadPdf_Click);
+      // 
       // frmAdminPanel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(884, 611);
+      this.Controls.Add(this.btnReadPdf);
       this.Controls.Add(this.btnKill);
       this.Controls.Add(this.btnRunningProcess);
-      this.Controls.Add(this.btnCheckFolder);
-      this.Controls.Add(this.txtFolder);
-      this.Controls.Add(this.txtSolutionFile);
-      this.Controls.Add(this.btnCheckSolution);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.txtPassword);
@@ -230,11 +199,8 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Button btnCheckSolution;
-    private System.Windows.Forms.TextBox txtSolutionFile;
-    private System.Windows.Forms.TextBox txtFolder;
-    private System.Windows.Forms.Button btnCheckFolder;
     private System.Windows.Forms.Button btnRunningProcess;
     private System.Windows.Forms.Button btnKill;
+    private System.Windows.Forms.Button btnReadPdf;
   }
 }

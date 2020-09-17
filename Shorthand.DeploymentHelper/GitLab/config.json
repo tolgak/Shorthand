@@ -1,0 +1,36 @@
+{
+  "archiveTool": {
+    "path": "C:\\Program Files\\WinRAR\\WinRAR.exe",
+    "switches": "a -s -ep -df"
+  },
+  "delphiBuilderService": {
+    "hostname": "localhost",
+    "port": "7200"
+  },
+  "applications": [
+    {
+      "codebase": "Bilgi.Sis.BackOffice",
+      "database": "pandora.ibu",
+      "gitOptions": {
+        "projectName": "Bilgi.Sis.BackOffice",
+        "projectId": "53"
+      },
+      "hasSoxWorkflow": "true",
+      "localBinFolder": "D:\\Development\\GitProjects\\Bilgi.Sis.BackOffice\\bin",
+      "deliveryTestFolder": "\\\\sisarena\\ibusa$\\Bilgi\\Delphi",
+      "deliveryProductionFolder": "\\\\sisarena\\ibusa$\\Bilgi\\Delphi\\_IBU DEPLOYMENT"
+    },
+    {
+      "codebase": "Bilgi.Els.BackOffice",
+      "database": "pandora.els",
+      "gitOptions": {
+        "projectName": "Bilgi.Els.BackOffice",
+        "projectId": "52"
+      },
+      "hasSoxWorkflow": "false",
+      "localBinFolder": "D:\\Development\\GitProjects\\Bilgi.Els.BackOffice\\bin",
+      "deliveryTestFolder": "\\\\sisarena\\ibusa$\\Bilgi\\PrepSchool",
+      "deliveryProductionFolder": "\\\\sisarena\\ibusa$\\Bilgi\\PrepSchool\\_ELS DEPLOYMENT"
+    }
+  ]
+}

@@ -34,6 +34,8 @@
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
+      this.txtConfigSnippetId = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
       // 
       // txtDefaultGitProjectName
@@ -45,14 +47,14 @@
       // 
       // txtUrl
       // 
-      this.txtUrl.Location = new System.Drawing.Point(168, 63);
+      this.txtUrl.Location = new System.Drawing.Point(168, 61);
       this.txtUrl.Name = "txtUrl";
       this.txtUrl.Size = new System.Drawing.Size(247, 25);
       this.txtUrl.TabIndex = 1;
       // 
       // txtPrivateToken
       // 
-      this.txtPrivateToken.Location = new System.Drawing.Point(168, 94);
+      this.txtPrivateToken.Location = new System.Drawing.Point(168, 93);
       this.txtPrivateToken.Name = "txtPrivateToken";
       this.txtPrivateToken.Size = new System.Drawing.Size(247, 25);
       this.txtPrivateToken.TabIndex = 2;
@@ -84,10 +86,28 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Private Token";
       // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(14, 129);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(109, 17);
+      this.label4.TabIndex = 7;
+      this.label4.Text = "Config Snippet Id";
+      // 
+      // txtConfigSnippetId
+      // 
+      this.txtConfigSnippetId.Location = new System.Drawing.Point(168, 126);
+      this.txtConfigSnippetId.Name = "txtConfigSnippetId";
+      this.txtConfigSnippetId.Size = new System.Drawing.Size(247, 25);
+      this.txtConfigSnippetId.TabIndex = 6;
+      // 
       // ucGitLabOptions
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.label4);
+      this.Controls.Add(this.txtConfigSnippetId);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
@@ -96,7 +116,7 @@
       this.Controls.Add(this.txtDefaultGitProjectName);
       this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
       this.Name = "ucGitLabOptions";
-      this.Size = new System.Drawing.Size(637, 607);
+      this.Size = new System.Drawing.Size(536, 364);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -110,5 +130,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.TextBox txtConfigSnippetId;
   }
 }

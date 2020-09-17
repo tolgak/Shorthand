@@ -60,19 +60,7 @@ namespace Shorthand
     {
       // create new
       var url = $"{_options.JiraBaseUrl}/rest/api/2/issue";
-      var data = new
-      {
-        fields = new
-        {
-          project = new { key = projectKey }
-                                    ,
-          summary = summary
-                                    ,
-          description = description
-                                    ,
-          issuetype = new { name = issueType }
-        }
-      };
+      var data = new { fields = new { project = new { key = projectKey }, summary, description, issuetype = new { name = issueType } } };
       var response = this.SendApiRequest(url, data.AsJson(), ApiMethod.POST);
 
       if (!response.Success)

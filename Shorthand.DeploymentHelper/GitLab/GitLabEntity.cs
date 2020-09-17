@@ -27,16 +27,30 @@ namespace Shorthand.GitLabEntity
       _logger = logger;
     }
 
-    public CodebaseConfig GetCodebaseConfig()
-    {
-      var url = $"{_options.Url}/snippets/100/raw";
 
+    public CodebaseConfig GetCodebaseConfig(int configSnippetId)
+    {
+      var json = this.GetSnippet(configSnippetId);
+      return CodebaseConfig.FromJson(json);
+    }
+
+    public string GetSnippet(int snippetId)
+    {
+      var url = $"{_options.Url}/snippets/{snippetId}/raw";
       var jsonResponse = this.SendApiRequest(url, null, ApiMethod.GET);
 
+      return jsonResponse.Result;
+    }
+
+
+    public async Task<CodebaseConfig> GetCodebaseConfigAsync(int configSnippetId)
+    {
+      var url = $"{_options.Url}/snippets/{configSnippetId}/raw";
+      var jsonResponse = await this.SendApiRequestAsync(url, null, ApiMethod.GET);
 
       return CodebaseConfig.FromJson(jsonResponse.Result);
-      //return JsonConvert.DeserializeObject<List<Project>>(jsonResponse.Result);
     }
+
 
     public List<Project> GetProjects(bool onlyStarred = false)
     {
@@ -119,6 +133,11 @@ namespace Shorthand.GitLabEntity
       var mrResponse = JsonConvert.DeserializeObject<MergeRequestResponse>(jsonResponse.Result);
       return mrResponse.id;
     }
+
+
+
+
+
 
     public int CreateMergeRequest(int projectId, string sourceBranch, string targetBranch, string title, string description = "", string assigneeId = "")
     {

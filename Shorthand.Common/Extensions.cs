@@ -30,10 +30,18 @@ namespace Shorthand
 
   public static class Extensions
   {
-
     public static StringBuilder AppendConditionally(this StringBuilder sb, bool predicate, string text)
     {
       return predicate ? sb.Append($"{text} {Environment.NewLine}") : sb;
+    }
+
+    public static string AggregateExceptionMessages(this Exception ex)
+    {
+      var result = $"{ex.Source} {ex.Message}";
+      if (ex.InnerException != null)
+        result = $"{result}\r\n{ex.InnerException.AggregateExceptionMessages()}";
+
+      return result;
     }
 
     public delegate void InvokeIfRequiredDelegate<T>(T obj) where T : ISynchronizeInvoke;
@@ -49,6 +57,12 @@ namespace Shorthand
     public static string AsJson(this object data)
     {
       return JsonConvert.SerializeObject(data);
+    }
+
+    public static bool IsJson(this string str)
+    {
+      return (str.StartsWith("{") && str.EndsWith("}"))
+          || (str.StartsWith("[") && str.EndsWith("]"));
     }
 
     public static string ToTidyString(this string str)
@@ -93,6 +107,8 @@ namespace Shorthand
 
       return sb.ToString();
     }
+
+
 
   }
 

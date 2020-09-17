@@ -27,6 +27,7 @@ namespace Shorthand.Configuration
       txtDefaultGitProjectName.DataBindTo(_options, "DefaultGitProjectName");
       txtUrl.DataBindTo(_options, "Url");
       txtPrivateToken.DataBindTo(_options, "PrivateToken");
+      txtConfigSnippetId.DataBindTo(_options, "ConfigSnippetId");
 
       return _options;
     }

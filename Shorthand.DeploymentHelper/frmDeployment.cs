@@ -1,16 +1,21 @@
-﻿using PragmaTouchUtils;
+﻿using AppBuilder.DTO;
+using Newtonsoft.Json;
+using PragmaTouchUtils;
 using Shorthand.Common;
 using Shorthand.GitLabEntity;
 using Shorthand.JiraEntity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,7 +33,9 @@ namespace Shorthand
 
     private GitLab _gitLab;
     private GitLabOptions _gitLabOptions;
-    
+    private Application _appSetting;
+    private DelphiBuilderService _builderService;
+
 
     public frmDeployment()
     {
@@ -83,9 +90,17 @@ namespace Shorthand
       cmbGitProjectName.DisplayMember = "Text";
       cmbGitProjectName.ValueMember = "Value";
       cmbGitProjectName.DataSource = items;
+
+      //cmbGitProjectName.SelectedValueChanged += this.SelectedProjectChanged;
       cmbGitProjectName.SelectedItem = items?.FirstOrDefault(x => x.Text == _gitLabOptions.DefaultGitProjectName);
 
-      lblMergeRequestLink.LinkClicked += (x, y) => { Process.Start(y.Link.LinkData as string); };
+      lblMergeRequestLink.LinkClicked += (x, y) =>
+      {
+        if (y.Link.LinkData != null)
+        { Process.Start(y.Link.LinkData as string); }
+        else
+        { this.Dump("LinkData not found"); }
+      };
 
       rdbProduction.CheckedChanged -= Rdb_CheckedChanged;
       rdbProduction.CheckedChanged += Rdb_CheckedChanged;
@@ -113,7 +128,40 @@ namespace Shorthand
     }
 
 
+    private bool EnsureAppSettings()
+    {
+      try
+      {
+        try
+        {
+          string json = string.Empty;
+          if (!File.Exists("config.json"))
+          {
+            json = _gitLab.GetSnippet(_gitLabOptions.ConfigSnippetId);
+            File.WriteAllText("config.json", json);
+          }
+          else
+            json = File.ReadAllText("config.json");
 
+          var projectId = (int)cmbGitProjectName.SelectedValue;
+          var config = CodebaseConfig.FromJson(json);
+          _appSetting = config?.Applications.FirstOrDefault(x => x.GitProperties.ProjectId == projectId);
+          _builderService = config?.DelphiBuilderService;
+
+          return _appSetting != null && _builderService != null;
+        }
+        catch (Exception ex)
+        {
+          this.Dump(ex.AggregateExceptionMessages());
+          return false;
+        }
+      }
+      finally
+      {
+        this.Dump($"{_appSetting?.Codebase ?? "no codebase"} set for gitLab");
+        this.Dump($"{_builderService?.HostName ?? "no host"} : {_builderService?.Port ?? "no port"} set for builder service");
+      }
+    }
 
 
     private void Rdb_CheckedChanged(object sender, EventArgs e)
@@ -127,6 +175,20 @@ namespace Shorthand
     private bool SanityCheck()
     {
       this.Dump("Sanity Check");
+
+      var builderServiceEnabled = this.EnsureAppSettings();
+      btnMakeExecutable.Enabled = builderServiceEnabled;
+      btnPing.Enabled = builderServiceEnabled;
+      if (!builderServiceEnabled)
+      {
+        this.Dump("Disabled builder service.");
+      }
+
+      if (!_jiraOptions.IsValid)
+      {
+        this.Dump("ERROR: Please configure jira options");
+        return false;
+      }
 
       if (!_jiraOptions.IsValid)
       {
@@ -177,7 +239,7 @@ namespace Shorthand
       }
       catch (Exception ex)
       {
-        this.Dump(ex.Message);
+        this.Dump(ex.AggregateExceptionMessages());
       }
       finally
       {
@@ -198,7 +260,7 @@ namespace Shorthand
 
       this.ClearBaseData();
 
-      var projectId = (int) (cmbGitProjectName.SelectedValue ?? 0);
+      var projectId = (int)(cmbGitProjectName.SelectedValue ?? 0);
       var baseData = await this.GetBaseData(txtInternal.Text, projectId);
       if (string.IsNullOrEmpty(baseData.RequestIssue?.key))
         this.Dump("WARNING: Can not locate request issue");
@@ -281,8 +343,6 @@ namespace Shorthand
       lblMergeRequestLink.Links.Add(0, lblMergeRequestLink.Text.Length, mergeReqUrl);
     }
 
-
-
     private async Task<DeliveryContext> BuildDeliveryContext()
     {
       var ctx = new DeliveryContext();
@@ -304,24 +364,30 @@ namespace Shorthand
       ctx.DeploymentIssue = txtDPLY.Text;
       ctx.UatIssue = lbxUAT.SelectedValue?.ToString();
 
-
-
-
       // GitLab
-
-      var codebaseConfig = _gitLab.GetCodebaseConfig();
-
       var projectId = (int)cmbGitProjectName.SelectedValue;
       var project = await _gitLab.GetProjectByIdAsync(projectId);
       var mergeReq = await _gitLab.GetMergeRequestByInternalIssueKeyAsync(projectId, ctx.InternalIssue);
-      var mergeReqNo = mergeReq?.iid ?? 0;
-      var mergeReqState = mergeReq?.state ?? "unknown";
 
-      ctx.GitProjectName = cmbGitProjectName.Text;
-      ctx.GitProjectId = (int)(cmbGitProjectName.SelectedValue ?? 0);
+      ctx.GitProjectName = project.name;
+      ctx.GitProjectId = project.id;
       ctx.GitProjectWebUrl = project.web_url;
-      ctx.GitMergeRequestNo = mergeReqNo;
-      ctx.GitMergeRequestState = mergeReqState;
+      ctx.GitMergeRequestNo = mergeReq?.iid ?? 0;
+      ctx.GitMergeRequestState = mergeReq?.state ?? "unknown";
+
+      //var requests = await _gitLab.GetMergeRequestsAsync(projectId);
+      //var r = requests.FirstOrDefault(x => x.source_branch.Contains(ctx.InternalIssue));
+      //ctx.GitMergeRequestNo = r == null ? 0 : r.id;
+      //ctx.GitMergeRequestState = r == null ? string.Empty : r.state;
+
+      if (_appSetting != null)
+      {
+        ctx.HasSoxWorkflow = _appSetting.hasSoxWorkflow;
+        ctx.Database = _appSetting.Database;
+        ctx.LocalBinFolder = _appSetting.LocalBinFolder;
+        ctx.DeliveryTestFolder = _appSetting.DeliveryTestFolder;
+        ctx.DeliveryProductionFolder = _appSetting.DeliveryProductionFolder;
+      }
 
       return ctx;
     }
@@ -380,6 +446,32 @@ namespace Shorthand
       txtDump.Log(line);
     }
 
+    public void HandleResponse(MessageWrapper message)
+    {
+      this.Invoke(new Action(() => DumpMessage(message)));
+    }
+
+    private void DumpMessage(MessageWrapper message)
+    {
+      var pageKey = $"Request_{message.RequestId}";
+      var page = tabMonitor.TabPages[pageKey];
+      if (page == null)
+      {
+        page = new TabPage($"Request {message.RequestId}") { Name = pageKey, Padding = new Padding(3) };
+        tabMonitor.TabPages.Add(page);
+        page.Enter += (object sender, EventArgs e) => { page.ImageIndex = -1; };
+        var font = new System.Drawing.Font("Consolas", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+        var box = new TextBox() { Name = $"box_{message.RequestId}", Dock = DockStyle.Fill, ForeColor = Color.Lime, BackColor = Color.Black, Multiline = true, Font = font, ScrollBars = ScrollBars.Vertical };
+        tabMonitor.TabPages[pageKey].Controls.Add(box);
+        box.BringToFront();
+      }
+
+      page.ImageIndex = tabMonitor.SelectedTab == page ? -1 : 1;
+      var destinationBox = this.Controls.Find($"box_{message.RequestId}", true).FirstOrDefault();
+      (destinationBox as TextBox)?.Log(message.Message);
+    }
+
+
     private boIssue[] ExtractLinksOfIssue(Issue issue)
     {
       var q1 = issue.fields.issuelinks.Where(x => x.inwardIssue != null).Select(x => new boIssue { key = x.inwardIssue.key, status = x.inwardIssue.fields.status.name });
@@ -391,6 +483,7 @@ namespace Shorthand
     private void btnClearLog_Click(object sender, EventArgs e)
     {
       txtDump.Clear();
+      tabMonitor.TabPages.OfType<TabPage>().Where(x => x.ImageIndex == -1).ToList().ForEach(x => tabMonitor.TabPages.Remove(x));
     }
 
     private async void frmDeployment_KeyUp(object sender, KeyEventArgs e)
@@ -429,24 +522,16 @@ namespace Shorthand
         Process.Start(ctx.GitProjectWebUrl);
     }
 
-    private void btnMakeExecutable_Click(object sender, EventArgs e)
-    {
-      var remoteHost = "eoyuktas-ESPRIMO-p900";
-      var remotePort = 6200;
-      var remoteBuilder = new RemoteBuilder(remoteHost, remotePort, this.Dump);
 
-      var args = new string[1] { cmbGitProjectName.Text };
-      remoteBuilder.Build(args);
-    }
 
     private void btnOpenLocal_Click(object sender, EventArgs e)
     {
-      this.OpenFolder(_deployOptions.LocalBinPath);
+      this.OpenFolder(_appSetting?.LocalBinFolder);
     }
 
     private void btnOpenDeployment_Click(object sender, EventArgs e)
     {
-      this.OpenFolder(_deployOptions.TestDeliveryFolder);
+      this.OpenFolder(_appSetting?.DeliveryProductionFolder);
     }
 
     private void OpenFolder(string folder)
@@ -467,18 +552,42 @@ namespace Shorthand
       Process.Start(pi);
     }
 
-    private async void btnJenkins_Click(object sender, EventArgs e)
+
+
+
+    private void btnPing_Click(object sender, EventArgs e)
     {
-      var jenkins = new Jenkins(x => this.Dump(x));
+      var remoteBuilder = this.GetBuilder();
 
-      var jobs = await jenkins.GetJobsAsync();
-      foreach (var job in jobs)
-      {
-        this.Dump($"{job.Name} - {job.Color}");
-      }
-
+      this.Dump($"ping");
+      Task.Run(() => remoteBuilder.Ping());
     }
 
+    private void btnBrew_Click(object sender, EventArgs e)
+    {
+      var remoteBuilder = this.GetBuilder();
+      this.Dump($"brew");
+      Task.Run(() => remoteBuilder.Brew());
+    }
+
+    private void btnMakeExecutable_Click(object sender, EventArgs e)
+    {
+      var remoteBuilder = this.GetBuilder();
+      var args = new string[1] { cmbGitProjectName.Text };
+      Task.Run(() => remoteBuilder.Build(args));
+    }
+
+    private RemoteBuilder GetBuilder()
+    {
+      //var remoteHost = "eoyuktas-ESPRIMO-p900";
+      //var remoteHost = "localhost";
+      //var remotePort = 3390;
+
+      var remoteHost = _builderService.HostName;
+      Int32.TryParse(_builderService.Port, out int remotePort);
+
+      return new RemoteBuilder(remoteHost, remotePort, this.HandleResponse);
+    }
 
 
   }
