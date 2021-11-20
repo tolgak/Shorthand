@@ -1,4 +1,4 @@
-﻿using AppBuilder.DTO;
+﻿//using AppBuilder.DTO;
 using Newtonsoft.Json;
 using PragmaTouchUtils;
 using Shorthand.Common;
@@ -446,30 +446,30 @@ namespace Shorthand
       txtDump.Log(line);
     }
 
-    public void HandleResponse(MessageWrapper message)
-    {
-      this.Invoke(new Action(() => DumpMessage(message)));
-    }
+    //public void HandleResponse(MessageWrapper message)
+    //{
+    //  this.Invoke(new Action(() => DumpMessage(message)));
+    //}
 
-    private void DumpMessage(MessageWrapper message)
-    {
-      var pageKey = $"Request_{message.RequestId}";
-      var page = tabMonitor.TabPages[pageKey];
-      if (page == null)
-      {
-        page = new TabPage($"Request {message.RequestId}") { Name = pageKey, Padding = new Padding(3) };
-        tabMonitor.TabPages.Add(page);
-        page.Enter += (object sender, EventArgs e) => { page.ImageIndex = -1; };
-        var font = new System.Drawing.Font("Consolas", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
-        var box = new TextBox() { Name = $"box_{message.RequestId}", Dock = DockStyle.Fill, ForeColor = Color.Lime, BackColor = Color.Black, Multiline = true, Font = font, ScrollBars = ScrollBars.Vertical };
-        tabMonitor.TabPages[pageKey].Controls.Add(box);
-        box.BringToFront();
-      }
+    //private void DumpMessage(MessageWrapper message)
+    //{
+    //  var pageKey = $"Request_{message.RequestId}";
+    //  var page = tabMonitor.TabPages[pageKey];
+    //  if (page == null)
+    //  {
+    //    page = new TabPage($"Request {message.RequestId}") { Name = pageKey, Padding = new Padding(3) };
+    //    tabMonitor.TabPages.Add(page);
+    //    page.Enter += (object sender, EventArgs e) => { page.ImageIndex = -1; };
+    //    var font = new System.Drawing.Font("Consolas", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(162)));
+    //    var box = new TextBox() { Name = $"box_{message.RequestId}", Dock = DockStyle.Fill, ForeColor = Color.Lime, BackColor = Color.Black, Multiline = true, Font = font, ScrollBars = ScrollBars.Vertical };
+    //    tabMonitor.TabPages[pageKey].Controls.Add(box);
+    //    box.BringToFront();
+    //  }
 
-      page.ImageIndex = tabMonitor.SelectedTab == page ? -1 : 1;
-      var destinationBox = this.Controls.Find($"box_{message.RequestId}", true).FirstOrDefault();
-      (destinationBox as TextBox)?.Log(message.Message);
-    }
+    //  page.ImageIndex = tabMonitor.SelectedTab == page ? -1 : 1;
+    //  var destinationBox = this.Controls.Find($"box_{message.RequestId}", true).FirstOrDefault();
+    //  (destinationBox as TextBox)?.Log(message.Message);
+    //}
 
 
     private boIssue[] ExtractLinksOfIssue(Issue issue)
@@ -557,37 +557,37 @@ namespace Shorthand
 
     private void btnPing_Click(object sender, EventArgs e)
     {
-      var remoteBuilder = this.GetBuilder();
+      //var remoteBuilder = this.GetBuilder();
 
-      this.Dump($"ping");
-      Task.Run(() => remoteBuilder.Ping());
+      //this.Dump($"ping");
+      //Task.Run(() => remoteBuilder.Ping());
     }
 
     private void btnBrew_Click(object sender, EventArgs e)
     {
-      var remoteBuilder = this.GetBuilder();
-      this.Dump($"brew");
-      Task.Run(() => remoteBuilder.Brew());
+      //var remoteBuilder = this.GetBuilder();
+      //this.Dump($"brew");
+      //Task.Run(() => remoteBuilder.Brew());
     }
 
     private void btnMakeExecutable_Click(object sender, EventArgs e)
     {
-      var remoteBuilder = this.GetBuilder();
-      var args = new string[1] { cmbGitProjectName.Text };
-      Task.Run(() => remoteBuilder.Build(args));
+      //var remoteBuilder = this.GetBuilder();
+      //var args = new string[1] { cmbGitProjectName.Text };
+      //Task.Run(() => remoteBuilder.Build(args));
     }
 
-    private RemoteBuilder GetBuilder()
-    {
-      //var remoteHost = "eoyuktas-ESPRIMO-p900";
-      //var remoteHost = "localhost";
-      //var remotePort = 3390;
+    //private RemoteBuilder GetBuilder()
+    //{
+    //  //var remoteHost = "eoyuktas-ESPRIMO-p900";
+    //  //var remoteHost = "localhost";
+    //  //var remotePort = 3390;
 
-      var remoteHost = _builderService.HostName;
-      Int32.TryParse(_builderService.Port, out int remotePort);
+    //  var remoteHost = _builderService.HostName;
+    //  Int32.TryParse(_builderService.Port, out int remotePort);
 
-      return new RemoteBuilder(remoteHost, remotePort, this.HandleResponse);
-    }
+    //  return new RemoteBuilder(remoteHost, remotePort, this.HandleResponse);
+    //}
 
 
   }
